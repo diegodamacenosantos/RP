@@ -1,0 +1,7 @@
+var setor = "sala"
+
+if (msg.payload === "ON") {
+    node.send({payload: {setor: setor, acao: "Aberto"}})
+} else if (msg.payload === "OFF") {
+    node.send({payload: {setor: setor, acao: "Fechado"}})
+}
