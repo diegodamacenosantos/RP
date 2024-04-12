@@ -1,0 +1,19 @@
+<div id="h1" style="line-height: 1.8; text-align: center; color: black; font-size: 16px;">
+    Exemplo {{msg.payload}} @<br>
+</div>
+
+<style>
+    .h1a {
+        display: flex;
+        justify-content: center;
+        align-items: center;        
+    }
+</style>
+
+<div class="h1a">
+    <div id="h1b"
+        style="border: 2px solid #3838f2; width: 150px; height: 9px; border-radius: 10px; background-color: #fcfcfc;">
+        <div id="h1c" style="width:{{msg.payload}}%; height: 100%; border-radius: 10px; background-color: #ff9696;">
+        </div>
+    </div>
+</div>

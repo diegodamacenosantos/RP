@@ -1,0 +1,8 @@
+var tempo = msg.payload;
+var partes = tempo.split(":");
+var horas = parseInt(partes[0]);
+var minutos = parseInt(partes[1]);
+var segundos = parseInt(partes[2]);
+var milissegundos = horas * 60 * 60 * 1000 + minutos * 60 * 1000 + segundos * 1000;
+
+node.send({payload: milissegundos})

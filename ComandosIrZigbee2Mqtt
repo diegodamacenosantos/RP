@@ -1,0 +1,20 @@
+#PARA ATIVAR O MODO COPIAR DO IR
+
+{
+    "topic": "zigbee2mqtt/NOME_DADO_AO_DISPOSITIVO/set",
+    "payload": "{ \"learn_ir_code\": \"ON\"}"
+}
+
+#PARA DESATIVAR O MODO COPIAR DO IR
+
+{
+    "topic": "zigbee2mqtt/NOME_DADO_AO_DISPOSITIVO/set",
+    "payload": "{ \"learn_ir_code\": \"OFF\"}"
+}
+
+#PARA EXECUTAR O COMANDO
+
+{
+    "topic": "zigbee2mqtt/NOME_DADO_AO_DISPOSITIVO/set",
+    "payload": "{ \"ir_code_to_send\": \"COMANDO_COPIADO\"}"
+}

@@ -1,0 +1,123 @@
+<template>
+  <div>
+    <v-btn class="button_fita_acionamento" ref="button" stacked @click="alternardialog">
+      <div class="title_fita_acionamento">On/Off</div>
+      <v-icon class="icon_fita_acionamento" ref="icon">{{icon}}</v-icon>
+    </v-btn>
+    <v-dialog class="dialog_acionamento" v-model="dialog">
+      <v-text-field class="text_dialog_acionamento" label="Senha" variant="outlined" v-model="senha" @keyup.enter="fecharDialog"></v-text-field>
+      <v-btn class="btn_dialog_acionamento" @click="fecharDialog">Autorizar</v-btn>
+    </v-dialog>
+  </div>
+</template>
+
+<script>
+  export default {
+  data() {
+    return {
+      value: "OFF",
+      icon: "mdi-power-on",
+      dialog: false,
+      senha: '' 
+    };
+  },
+  methods: {
+    alternardialog() {
+      this.dialog = true;
+    },
+    alternar: function () {
+      if (this.value === 'ON') {
+        this.desligar();
+      } else if (this.value === 'OFF') {
+        this.ligar();
+      } else {
+        this.desligar();
+      }
+    },
+    ligar: function () {
+      this.icon = "mdi-moon-new";
+      this.$refs.icon.$el.style.color = '#BD9608';
+      this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+      if (this.value === 'OFF') {        
+        this.send({ payload: 'ON' });
+        this.value = "ON"; 
+      }
+      
+    },
+    desligar: function () {
+      this.icon = "mdi-power-on";
+      this.$refs.icon.$el.style.color = '#A9A9A9';
+      this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+      if (this.value === 'ON') {       
+        this.send({ payload: 'OFF' });
+        this.value = "OFF"; 
+      }
+    },
+    fecharDialog() {
+      if (this.senha === '1234') { 
+        this.dialog = false;
+        this.alternar();
+        this.senha = ''
+      } else {        
+        this.senha = ''
+      }      
+    }
+  },
+  watch: {
+    msg: function() {
+      if (this.msg.payload != undefined) {
+        console.log('got message :', this.msg);
+        if (this.msg.payload === "ON") {
+          this.ligar();
+        } else if (this.msg.payload === "OFF") {
+          this.desligar();                        
+        }
+      }
+    }
+  }
+};
+</script>
+
+<style>
+  .dialog_acionamento {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: #A9A9A9;
+    border: 1px solid #000000;
+    border-radius: 18px;
+    height: 150px;
+    width: 300px;
+  }
+
+  .btn_dialog_acionamento {
+    display: flex;
+    margin: auto;
+    background-color: #A9A9A9;
+    border: 1px solid #000000;
+    color: #000000;
+    border-radius: 08px;
+    width: 40%;
+  }
+
+  .button_fita_acionamento {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    height: 75px;
+    width: 75px;
+    background-color: #4F4F4F;
+    color: #000000;
+    border: 1px solid #000000;
+    font-size: 14px;
+    border-radius: 18px;
+  }
+
+  .title_fita_acionamento {
+    font-size: 75%;
+  }
+
+  .icon_fita_acionamento {
+    font-size: 40px;
+  }
+</style>

@@ -1,0 +1,91 @@
+----------------- função de seleção
+
+if (msg.payload > 0) {
+    node.send([{payload: msg.payload}, null])
+} else if (msg.payload === false) {
+    node.send([null, {payload: msg.payload}])
+}
+
+----------------- componente
+
+<template>
+    <div class="card_ping">
+        <div class="title_ping">{{title}}</div>
+        <v-icon class="icon_ping" ref="icon">{{icon}}</v-icon>   
+        <div class="title_ping">{{ping}}</div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                icon: "mdi-wifi-strength-outline",                
+                title: "--",
+                ping: "--"
+            };
+        },
+        methods: {
+            online_alto: function () {
+                this.icon = "mdi-wifi-arrow-up";
+                this.$refs.icon.$el.style.color = '#32CD32';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #32CD32';
+                this.title = "Online";               
+            },
+            online_baixo: function () {
+                this.icon = "mdi-wifi-arrow-down";
+                this.$refs.icon.$el.style.color = '#FF8C00';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #FF8C00';
+                this.title = "Online";
+            },
+            offline: function () {
+                this.icon = "mdi-wifi-remove";
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px'; 
+                this.title = "Offline";               
+            }
+        },
+        watch: {
+            msg: function(){
+                if(this.msg.payload != undefined){
+                    console.log('got message :',this.msg)                 
+                    if (this.msg.payload > 0) {
+                        if (this.msg.payload < 8) {
+                            this.online_alto();
+                            this.ping = this.msg.payload;
+                        } else {
+                            this.online_baixo();
+                            this.ping = this.msg.payload;
+                        }                               
+                                            
+                    } else if (this.msg.payload === false) {
+                        this.desligar();
+                        this.ping = "--";                                        
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .card_ping {
+        display: flex;
+        flex-direction: column;        
+        margin: auto;
+        height: 75px !important; 
+        width: 75px !important; 
+        background-color: #4F4F4F !important;         
+        border: 1px solid #000000; 
+        font-size: 14px; 
+        border-radius: 18px; 
+    }
+    .title_ping { 
+        margin: auto;        
+        font-size: 80%;
+    }
+    .icon_ping {    
+        margin: auto;      
+        font-size: 35px;
+    }
+</style>

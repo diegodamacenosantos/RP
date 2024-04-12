@@ -1,0 +1,277 @@
+=========================================================================== BOTAO TIPO CAMPAINHA
+
+<style>
+    .total@ {
+        display: flex;
+        margin: auto;
+    }
+
+    .botao@ {
+        background-color: #ffffff !important;
+        border: 1px solid #000000;
+        border-radius: 20px !important;
+        height: 75px;
+        width: 75px;
+    }
+
+    .titulo@ {
+        color: #000000;
+        font-size: 10px;
+    }
+
+    .icone@ {
+        color: #000000;
+        font-size: 55px;
+    }
+
+    .totalpopup@ {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .botoes@ {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: baseline;
+    }
+
+    .senha@ {
+        padding: 4px 4px;
+        box-sizing: border-box;
+        background-color: #d1d1d1;
+        border-radius: 25px;
+        text-align: center;
+    }
+
+    .autorizar@,
+    .cancelar@ {
+        font-size: 14px;
+        background-color: #d1d1d1 !important;
+        color: #000000 !important;
+        border-radius: 15px;
+        border: 1px solid #8C8C8C;
+        width: 40%;
+    }
+</style>
+
+<dialog class="popup@">
+    <div class="totalpopup@">
+        <div>Digite a senha para autorizar!</div>
+        <br>
+        <input class="senha@" type="text" placeholder="Senha"></input>
+        <br>
+        <div class="botoes@">
+            <button class="autorizar@" ng-click="autorizar@()">Autorizar</button>
+            <button class="cancelar@" ng-click="cancelar@()">Cancelar</button>
+        </div>
+    </div>
+</dialog>
+
+<div class="total@">
+    <button class="botao@">
+        <div class="titulo@">NOME</div>
+        <i class="icone@ material-icons">blur_on</i>
+    </button>
+</div>
+
+<script>
+    (function(scope) {       
+        
+        $('.total@').on('click', function() {
+            document.querySelector('.popup@').showModal()
+        });                
+        
+        document.querySelector('.senha@').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {                
+                if (this.value == 780705) {
+                    autorizar();
+                } else {
+                    bloquear();
+                }
+            }
+        });
+
+        scope.autorizar@ = function() {            
+            if (document.querySelector('.senha@').value == 780705) {
+                autorizar();
+            } else {
+                bloquear();
+            }
+        }
+
+        scope.cancelar@ = function() {
+            finalizar();
+        }
+
+        function autorizar() {
+            scope.send({"payload": "ON"});
+            document.querySelector('.senha@').value = "";
+            document.querySelector('.popup@').close()
+        }
+
+        function finalizar() {
+            document.querySelector('.senha@').value = "";
+            document.querySelector('.popup@').close()
+        }
+
+        function bloquear() {
+            document.querySelector('.senha@').value = "";
+            document.querySelector('.popup@').showModal()
+        }
+
+    })(scope);
+</script>
+
+
+=========================================================================== BOTAO TIPO ON/OFF
+
+<style>
+    .total@ {
+        display: flex;
+        margin: auto;
+    }
+
+    .botao@ {
+        background-color: #ffffff !important;
+        border: 1px solid #000000;
+        border-radius: 20px !important;
+        height: 75px;
+        width: 75px;
+    }
+
+    .titulo@ {
+        color: #000000;
+        font-size: 10px;
+    }
+
+    .icone@ {
+        color: #000000;
+        font-size: 55px;
+    }
+
+    .totalpopup@ {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .botoes@ {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: baseline;
+    }
+
+    .senha@ {
+        padding: 4px 4px;
+        box-sizing: border-box;
+        background-color: #d1d1d1;
+        border-radius: 25px;
+        text-align: center;
+    }
+
+    .autorizar@,
+    .cancelar@ {
+        font-size: 14px;
+        background-color: #d1d1d1 !important;
+        color: #000000 !important;
+        border-radius: 15px;
+        border: 1px solid #8C8C8C;
+        width: 40%;
+    }
+</style>
+
+<dialog class="popup@">
+    <div class="totalpopup@">
+        <div>Digite a senha para autorizar!</div>
+        <br>
+        <input class="senha@" type="text" placeholder="Senha"></input>
+        <br>
+        <div class="botoes@">
+            <button class="autorizar@" ng-click="autorizar@()">Autorizar</button>
+            <button class="cancelar@" ng-click="cancelar@()">Cancelar</button>
+        </div>
+    </div>
+</dialog>
+
+<div class="total@">
+    <button class="botao@">
+        <div class="titulo@">NOME</div>
+        <i class="icone@ material-icons" style= "color: #8C8C8C">power_settings_new</i>
+    </button>
+</div>
+
+<script>
+    (function(scope) {        
+         
+        $('.total@').on('click', function() {
+            if ($('.botao@').data("state") === "ON") {
+                desligar();                
+            } else {
+                document.querySelector('.popup@').showModal()                
+            }
+        });
+        
+        document.querySelector('.senha@').addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {                
+                if (this.value == 780705) {
+                    ligar();
+                } else {
+                    document.querySelector('.senha@').value = "";
+                    document.querySelector('.popup@').close()
+                }
+            }
+        });
+
+        scope.autorizar@ = function() {            
+            if (document.querySelector('.senha@').value == 780705) {
+                ligar();           
+            } else {
+                document.querySelector('.senha@').value = "";                
+            }
+        }
+
+        scope.cancelar@ = function() {
+            document.querySelector('.senha@').value = "";
+            document.querySelector('.popup@').close()
+        }
+
+        scope.$watch('msg', function(msg) {
+            if (msg.payload === "ON") {
+                ligar();
+            } else if (msg.payload === "OFF") {
+                desligar();                
+            }
+        });
+
+        function ligar() {
+            if ($('.botao@').data("state") === "OFF") {
+                scope.send({"payload": "ON"});
+            }            
+            $(".botao@").data("state", "ON");            
+            document.querySelector('.senha@').value = "";
+            document.querySelector('.popup@').close()            
+            document.querySelector('.icone@').style.textShadow = "0px 0px 10px #BD960B";
+            document.querySelector('.icone@').style.color = "#BD960B";
+            document.querySelector('.icone@').innerHTML = "power_settings_new";
+            
+        }
+
+        function desligar() {
+            if ($('.botao@').data("state") === "ON") {
+                scope.send({"payload": "OFF"});
+            }
+            $(".botao@").data("state", "OFF");
+            document.querySelector('.senha@').value = "";
+            document.querySelector('.popup@').close()
+            document.querySelector('.icone@').style.textShadow = "0px 0px 0px";
+            document.querySelector('.icone@').style.color = "#8C8C8C";
+            document.querySelector('.icone@').innerHTML = "power_settings_new";
+        }        
+
+    })(scope);
+</script>
+
+
+
+

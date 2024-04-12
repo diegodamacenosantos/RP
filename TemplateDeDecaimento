@@ -1,0 +1,44 @@
+<style>
+    .total1{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+        background-color: #00000060 !important;
+        border-radius: 20px !important;
+        width: 70px;
+        height: 70px;
+    }
+    .caixadetexto1 {
+        width: 60px;
+        padding: 3px 3px;
+        box-sizing: border-box;
+        background-color: #d1d1d1;
+        border-radius: 25px;
+        text-align: center;
+        font-size: 11px;
+    }
+    .segundos1 {
+        font-size: 25px;
+    }
+</style>
+
+<div class="total1">
+    <div class="segundos1">{{msg.payload}}</div>
+    <input class="caixadetexto1" type="text" placeholder="Segundos">
+</div>
+
+<script>
+    (function($scope) {
+        $('.caixadetexto1').on("keyup", function() {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                const bloco = document.getElementsByClassName("caixadetexto1");
+                var objeto = bloco[0].value;
+                $scope.send({"payload": objeto});                             
+            }            
+        });    
+    })(scope);
+</script>

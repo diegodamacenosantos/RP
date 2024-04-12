@@ -1,0 +1,35 @@
+var timeout = 3000;  
+
+if (context.get('timer')) {
+    clearTimeout(context.get('timer'));
+}
+
+if (context.get('count') === undefined) {
+    context.set('count', 0);
+}
+
+context.set('count', context.get('count') + 1);
+
+context.set('timer', setTimeout(function() {
+    
+    if (context.get('count') === 1) {
+        node.send([{ payload: context.get('count') }, null, null, null, null]);
+    }
+    if (context.get('count') === 2) {
+        node.send([null, { payload: context.get('count') }, null, null, null]);
+    }
+    if (context.get('count') === 3) {
+        node.send([null, null, { payload: context.get('count') }, null, null]);
+    }
+    if (context.get('count') === 4) {
+        node.send([null, null, null, { payload: context.get('count') }, null]);
+    }
+    if (context.get('count') === 5) {
+        node.send([null, null, null, null, { payload: context.get('count') }]);
+    }
+    
+    context.set('count', 0);
+
+}, timeout));
+
+return null;

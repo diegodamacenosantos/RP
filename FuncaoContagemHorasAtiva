@@ -1,0 +1,84 @@
+data = new Date()
+horaatual = data.getHours()
+minutoatual = data.getMinutes()
+diaatual = data.getDate()
+mesatual = data.getMonth() + 1
+//Hora Anterior
+horadata = msg.data.old_state.last_changed
+hora = horadata.split("T")[1]
+horaanterior = hora.split(":")[0] - 3
+//Minuto Anterior
+minutoanterior = hora.split(":")[1]
+//Mes Anterior
+data = horadata.split("T")[0]
+mesanterior = data.split("-")[1]
+//Dia Anterior
+diaanterior = data.split("-")[2]
+
+
+// indicador de horas
+i = 0
+
+//FUNÇÃO MINUTOS
+if (minutoatual == minutoanterior) {
+    minuto = "00"
+}
+else if (minutoatual > minutoanterior) {
+    minuto = minutoatual - minutoanterior
+    // SE O MINUTO ATUAL FOR MENOR QUE O ANTERIOR, SOMA 60 AO MINUTO ATUAL E SUBTRAI PELO MINUTO ANTERIOR E INDICA QUE NÃO FOI CONTATO 1 HORA    
+} else {
+    minuto = (minutoatual + 60) - minutoanterior
+    i = 1 //COLOCA 1 NO INDICADOR PARA SABER QUE NÃO SE PASSOU UMA HORA
+}
+
+
+//FUNÇÃO HORAS
+if (horaatual == horaanterior) {
+    hora = "00"
+}
+//SE O INDICADOR DE HORA ESTIVER 1 SIGNIFICA QUE PRECISA DIMINUIR UMA HORA DO RESULTAD    
+else if (i == 1) {
+    if (horaatual > horaanterior & minutoatual > minutoanterior) {
+        hora = horaatual - horaanterior
+    }
+    else if (horaatual > horaanterior & minutoatual < minutoanterior) {
+        hora = horaatual - horaanterior - 1
+    } else {
+        hora = (horaatual + 24) - horaanterior - 1
+    }
+
+
+    //SE O INDICADOR DE HORA ESTIVER ZERADO SIGNIFICA QUE NÃO PRECISA DIMINUIR UMA HORA DO RESULTADO    
+} else if (i == 0) {
+    if (horaatual > horaanterior & minutoatual > minutoanterior) {
+        hora = horaatual - horaanterior
+    }
+    else if (horaatual > horaanterior & minutoatual < minutoanterior) {
+        hora = horaatual - horaanterior
+    } else {
+        hora = (horaatual + 24) - horaanterior
+    }
+}
+
+// FUNÇÃO DIAS
+if (mesanterior == 1 || mesanterior == 3 || mesanterior == 5 || mesanterior == 7 || mesanterior == 8 || mesanterior == 10 || mesanterior == 12) {
+    mes = 31
+} else if (mesanterior == 4 || mesanterior == 6 || mesanterior == 9 || mesanterior == 11 || mesanterior == 08) {
+    mes = 30
+} else if (mesanterior == 2) {
+    mes = 28
+}
+
+if (diaanterior < diaatual) {
+    dia = diaatual - diaanterior
+} else if (diaanterior == diaatual) {
+    dia = 0
+} else {
+    dia = (diaatual + mes) - diaanterior
+}
+
+msg.payload_inicial = mesanterior + "/" + diaanterior + "-" + horaanterior + ":" + minutoanterior
+msg.payload_final = mesatual + "/" + diaatual + "-" + horaatual + ":" + minutoatual
+msg.payload = (dia * 24) + parseInt(hora) + ":" + minuto
+
+return msg;

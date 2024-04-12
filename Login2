@@ -1,0 +1,52 @@
+<style>
+    .total@ {
+        display: flex;
+        margin: auto;
+    }
+
+    .botao@ {               
+        background-color: #FF8C00 !important;
+        border: 1px solid #ffffff40;
+        border-radius: 20px !important;
+        height: 75px;
+        width: 75px;
+    }   
+
+    .icone@ {         
+        color: #000000;
+        font-size: 55px;
+    }
+</style>
+
+<div class="total@">
+    <button class="botao@">        
+        <i class="icone@ material-icons">login</i>
+    </button>
+</div>
+
+<script>
+    (function(scope) {
+        $('.total@').on('click', function() {            
+            scope.send({"payload": "ON"});
+        });    
+    })(scope);
+</script>
+
+################################################################################################################
+
+node.send([{payload:{"tab":"Login"}}])
+
+setTimeout(function () {
+    
+    msg.payload = {
+        "tabs": {
+            "hide": [
+                "tabela1",
+                "tabela2",
+                "Login"        
+            ]
+        }
+    };
+
+    node.send(msg); 
+}, 50);

@@ -1,0 +1,65 @@
+<style>
+    .mesa@ {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .base@ {
+        background-color: #00000060 !important;
+        border-radius: 20px !important;
+        height: 75px;
+        width: 75px;
+    }
+
+    .titulo@ {
+        color: #000000;
+        font-size: 12px;
+    }
+
+    .icone@ {
+        font-size: 55px;
+    }
+</style>
+
+<div class="mesa@">
+    <div class="base@">
+        <div class="titulo@"></div>
+        <i class="icone@ material-icons">directions_walk</i>
+    </div>
+</div>
+
+
+<script>
+    (function($scope) {    
+    
+    scope.$watch('msg', function(msg) {         
+
+        var bloco = ".base@";
+        var objeto = $(bloco);      
+        
+        if (msg) {
+            document.querySelector('.titulo@').innerHTML = msg.decaimento;
+            if(msg.payload == "ON"){
+                ON(objeto);
+            } else if(msg.payload == "OFF"){
+                OFF(objeto);
+            }        
+        }
+    }); 
+    
+    function OFF(objeto){ 
+        document.querySelector('.icone@').style.color = "#000000";
+        document.querySelector('.icone@').innerHTML = "directions_walk";
+        document.querySelector('.titulo@').innerHTML = "Exemplo";
+    }
+    
+    function ON(objeto){ 
+        document.querySelector('.icone@').style.color = "#BD960B";
+        document.querySelector('.icone@').innerHTML = "directions_run";
+        document.querySelector('.titulo@').innerHTML = "Exemplo";
+    }
+
+})(scope)
+</script>

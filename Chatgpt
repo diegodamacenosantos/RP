@@ -1,0 +1,66 @@
+1 - Conversor que envia o data para a API
+
+var obj = msg.payload;
+var requestData = {
+    "model": "gpt-3.5-turbo",
+    "messages": [{ "role": "user", "content": obj + " (De uma resposta curta.)" }]    
+};
+msg.payload = JSON.stringify(requestData);
+return msg;
+
+2 - Filtro que seleciona apenas a resposta enviada para API
+
+msg.payload = msg.payload.choices[0].message.content;
+return msg;
+
+3 - Templante para dashboard node-red e uso simplificado do chatgpt
+
+<style>
+    .total@ {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        margin: auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        width: 275px;
+        border: 1px solid #000000;
+    }
+
+    .resposta@ {
+        max-width: 240px;
+        margin: auto;
+        text-align: center;
+        font-size: 10px;
+    }
+
+    .pergunta@ {
+        width: 240px;
+        margin: auto;
+        padding: 4px 4px;
+        box-sizing: border-box;
+        background-color: #ffffff;
+        border-radius: 10px;
+        text-align: center;
+    }
+</style>
+
+<div class="total@">
+    <br>
+    <div class="resposta@">{{msg.payload}}</div>
+    <br>
+    <input class="pergunta@" type="text" placeholder="Pergunta"/>
+    <br>
+</div>
+
+<script>
+    (function(scope) {
+        const obj = document.querySelector('.pergunta@');
+        obj.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                const payload = this.value;
+                scope.send({payload});
+            }
+        });
+    })(scope);
+</script>

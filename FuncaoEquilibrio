@@ -1,0 +1,12 @@
+var tp = msg.payload_tp;
+var tb = msg.payload_tb;
+var ti = (parseInt(tb) + parseInt(3));
+
+if (tp > ti) {
+    msg.payload = "on"
+    return [msg, null]
+}
+if (tp < ti) {
+    msg.payload = "off"
+    return [null, msg]
+}

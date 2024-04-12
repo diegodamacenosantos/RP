@@ -1,0 +1,7 @@
+var X = msg.payload;
+
+var Y = X.replace('texto-ou-numero','');
+
+msg.payload = Y
+
+return msg;

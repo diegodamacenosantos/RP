@@ -1,0 +1,211 @@
+================================== Botão Login ===================================== 
+
+<template>
+    <div class="card_login" :class="{ 'background_login': active }">
+        <v-text-field class="input_login" type="password" label="Senha" variant="outlined" v-model="senha"
+            @keyup.enter="sendOTP"></v-text-field>
+        <v-btn class="button_login" @click="sendOTP">Autorizar</v-btn>
+    </div>
+</template>
+
+
+<script>
+    export default {
+    data() {
+      return {              
+        senha:'',
+        active: false
+      };
+    },
+    methods: {    
+      sendOTP() {
+        this.active = true;
+        setTimeout(() => {
+          this.send({ payload: this.senha });
+          this.senha = '';
+          this.active = false;
+        }, 1000);
+      },      
+    }        
+  }
+</script>
+
+
+<style>
+    .card_login {
+        display: flex;
+        margin: auto;
+        flex-direction: column;
+        height: 130px !important;
+        width: 250px !important;
+        background-color: #4F4F4F;
+        border: 1px solid #000000;
+        border-radius: 18px;
+        padding: 10px;
+    }
+
+
+    .background_login {
+        background-color: #FF8C00;
+    }
+
+
+    .input_login {
+        margin: auto;
+        height: 20%;
+        width: 90%;
+        font-size: 25px;
+    }
+
+
+    .button_login {
+        margin: auto;
+        background-color: #4F4F4F;
+        border: 1px solid #000000;
+        border-radius: 10px;
+        color: #000000;
+    }
+</style>
+
+=============================== Função Full ==========================================
+
+if (msg.payload === 'senha') {
+   
+    node.send({ payload: { 'page': 'pagina_inicial' }});
+
+
+    setTimeout(function () {
+        node.send({
+            payload: {
+                groups: {
+                    show: [
+                        'pagina:grupo',
+                        'pagina:grupo',
+                    ]
+                }
+            }
+        });
+    }, 10);
+
+
+    setTimeout(function () {
+        node.send({ payload: { pages: { hide: ['pagin'] } } });
+    }, 20);
+
+
+    setTimeout(function () {
+        node.send({ payload: { pages: { hide: ['pagina'] } } });
+    }, 30);
+}
+
+================================== Função de corte =================================================
+
+if (msg.payload === 'senha') {
+   
+    node.send({ payload: { 'page': 'pagina' }});
+
+
+    setTimeout(function () {
+        node.send({
+            payload: {
+                groups: {
+                    show: [
+                        'pagina:grupo',
+                        'pagina:grupo'                        
+                    ]
+                }
+            }
+        });
+    }, 10);
+
+
+    setTimeout(function () {
+        node.send({
+            payload: {
+                groups: {
+                    hide: [
+                        'pagina:grupo',
+                        'pagina:grupo'
+                    ]
+                }
+            }
+        });
+    }, 20);
+
+
+    setTimeout(function () {
+        node.send({ payload: { pages: { hide: ['pagina'] } } });
+    }, 30);
+
+
+    setTimeout(function () {
+        node.send({ payload: { pages: { hide: ['pagina'] } } });
+    }, 40);
+}
+
+============================ Função Logoff ================================
+
+node.send([{payload:{"page":"pagina"}}])
+
+setTimeout(function () {
+    node.send([{payload:{pages:{ hide: ["pagina", "pagina"]}}}])
+}, 10);
+
+============================ Botão Logoff =================================
+
+<template>
+    <v-btn class="buton_logoff" ref="botao" stacked @click="start">
+      <div class="title_logoff">Logoff</div>
+      <v-icon class="icon_logoff" ref="icon" style="font-size: 40px;">{{ icone }}</v-icon>
+    </v-btn>
+</template>
+
+
+<script>
+  export default {
+    data() {
+      return {
+        icone: 'mdi-power-on'
+       };
+    },
+    methods: {
+      start: function () {        
+        this.icone = 'mdi-power-cycle';
+        this.$refs.icon.$el.style.color = '#A9A9A9';
+        this.$refs.icon.$el.style.textShadow = '0px 0px 0px';    
+       
+        setTimeout(() => {
+          this.icone = 'mdi-power-off';
+          this.$refs.icon.$el.style.color = '#A9A9A9';
+          this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+        }, 1000);
+
+
+        setTimeout(() => {
+          this.send({ payload: 'ON' });
+        }, 2000);
+
+
+      },
+    }
+  };
+</script>
+
+
+<style>
+  .buton_logoff {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    height: 50px;
+    width: 50px;
+    background-color: #FF8C00;
+    color: #000000;
+    border: 1px solid #000000;
+    font-size: 14px;
+    border-radius: 18px;
+  }
+  .title_logoff {
+    font-size: 75%;
+  }
+</style>

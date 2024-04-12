@@ -1,0 +1,35 @@
+var valor;
+
+if (msg.payload === "ON") {
+    valor = 30;
+} else if (typeof msg.payload !== 'number' && msg.payload !== "OFF") {
+    valor = parseInt(msg.payload);
+} if (msg.payload === "OFF") {
+    valor = "OFF";
+} else if (typeof msg.payload === 'number') {
+    valor = msg.payload;
+}
+
+function tick() {
+    valor--;
+    if (valor >= 0) {
+        if (context.get("obj") !== "parado") {
+            node.send([{ payload: valor }, null, null]);
+            setTimeout(tick, 1000);
+        };
+    } else {
+        node.send([null, null, { payload: "OFF" }]);
+        context.set("obj", "parado");
+    };
+};
+
+if (context.get("obj") !== "rodando" || context.get("obj") === "" || context.get("obj") === null || valor === "OFF") {
+    if (typeof valor === 'number' || valor === "ON") {
+        node.send([null, { payload: "ON" }, null]);
+        context.set("obj", "rodando");
+        tick();
+    } else if (msg.payload === "OFF") {
+        node.send([null, null, { payload: "OFF" }]);
+        context.set("obj", "parado");
+    };
+};

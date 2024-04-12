@@ -1,0 +1,60 @@
+<style>
+    .mesa01 {
+        display: flex;
+        margin: auto;      
+        text-align: center;
+    }
+    .base01 {
+        background-color: #ffffff !important;
+        border: 1px solid #000000;
+        border-radius: 20px !important;
+        height: 75px;
+        width: 75px;
+    }
+    .titulo01 {
+        color: #000000;
+        font-size: 10px;
+    }
+    .icone01 {
+        color: #000000;
+        font-size: 55px;
+    }
+</style>
+
+<div class="mesa01">
+    <div class="base01">
+        <div class="titulo01">{{msg.payload}}</div>
+        <i class="icone01 material-icons"/>
+    </div>
+</div>
+
+
+<script>
+    (function($scope) {    
+    
+    scope.$watch('msg', function(msg) {         
+
+        var bloco = ".base01";
+        var objeto = $(bloco);      
+        
+        if (msg) {
+            if(msg.payload == "Dia"){
+                ON(objeto);
+            } else if(msg.payload == "Noite"){
+                OFF(objeto);
+            }        
+        }
+    }); 
+    
+    function OFF(objeto){ 
+        document.querySelector('.icone01').style.color = "#8C8C8C";
+        document.querySelector('.icone01').innerHTML = "dark_mode";        
+    }
+    
+    function ON(objeto){
+        document.querySelector('.icone01').style.color = "#BD960B";
+        document.querySelector('.icone01').innerHTML = "light_mode";                       
+    }
+
+})(scope)
+</script>

@@ -1,0 +1,11 @@
+#notificação
+#alexa_media
+
+
+{
+    "data": {
+        "type": "tts"
+    },
+    "message": "{{payload}}", 
+    "target": "ALEXA_QUE_FALARÁ"
+}

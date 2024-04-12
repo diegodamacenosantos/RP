@@ -1,0 +1,65 @@
+<style>   
+    p01 {        
+        font: normal 18px Arial;
+        text-align: center;     
+    }
+</style>
+
+<p01>
+    Botão
+    {{msg.payload}}
+</p01>
+
+<p01> 
+    <md-button id="b01" class="md-button remote-button" ng-click="toggle()"> <i class="" aria-hidden="true"></i> </md-button>    
+</p01>
+
+<script>
+    (function($scope) {
+
+    var btnSelector = "#b01"; 
+    var $btn = $(btnSelector);
+    
+    scope.toggle = function(){        
+
+        var $btn = $(btnSelector);
+        var currentState = $btn.data("state");
+
+        if(currentState == "ON"){
+            objeto($btn);
+            $scope.send({"payload": "OFF"});            
+        } else {
+            unobjeto($btn);
+            $scope.send({"payload": "ON"});
+        }        
+    } 
+    
+    scope.$watch('msg', function(msg) {
+        var $btn = $(btnSelector);
+        
+        if (msg) {
+            if(msg.payload == "ON"){
+                unobjeto($btn);
+            } else if(msg.payload == "OFF"){
+                objeto($btn);
+            }
+          
+        }        
+    }); 
+    
+    function objeto($btn){        
+        $btn.data("state","OFF");
+        document.getElementById("b01").style.color = "#050505";
+        $btn.find("i").removeClass("fa fa-lightbulb-o fa-4x");
+        $btn.find("i").addClass("fa fa fa-times fa-4x");
+    }
+    
+    function unobjeto($btn){        
+        $btn.data("state","ON"); 
+        document.getElementById("b01").style.color = "#f5a002";
+        $btn.find("i").removeClass("fa fa fa-times fa-4x");
+        $btn.find("i").addClass("fa fa-lightbulb-o fa-4x");        
+    }
+
+})(scope)
+</script>

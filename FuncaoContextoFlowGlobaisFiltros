@@ -1,0 +1,69 @@
+1 - contexto
+
+context.set("teste", msg.payload);
+msg.payload = context.get("teste");
+return msg;
+
+2 - flow
+
+  *escreve 
+      flow.set("teste", msg.payload);
+      return msg;
+      
+  *ler
+      msg.payload = flow.get("teste");
+      return msg;
+      
+3 - global
+
+    *escreve
+      global.set("teste", msg.payload);
+      return msg;
+      
+    *ler
+      msg.payload = global.get("teste");
+      return msg;
+      
+4 - função bonus
+
+var obj = msg.payload.state;
+
+if (obj === "on") {
+    msg.payload = "ON"
+}
+
+if (obj === "ON") {
+    msg.payload = "ON"
+}
+
+if (obj === true) {
+    msg.payload = "ON"
+}
+
+if (obj === "off") {
+    msg.payload = "OFF";
+}
+
+if (obj === false) {
+    msg.payload = "OFF";
+}
+
+if (obj === "OFF") {
+    msg.payload = "OFF";
+}
+
+var globalContext = context.global;
+var objeto = globalContext.get("teste_2");
+
+if (objeto === msg.payload) {
+    return null;
+} else {
+    globalContext.set("teste_2", msg.payload);
+    if (msg.payload == "ON") {
+        return [msg, null]
+    } else {
+        return [null, msg]
+    }
+}
+
+

@@ -1,0 +1,79 @@
+<template>
+    <v-btn class="button" ref="button" stacked @click="alternar">
+        <div class="title">Luz</div>
+        <v-icon class="icon" ref="icon">{{icon}}</v-icon>
+    </v-btn>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                value: "OFF",
+                icon: "mdi-lightbulb-outline"
+            };
+        },
+        methods: {
+            alternar: function () {
+                if (this.value === 'ON') {
+                    this.desligar();
+                } else if (this.value === 'OFF') {
+                    this.ligar();
+                } else {
+                    this.desligar();
+                }
+            },
+            ligar: function () {
+                this.icon = "mdi-lightbulb-on-outline";
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+                if (this.value === 'OFF') {
+                    this.send({ payload: 'ON' });
+                    this.value = "ON"; 
+                }
+            },
+            desligar: function () {
+                this.icon = "mdi-lightbulb-outline";
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+                if (this.value === 'ON') {
+                    this.send({ payload: 'OFF' });
+                    this.value = "OFF"; 
+                }
+            }
+        },
+        watch: {
+            msg: function(){
+                if(this.msg.payload != undefined){
+                    console.log('got message :',this.msg)
+                    if (this.msg.payload === "ON") {
+                        this.ligar();
+                    } else if (this.msg.payload === "OFF") {
+                        this.desligar();                        
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .button {
+        display: flex; 
+        flex-direction: column; 
+        margin: auto; 
+        height: 100%; 
+        width: 100%; 
+        background-color: #4F4F4F; 
+        color: #000000; 
+        border: 1px solid #000000; 
+        ont-size: 14px; 
+        border-radius: 18px;"
+    }
+    .title {
+        font-size: 14px;
+    }
+    .icon {
+        font-size: 40px;
+    }
+</style>

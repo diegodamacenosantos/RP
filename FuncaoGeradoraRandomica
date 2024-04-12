@@ -1,0 +1,20 @@
+1 - ##########################################################
+
+node.send([{ payload: Math.round(Math.random() * 100) }])
+
+2 - ##########################################################
+
+msg.payload = Math.round(Math.random()*20);
+
+if (msg.payload == 20){
+    return [msg, null, null, null, null, null];}
+if (msg.payload == 16){
+    return [null, msg, null, null, null, null];}
+if (msg.payload == 12){
+    return [null, null, msg, null, null, null];}
+if (msg.payload == 8){
+    return [null, null, null, msg, null, null];}
+if (msg.payload == 4){
+    return [null, null, null, null, msg, null];}
+if (msg.payload == 0){
+    return [null, null, null, null, null, msg];}

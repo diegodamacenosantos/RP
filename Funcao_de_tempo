@@ -1,0 +1,7 @@
+if (msg.payload_atual == msg.payload_anterior)
+    msg.payload = "00"
+    
+if (msg.payload_atual > msg.payload_anterior)
+    msg.payload = msg.payload_atual - msg.payload_anterior
+
+return msg;

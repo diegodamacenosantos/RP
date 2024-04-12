@@ -1,0 +1,292 @@
+<style>
+    .total {
+        display: flex;
+        justify-content: center;
+        aling-intens: center;
+        flex-direction: column;
+        margin: auto;        
+        background-color: #00000060 !important;
+        border-radius: 20px !important;
+        height: 350px;
+        width: 275px;
+    }
+</style>
+
+<style>      
+    .contaner-inicio-voltar {        
+        display: flex;        
+        justify-content: center;
+        aling-intens: center;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: auto;
+        background-color: #00000060 !important;
+        border-radius: 20px !important;
+        height: 50px;
+        width: 250px;
+    }     
+    .inicio {
+        display: flex;
+        justify-content: center;         
+    }    
+    .botao-inicio {
+        background-color: transparent !important;        
+    }
+    .icone-inicio {
+        font-size: 40px;
+        color: black;
+    }
+    .voltar {
+        display: flex;
+        justify-content: center;
+    }
+    .botao-voltar {
+        background-color: transparent !important;
+    }
+    .icone-voltar {
+        font-size: 40px;
+        color: black;
+    }
+</style>
+
+<style>
+    .contaner-mais-menos {       
+        display: flex;
+        justify-content: center;
+        aling-intens: center;
+        flex-direction: row;
+        justify-content: space-around;
+        margin: auto;
+        background-color: #00000060 !important;
+        border-radius: 20px !important;
+        height: 50px;
+        width: 250px;
+    }    
+    .icone-mais {
+        font-size: 40px;
+        color: black;
+    }
+    .botao-mais {
+        background-color: transparent !important;
+    }
+    .mais {
+        display: flex;
+        justify-content: center;
+    }
+    .icone-menos {
+        font-size: 40px;
+        color: black;
+    }
+    .botao-menos {
+        background-color: transparent !important;
+    }
+    .menos {
+        display: flex;
+        justify-content: center;
+    }  
+</style>
+
+<style>  
+    .contaner-direcional {
+        display: flex;
+        justify-content: center;
+        aling-intens: center;
+        flex-direction: column;
+        margin: auto;
+        background-color: #00000040 !important;
+        border-radius: 20px !important;
+        height: 350px;
+        width: 275px;
+    }
+    .direcional-horizontal {
+        display: flex;
+        justify-content: center;        
+    } 
+    .para-cima {
+        display: flex;
+        flex-direction: column;
+    }
+    .botao-para-cima {        
+        background-color: transparent !important;
+    }
+    .icone-para-cima {
+        font-size: 35px;
+        color: black;
+    } 
+    .botao-para-esquerda {        
+        background-color: transparent !important;
+    }
+    .icone-para-esquerda {        
+        font-size: 35px;
+        color: black;
+    }    
+    .botao-selecao {        
+        background-color: transparent !important;
+    }
+    .icone-selecao {
+        font-size: 35px;
+        color: black;
+    }
+    .botao-para-direita {        
+        background-color: transparent !important;
+    }
+    .icone-para-direita {
+        font-size: 35px;
+        color: black;
+    }
+    .para-baixo {
+        display: flex;
+        flex-direction: column;        
+    }    
+    .botao-para-baixo {        
+        background-color: transparent !important;
+    }
+    .icone-para-baixo {
+        font-size: 35px;
+        color: black;
+    }
+</style>
+
+<div class="total">
+    <br>
+    <div class="contaner-inicio-voltar">       
+
+        <div class="inicio">
+                <md-button class="botao-inicio">
+                    <i class="icone-inicio material-icons">home</i>
+                </md-button>
+        </div>
+
+        <div class="voltar">
+                <md-button class="botao-voltar">
+                    <i class="icone-voltar material-icons">logout</i>
+                </md-button>
+        </div>        
+
+    </div>
+    <br>
+    <div class="contaner-mais-menos">               
+            
+        <div class="menos">
+                <md-button class="botao-menos">
+                    <i class="icone-menos material-icons">volume_mute</i>
+                </md-button>
+        </div>
+
+        <div class="mais">
+                <md-button class="botao-mais">
+                    <i class="icone-mais material-icons">volume_up</i>
+                </md-button>
+        </div>        
+
+    </div>
+    <br>   
+    <div class="contaner-direcional">
+
+        <div class="para-cima">       
+            <md-button class="botao-para-cima">
+                <i class="icone-para-cima material-icons">arrow_upward</i>
+            </md-button>
+        </div>     
+        <br>
+        <div class="direcional-horizontal">
+
+            <div class="para-esquerda">
+                <md-button class="botao-para-esquerda">
+                    <i class="icone-para-esquerda material-icons">arrow_back</i>
+                </md-button>
+            </div> 
+            &nbsp; &nbsp;
+            <div class="selecao">
+                <md-button class="botao-selecao">
+                    <i class="icone-selecao material-icons">radio_button_checked</i>
+                </md-button>
+            </div> 
+            &nbsp; &nbsp;
+            <div class="para-direita">
+                <md-button class="botao-para-direita">
+                    <i class="icone-para-direita material-icons">arrow_forward</i>
+                </md-button>
+            </div> 
+
+        </div>    
+        <br>
+        <div class="para-baixo">
+            <md-button class="botao-para-baixo">
+                <i class="icone-para-baixo material-icons">arrow_downward</i>
+            </md-button>
+        </div>   
+    </div> 
+</div>
+
+<script>
+    (function($scope) {
+        $('.inicio').on('click', function() {        
+            $scope.send({"payload": "inicio"});
+        });    
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.mais').on('click', function() {        
+            $scope.send({"payload": "mais"});
+        });    
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.menos').on('click', function() {         
+            $scope.send({"payload": "menos"});
+        });    
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.voltar').on('click', function() {         
+            $scope.send({"payload": "voltar"});
+        });    
+    })(scope);
+</script>
+       
+<script>
+    (function($scope) {
+        $('.paracima').on('click', function() {        
+            $scope.send({"payload": "cima"});
+        });    
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.para-esquerda').on('click', function() {       
+            $scope.send({"payload": "esquerda"});
+        }); 
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.para-direita').on('click', function() {        
+            $scope.send({"payload": "direita"});
+        });    
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.para-baixo').on('click', function() {        
+            $scope.send({"payload": "baixo"});
+        });    
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.selecao').on('click', function() {        
+            $scope.send({"payload": "selecionar"});
+        });    
+    })(scope);
+</script>

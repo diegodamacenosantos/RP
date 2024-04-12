@@ -1,0 +1,92 @@
+<style>
+    .total@ {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        border: 1px solid #000000;
+        border-radius: 20px;
+        height: 75px;
+        width: 75px;        
+    }   
+
+    .titulo@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 8px;
+    }
+
+    .valor@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 30px;        
+        margin-top: 0;
+        margin-bottom: 0;
+        text-shadow: 0px 0px 0px;
+    }  
+    
+    .barra@ {
+        -webkit-appearance: none;
+        appearance: none;
+        display: flex;
+        margin: auto;
+        width: 45px;
+        height: 3px;
+        border-radius: 25px;
+        background-color: #ffffff;
+        border: 1px solid #343839;
+    }
+
+    .barra@::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: #BD960B;
+        border: 1px solid #000000;
+        cursor: pointer;
+    }
+</style>
+
+<div class="total@">
+    <div class="titulo@">Ar Condicionado</div>
+    <div class="valor@">OFF</div>
+    <input class="barra@" type="range" min="17" max="35" value="18"/>
+</div>
+
+<script>
+    (function(scope) {           
+
+        $('.barra@').on('change', function() {          
+            if ($('.barra@').val() > 17) {                
+                scope.send({"payload": $('.barra@').val()});
+            } else {
+                scope.send({"payload": "OFF"});
+            }
+        });      
+
+        $('.barra@').on('input', function() { 
+            if ($('.barra@').val() > 17) {
+                if ($('.barra@').val() > 25) {
+                    document.querySelector('.valor@').style.textShadow = "0px 0px 10px #BD960B";
+                } else {
+                    document.querySelector('.valor@').style.textShadow = "0px 0px 10px #293AFA";
+                }
+                if ($('.barra@').val() > 34) {
+                    $('.valor@').css("font-size", "25px");
+                    $('.valor@').text("MAX");
+                } else {
+                    $('.valor@').css("font-size", "30px");
+                    $('.valor@').text($('.barra@').val() + "°");
+                }                
+            } else {
+                $('.valor@').css("font-size", "30px");
+                $('.valor@').text("OFF");
+                document.querySelector('.valor@').style.textShadow = "0px 0px 0px";
+            }
+        });       
+        
+    })(scope);
+</script>

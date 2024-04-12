@@ -1,0 +1,44 @@
+<style>
+    .tit100 {
+        color: black;
+        text-align: center;
+        font-size: 18px;
+    }
+    .sel100 {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        height: 7px;
+        border-radius: 25px;
+        background-color: #d9d9db;
+        border: 1px solid #343839;        
+    }   
+    
+    .sel100::-webkit-slider-thumb {        
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #343839;
+        cursor: pointer;
+    }    
+</style>
+
+<div class="tit100">
+    Teste {{msg.payload}}
+</div>
+
+<div class="bard100">
+    <input class="sel100" type="range" min="1" max="100" value="1">
+</div>
+
+<script>
+    (function($scope) {
+        $('.sel100').on('click', function() {          
+            const bloco = document.getElementsByClassName("sel100");
+            var objeto = bloco[0].value;
+            $scope.send({"payload": objeto });
+        });    
+    })(scope);
+</script>

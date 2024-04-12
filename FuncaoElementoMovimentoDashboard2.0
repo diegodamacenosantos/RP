@@ -1,0 +1,130 @@
+##################### função
+
+var entrada = msg.payload.occupancy;
+var memoria = global.get("movimento");
+var bat = msg.payload.battery;
+var valor;
+var obj;
+
+if (entrada == "on" || entrada == "ON" || entrada == true || entrada == 1) {
+    obj = "ON"
+} else if (entrada == "off" || entrada == "OFF" || entrada == false || entrada == 0) {
+    obj = "OFF"
+}
+
+function tick() {
+    valor--;
+    if (valor >= 0) {
+        if (context.get("obj") !== "parado") {
+            node.send([{ payload: { decaimento: valor, bateria: bat } }, null, null])
+            setTimeout(tick, 1000);
+        };
+    } else {
+        node.send([null, null, { payload: { status: "OFF", bateria: bat } }])
+        context.set("obj", "parado");
+    };
+};
+
+if (obj !== memoria) {
+    global.set("movimento", obj);
+    if (obj == "ON") {
+        node.send([null, { payload: { status: "ON", bateria: bat } }, null])
+        context.set("obj", "parado");
+    } else if (obj == "OFF") {
+        if (context.get("obj") !== "rodando") {
+            context.set("obj", "rodando");
+            valor = 70;
+            tick();
+        };
+    };
+};
+
+
+################## elemento do dashboard
+
+<template>
+    <div class="card_movimento">
+        <div class="title_movimento">{{title}}</div>
+        <v-icon class="icon_movimento" ref="icon">{{icon}}</v-icon>
+        <div class="battery_movimento">{{battery}}</div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                value: "OFF",
+                icon: "mdi-human-male",
+                battery: "--",
+                title: "Sala"
+            };
+        },
+        methods: {
+            alternar: function () {
+                if (this.value === 'ON') {
+                    this.desligar();
+                } else if (this.value === 'OFF') {
+                    this.ligar();
+                } else {
+                    this.desligar();
+                }
+            },
+            ligar: function () {
+                this.icon = "mdi-run";
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+                this.title = "Sala";               
+            },
+            desligar: function () {
+                this.icon = "mdi-human-male";
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px'; 
+                this.title = "Sala";               
+            }
+        },
+        watch: {
+            msg: function(){
+                if(this.msg.payload != undefined){
+                    console.log('got message :',this.msg)
+                    this.battery = this.msg.payload.bateria + "%";
+                    this.title = this.msg.payload.decaimento;
+                    if (this.msg.payload.status === "ON") {
+                        this.ligar();                        
+                    } else if (this.msg.payload.status === "OFF") {
+                        this.desligar();                                        
+                    }
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .card_movimento {
+        display: flex;
+        flex-direction: column;        
+        margin: auto; 
+        height: 75px !important; 
+        width: 75px !important; 
+        background-color: #4F4F4F !important;         
+        border: 1px solid #000000; 
+        font-size: 14px; 
+        border-radius: 18px; 
+    }
+    .title_movimento {
+        display: flex;      
+        margin: auto; 
+        font-size: 75%;
+    }
+    .icon_movimento {
+        display: flex;      
+        margin: auto;
+        font-size: 37px;
+    }
+    .battery_movimento {
+        display: flex;
+        margin: auto;
+        font-size: 75%;
+    }
+</style>

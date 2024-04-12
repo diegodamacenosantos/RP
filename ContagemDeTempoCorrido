@@ -1,0 +1,50 @@
+================================================ 01
+
+const date = new Date();
+
+const houras = date.getHours();
+const minutos = date.getMinutes();
+const segundos = date.getSeconds();
+const formattedTime = `${houras.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+global.set("hora_inicial", formattedTime )
+
+node.send([{ payload: formattedTime }])
+
+================================================ 02
+
+const date = new Date();
+
+const horas = date.getHours();
+const minutos = date.getMinutes();
+const segundos = date.getSeconds();
+const formattedTime = `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+global.set("hora_final", formattedTime);
+
+const horaInicial = global.get("hora_inicial");
+const horaFinal = global.get("hora_final");
+
+const [horaInicialHora, horaInicialMinuto, horaInicialSegundo] = horaInicial.split(":").map(Number);
+const [horaFinalHora, horaFinalMinuto, horaFinalSegundo] = horaFinal.split(":").map(Number);
+
+const segundosTotaisInicial = (horaInicialHora * 3600) + (horaInicialMinuto * 60) + horaInicialSegundo;
+const segundosTotaisFinal = (horaFinalHora * 3600) + (horaFinalMinuto * 60) + horaFinalSegundo;
+let tempoDecorridoSegundos = segundosTotaisFinal - segundosTotaisInicial;
+
+if (tempoDecorridoSegundos < 0) {
+    tempoDecorridoSegundos += 86400; 
+}
+
+const diasDecorridos = Math.floor(tempoDecorridoSegundos / 86400);
+tempoDecorridoSegundos %= 86400; 
+
+const horasDecorridas = Math.floor(tempoDecorridoSegundos / 3600);
+tempoDecorridoSegundos %= 3600; 
+
+const minutosDecorridos = Math.floor(tempoDecorridoSegundos / 60);
+const segundosDecorridos = tempoDecorridoSegundos % 60;
+
+const formattedElapsedTime = `${diasDecorridos}d ${horasDecorridas.toString().padStart(2, '0')}:${minutosDecorridos.toString().padStart(2, '0')}:${segundosDecorridos.toString().padStart(2, '0')}`;
+
+global.set("tempo_decorrido", formattedElapsedTime);
+node.send({ payload: formattedElapsedTime });

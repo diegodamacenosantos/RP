@@ -1,0 +1,23 @@
+apt-get install samba -y
+
+nano /etc/samba/smb.conf
+
+[global]
+        workgroup = WORKGROUP
+        server string = HUB
+        server role = standalone server
+        passdb backend = smbpasswd
+        map to guest = bad user
+[Node-RED]
+        path = /root/.node-red
+        guest ok = yes
+        read only = no
+        browseable = yes
+        create mode = 0777
+        directory mode = 0777
+
+chmod -R 777 /root/
+
+chmod -R 777 /root/.node-red
+
+systemctl enable --now smbd nmbd

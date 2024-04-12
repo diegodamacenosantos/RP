@@ -1,0 +1,7 @@
+var X = msg.payload;
+
+Y = X.replace(/[^0-9]/g,'');
+
+msg.payload = Y
+
+return msg;

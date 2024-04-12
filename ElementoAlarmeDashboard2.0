@@ -1,0 +1,125 @@
+<template>
+    <v-btn class="button_alarme" stacked @click="opendialog">
+        <div class="title_alarme">{{ titulo_presenca }}</div>
+        <v-icon class="icon_alarme" ref="icon_alarme">{{ icon }}</v-icon>
+        <div class="title_alarme">{{ titulo_status }}</div>
+    </v-btn>
+    <v-dialog class="dialog_alarme" v-model="dialog" @click:outside="closedialog_b">
+        <v-text-field class="text_dialog_alarme" type="password" label="Senha" variant="outlined" v-model="senha" @keyup.enter="closedialog_a"></v-text-field>
+        <v-btn class="btn_dialog_alarme" @click="closedialog_a">Autorizar</v-btn>
+    </v-dialog>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                value: '',
+                senha: '',
+                icon:'mdi-home-alert',
+                titulo_presenca: '--',
+                titulo_status: '--',
+                dialog: false                
+            };
+        },
+        mounted() {            
+            this.$socket.on('widget-load:' + this.id, (msg) => {
+                this.value = msg.payload;
+                if (this.value === "ativo_em_casa") {
+                    this.ativo_em_casa();
+                } else if (this.value === "ativo_fora_de_casa") {
+                    this.ativo_fora_de_casa();
+                } else if (this.value === "desativado") {
+                    this.desativado();
+                }
+            });
+        },
+        methods: {
+            opendialog() {
+                this.dialog = true;
+            },
+            closedialog_a() {
+                if (this.senha === '1234') {
+                    this.senha = '';                    
+                    this.dialog = false;
+                    this.ativo_em_casa();
+                    this.send({ payload: 'ativo_em_casa' });
+                } else if (this.senha === '12345') {
+                    this.senha = '';
+                    this.dialog = false;
+                    this.ativo_fora_de_casa();
+                    this.send({ payload: 'ativo_fora_de_casa' });
+                } else if (this.senha === '0') {
+                    this.senha = '';
+                    this.dialog = false;
+                    this.desativado();
+                    this.send({ payload: 'desativado' });
+                } else {
+                    this.senha = '';
+                }
+            },
+            closedialog_b() {                
+                this.senha = '';
+                this.dialog = false;
+            },
+            ativo_em_casa() {                
+                this.$refs.icon_alarme.$el.style.color = '#F0881D';                 
+                this.icon = "mdi-home-lock";
+                this.titulo_presenca = "Presente";
+                this.titulo_status = "Ativo";
+            },
+            ativo_fora_de_casa() {                
+                this.$refs.icon_alarme.$el.style.color = '#F0491D';                
+                this.icon = "mdi-home-lock";
+                this.titulo_presenca = "Ausente";
+                this.titulo_status = "Ativo";
+            },
+            desativado() {                
+                this.$refs.icon_alarme.$el.style.color = '#1DF088';                
+                this.icon = "mdi-home-lock-open";
+                this.titulo_presenca = "Presente";
+                this.titulo_status = "Desativado";
+            }
+        }
+    }
+</script>
+
+<style>
+    .dialog_alarme {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        background-color: #A9A9A9;
+        border: 1px solid #000000;
+        border-radius: 18px;
+        height: 150px;
+        width: 300px;
+    }    
+    .btn_dialog_alarme {
+        display: flex;
+        margin: auto;
+        background-color: #A9A9A9;
+        border: 1px solid #000000;
+        color: #000000;
+        border-radius: 08px;
+        width: 40%;
+    }
+    .button_alarme {
+        display: flex; 
+        flex-direction: column; 
+        margin: auto; 
+        height: 70px !important; 
+        width: 70px !important; 
+        background-color: #4F4F4F; 
+        color: #000000; 
+        border: 1px solid #000000; 
+        font-size: 14px; 
+        border-radius: 18px;
+    }
+    .title_alarme {
+        font-size: 60%;
+    }
+    .icon_alarme {
+        font-size: 300%;
+    }
+</style>

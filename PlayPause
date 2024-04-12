@@ -1,0 +1,53 @@
+<style>    
+    .horizonte@ {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+    .botaoplay@ {
+        background-color: transparent !important;
+    }
+    .iconeplay@ {
+        font-size: 40px;
+        color: black;
+    }
+    .botaostop@ {
+        background-color: transparent !important;
+    }
+    .iconestop@ {
+        font-size: 40px;
+        color: black;
+    }
+</style>
+
+<div class="horizonte@">
+
+    <div class="play@">
+        <md-button class="botaoplay@">
+            <i class="iconeplay@ material-icons">play_arrow</i>
+        </md-button>
+    </div>    
+
+    <div class="stop@">
+        <md-button class="botaostop@">
+            <i class="iconestop@ material-icons">stop</i>
+        </md-button>
+    </div>
+
+</div>
+
+<script>
+    (function($scope) {
+        $('.play@').on('click', function() {        
+            $scope.send({"payload": "PLAY"});
+        });    
+    })(scope);
+</script>
+
+<script>
+    (function($scope) {
+        $('.stop@').on('click', function() {         
+            $scope.send({"payload": "STOP"});
+        });    
+    })(scope);
+</script>

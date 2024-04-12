@@ -1,0 +1,102 @@
+1 ----------------------------- primeira funcao antes do botao
+
+var obj = msg.payload.state;
+var globalContext = context.global;
+var memoria = globalContext.get("fita");
+
+if (obj == "on" || obj == "ON" || obj == true) { 
+    msg.payload = "ON"
+} else {
+    msg.payload = "OFF"
+}
+
+if (memoria == msg.payload) {
+    return null;
+} else {
+    globalContext.set("fita", msg.payload);
+    return msg;
+}
+
+2 ------------------------------ botao
+
+<style>    
+    .botaofita{  
+        background-color: #00000060 !important;
+        border-radius: 20px !important;        
+        text-align: center;  
+        height: 75px;
+        width: 75px;
+    }
+    .iconefita{          
+        font-size: 55px;
+    }
+</style>
+
+<md-button class="botaofita" ng-click="toggle()">    
+    <i class="iconefita material-icons"></i>
+</md-button>
+
+<script>
+    (function($scope) {
+
+    var bloco = ".botaofita"; 
+    var objeto = $(bloco);
+    
+    scope.toggle = function(){        
+
+        var objeto = $(bloco);
+        var estado = objeto.data("state");
+
+        if(estado == "ON"){
+            OFF(objeto);
+            $scope.send({"payload": "OFF"});            
+        } else {
+            ON(objeto);
+            $scope.send({"payload": "ON"});
+        }        
+    } 
+    
+    scope.$watch('msg', function(msg) {
+
+        var objeto = $(bloco);
+        
+        if (msg) {
+            if(msg.payload == "ON"){
+                ON(objeto);
+            } else if(msg.payload == "OFF"){
+                OFF(objeto);
+            }
+          
+        }        
+    }); 
+    
+    function OFF(objeto) {        
+        objeto.data("state","OFF");
+        const cor = document.getElementsByClassName("botaofita");
+        cor[0].style.color = "#000000";
+        objeto.find("i").html('bathtub');
+    }
+    
+    function ON(objeto) {        
+        objeto.data("state","ON");
+        const cor = document.getElementsByClassName("botaofita");
+        cor[0].style.color = "#2DB8EB";
+        objeto.find("i").html('bathtub');
+    }
+
+})(scope)
+</script>
+
+3 ------------------------------------- funcao depois do botao
+
+var entrada = msg.payload;
+var memoria = global.get("fita");
+
+if (entrada && memoria == "ON") {
+    msg.payload = ({"state":"OFF"})
+    return msg;
+} else {
+    msg.payload = ({ "state": "ON" })
+    return msg;
+}
+

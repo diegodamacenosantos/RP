@@ -1,0 +1,118 @@
+<style>
+    .total01 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+        background-color: #ffffff40 !important;
+        border: 1px solid #ffffff40;
+        border-radius: 20px !important;
+        height: 75px;
+    }
+
+    .botao01 {
+        display: flex;
+        margin: auto;
+        flex-direction: column;
+        align-items: center;
+        background-color: transparent !important;
+        border-radius: 20px !important;
+        height: 50px;
+        width: 75px;
+    }
+
+    .titulo01 {
+        color: #000000;
+        font-size: 10px;
+    }
+
+    .icone01 {
+        font-size: 35px;
+        text-shadow: 0px 0px 10px #BD960B;
+    }
+
+    .selecaohora01 {
+        display: flex;
+        margin: auto;
+        border-radius: 20px !important;
+        background-color: #ffffff40 !important;
+        font-size: 09px;
+        height: 15px;
+        width: 50px;
+    }
+</style>
+
+<div class="total01">
+    <button class="botao01">
+        <div class="titulo01">Titulo</div>
+        <i class="icone01 material-icons" style="text-shadow: 0px 0px 0px; color: 018C8C8C;">lightbulb</i>
+    </button>
+    <input type="time" class="selecaohora01" />
+</div>
+
+<script>
+    (function (scope) {
+        function tick() {
+            var status = $('.botao01').data("state");
+            var hora = $('.selecaohora01').val();
+            var data = new Date();
+            //data.setHours(data.getHours() + 3);
+            var horas = data.getHours();
+            var minutos = data.getMinutes();
+            var horaminuto = horas.toString().padStart(2, '0') + ':' + minutos.toString().padStart(2, '0');
+
+            if (hora === horaminuto) {
+                if (status == "OFF") {
+                    ON();
+                } else if (status == "ON") {
+                    OFF();
+                }
+            } else {
+                setTimeout(tick, 5000);
+                document.querySelector('.icone01').innerHTML = "update";
+                document.querySelector('.icone01').style.textShadow = "0px 0px 10px #D2691E";
+                document.querySelector('.icone01').style.color = "#D2691E";
+            }
+        }
+
+        $('.selecaohora01').on('change', function () {
+            tick();
+        });
+
+        $('.botao01').on('click', function () {
+            if ($('.botao01').data("state") === "ON") {
+                OFF();
+            } else {
+                ON();
+            }
+        });
+
+        scope.$watch('msg', function (msg) {
+            if (msg.payload === "ON") {
+                ON();
+            } else if (msg.payload === "OFF") {
+                OFF();
+            }
+        });
+
+        function OFF() {
+            if ($('.botao01').data("state") === "ON") {
+                scope.send({ "payload": "OFF" });
+            }
+            $(".botao01").data("state", "OFF");
+            document.querySelector('.icone01').style.textShadow = "0px 0px 0px";
+            document.querySelector('.icone01').style.color = "#8C8C8C";
+            document.querySelector('.icone01').innerHTML = "lightbulb";
+        }
+
+        function ON() {
+            if ($('.botao01').data("state") === "OFF") {
+                scope.send({ "payload": "ON" });
+            }
+            $(".botao01").data("state", "ON");
+            document.querySelector('.icone01').style.textShadow = "0px 0px 10px #BD960B";
+            document.querySelector('.icone01').style.color = "#BD960B";
+            document.querySelector('.icone01').innerHTML = "lightbulb";
+        }
+    })(scope);
+</script>

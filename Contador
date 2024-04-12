@@ -1,0 +1,16 @@
+global.set("contador", msg.payload)
+var obj = global.get("contador");
+
+if (obj == null) {
+    global.set("contador", 1);
+    node.send({ payload: 1 });
+} else {
+    if (msg.payload === "reset") {
+        global.set("contador", 0);
+        node.send({ payload: 0 });
+    } else {
+        obj++;
+        global.set("contador", obj);
+        node.send({ payload: obj });
+    }
+}

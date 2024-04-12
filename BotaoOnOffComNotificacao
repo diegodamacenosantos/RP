@@ -1,0 +1,100 @@
+######################################## TEMPLATE DE BOTÃO COM NOTIFICAÇÃO ######################################
+
+<style>
+    .total60 {
+        display: flex;
+        margin: auto;
+    }
+
+    .totalpopup60 {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .fechar60 {
+        font-size: 15px;
+        background-color: #d1d1d1 !important;
+        color: #000000 !important;
+        border-radius: 15px;
+        border: 1px solid #8C8C8C;
+        width: 65px;
+    }
+
+    .botao60 {
+        background-color: #ffffff !important;
+        border: 1px solid #000000;
+        border-radius: 20px !important;
+        height: 75px;
+        width: 75px;
+    }
+
+    .titulo60 {
+        color: #000000;
+        font-size: 12px;
+    }
+
+    .icone60 {
+        text-shadow: 0px 0px 10px #BD960B;
+        font-size: 55px;
+    }
+</style>
+
+<dialog class="popup60">
+    <div class="totalpopup60"> 
+        <div>Mensagem</div>
+        <br>
+        <button class="fechar60">Fechar</button>
+    </div>
+</dialog>
+
+<div class="total60">
+    <button class="botao60">
+        <div class="titulo60">NOME</div>
+        <i class="icone60 material-icons"></i>
+    </button>
+</div>
+
+<script>
+    (function(scope) {        
+        
+        $('.botao60').on('click', function() {
+            if ($('.botao60').data("state") === "ON") {
+                OFF()
+                scope.send({"payload": "OFF"});
+            } else {
+                ON()
+                scope.send({"payload": "ON"});
+                document.querySelector('.popup60').showModal();
+            }        
+        });
+        
+        scope.$watch('msg', function(msg) {
+            if(msg && msg.payload === "ON"){
+                ON()
+            } else if(msg && msg.payload === "OFF"){
+                OFF()
+            }         
+        }); 
+
+        $('.fechar60').on('click', function() {
+            document.querySelector('.popup60').close();
+        });
+        
+        function OFF() {        
+            $(".botao60").data("state", "OFF");            
+            document.querySelector('.icone60').style.textShadow = "0px 0px 0px";
+            document.querySelector('.icone60').style.color = "#8C8C8C";
+            document.querySelector('.icone60').innerHTML = "power_settings_new";
+        }
+        
+        function ON() {        
+            $(".botao60").data("state", "ON");
+            document.querySelector('.icone60').style.textShadow = "0px 0px 10px #BD960B";
+            document.querySelector('.icone60').style.color = "#BD960B";
+            document.querySelector('.icone60').innerHTML = "power_settings_new";            
+        }
+        
+    })(scope);
+</script>
+
+###########################################################################################################################

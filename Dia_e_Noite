@@ -1,0 +1,32 @@
+FUNÇÃO QUE ESCREVE
+
+var obj = msg.payload;
+
+if (obj == 1) {
+    msg.payload = "Dia"
+} else if (obj == 0) {
+    msg.payload = "Noite"
+}
+
+var memoria = global.get("dia_e_noite");
+
+if (memoria == msg.payload) {
+    return null;
+} else {
+    global.set("dia_e_noite", msg.payload);
+    if (msg.payload == "Dia") {
+        return [msg, null]
+    } else {
+        return [null, msg]
+    }
+}
+
+FUNÇÃO QUE LÊ
+
+msg.payload = global.get("dia_e_noite");
+
+if (msg.payload == "Dia") {
+    return [msg, null]
+} else {
+    return [null, msg]
+}

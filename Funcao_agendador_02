@@ -1,0 +1,6 @@
+if (msg.payload_atual == msg.payload_inicio)
+    msg.payload_saida = "on"
+if (msg.payload_atual == msg.payload_fim)
+    msg.payload_saida = "off"
+    
+return msg;

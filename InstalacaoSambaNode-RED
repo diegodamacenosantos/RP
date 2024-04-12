@@ -1,0 +1,35 @@
+1 - sudo apt update -y && apt upgrade -y && apt autoremove -y
+
+2 - sudo apt-get install samba
+
+3 - cd /etc/samba
+
+4 - sudo nano smb.conf
+
+#substitua tudo existente no arquivo para o conteudo a baixo
+
+[global]
+        workgroup = WORKGROUP
+        server string = HUB
+        server role = standalone server
+        passdb backend = smbpasswd
+        map to guest = bad user
+[Arquivos]
+        path = /
+        guest ok = yes
+        read only = no
+        browseable = yes
+        create mode = 0777
+        directory mode = 0777
+
+5 - sudo smbpasswd -a root 
+
+	#coloque a sua senha
+
+6 - sudo systemctl start smbd nmbd
+
+7 - sudo systemctl enable smbd nmbd
+
+	sudo systemctl restart smbd nmbd
+
+8 - reboot 

@@ -1,0 +1,12 @@
+var milissegundos = msg.payload;
+var segundos = Math.floor(milissegundos / 1000);
+var horas = Math.floor(segundos / 3600);
+segundos %= 3600;
+var minutos = Math.floor(segundos / 60);
+segundos %= 60;
+var tempoFormatado = horas + "h " + minutos + "m " + segundos + "s";
+
+node.send([{ payload: horas }, { payload: minutos }, { payload: segundos }, { payload: tempoFormatado }, {payload: {horas: horas, minutos: minutos, segundos: segundos, bloco: tempoFormatado}}])
+
+
+

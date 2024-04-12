@@ -1,0 +1,72 @@
+<template>
+    <div class="card_login" :class="{ 'card_login_active': isCardActive }">
+        <div class="title_login">login</div>
+        <v-otp-input class="input_login" length="6" v-model="senha" @keyup.enter="sendOTP"></v-otp-input>
+        <v-btn class="button_login" :class="{ 'card_login_active': isCardActive }" @click="sendOTP">Autorizar</v-btn>
+    </div>
+</template>
+
+<script>
+    export default {
+    data() {
+        return {              
+            senha:'',
+            isCardActive: false
+        };
+    },
+    methods: {            
+        sendOTP() {
+            this.isCardActive = true;
+
+            setTimeout(() => {
+                this.send({ payload: this.senha });
+                this.senha = '';
+                this.isCardActive = false;
+            }, 1000);
+        },
+    }        
+}
+</script>
+
+<style>
+    .card_login {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        height: 150px;
+        width: 250px;
+        background-color: #4F4F4F;
+        border: 1px solid #000000;
+        border-radius: 18px;
+    }
+
+    .card_login_active {
+        background-color: #FF8C00;
+    }
+
+    .input_login {
+        display: flex;
+        margin: auto;
+        font-size: 14px;
+        height: 5%;
+        width: 90%;
+    }
+
+    .button_login {
+        display: flex;
+        margin: auto;
+        height: 5% !important;
+        width: 50% !important;
+        background-color: #4F4F4F !important;
+        border: 1px solid #000000;
+        border-radius: 10px;
+        color: #000000;
+    }
+
+    .title_login {
+        display: flex;
+        margin: auto;
+        font-size: 14px;
+        color: #000000;
+    }
+</style>

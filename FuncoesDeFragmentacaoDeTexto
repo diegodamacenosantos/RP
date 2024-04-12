@@ -1,0 +1,51 @@
+----------------------------------------------------------
+
+FUNÇÃO POR CONTAGEM DE PALAVRAS E TEMPO
+
+var texto = msg.payload.split(' ');
+var intervalo = 9; 
+var blocodepalavras = 20;
+var corrente = 0;
+
+function blocodesaida() {
+    var saidatexto = corrente + blocodepalavras;
+    var block = texto.slice(corrente, saidatexto).join(' ');
+
+    msg.payload = block;
+    node.send(msg);
+
+    corrente += blocodepalavras;
+    if (corrente < texto.length) {
+        setTimeout(blocodesaida, intervalo * 1000);
+    }
+}
+
+blocodesaida();
+return null;
+
+-----------------------------------------------------------
+
+FUNÇÃO POR CONTAGEM DE TEMPO ATÉ PONTO FINAL
+
+var texto = msg.payload.split('.');
+var intervalo = 14;
+var blocodepalavras = texto.length;
+var corrente = 0;
+
+function blocodesaida() {
+    var saidatexto = corrente + 1;
+    var block = texto.slice(corrente, saidatexto).join('.');
+
+    msg.payload = block;
+    node.send(msg);
+
+    corrente += 1;
+    if (corrente < texto.length) {
+        setTimeout(blocodesaida, intervalo * 1000);
+    }
+}
+
+blocodesaida();
+return null;
+
+-------------------------------------------------------------

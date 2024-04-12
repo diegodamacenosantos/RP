@@ -1,0 +1,21 @@
+var latitude = msg.payload[0].latitude;
+var longitude = msg.payload[0].longitude;
+var bateria = msg.payload[0].attributes.batteryLevel;
+
+msg.payload = {
+    "draggable": true,
+    "name": "Diego",
+    "lat": latitude,
+    "lon": longitude,
+    "radius": 10,
+    "iconColor": '#000000',
+    "command": {       
+        "zoom": 17,
+        "lat": latitude,
+        "lon": longitude,
+    } 
+};
+
+msg.bateria = bateria;
+
+return msg;

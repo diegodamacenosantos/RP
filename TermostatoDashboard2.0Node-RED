@@ -1,0 +1,110 @@
+<template>
+    <div class="card_ic">
+        <div class="title_temp_umi_ic">T/{{ temp }}°U/{{ umR }}%</div>
+        <div class="sample_ic" ref="ic">{{ ic }}°</div>
+        <div class="title_bat_ic" ref="bat">{{ bat }}%</div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {               
+            temp: 0,
+            umR: 0,
+            bat: 0,
+            hi: 0,
+            tempF: 0,
+            icparcial: 0,
+            ic: 0
+        };
+    },
+    mounted() {            
+        this.$socket.on('widget-load:' + this.id, (msg) => { 
+            this.temp = parseInt(msg.payload.temperature);
+            this.umR = parseInt(msg.payload.humidity);
+            this.bat = parseInt(msg.payload.battery);
+            this.active();
+        });
+    },
+    methods: {
+        active() {
+
+            this.tempF = (this.temp * 9 / 5) + 32;
+            this.hi = 0.5 * (this.tempF + 61.0 + ((this.tempF - 68.0) * 1.2) + (this.umR * 0.094));
+
+            if (this.hi > 79) {
+                this.hi = -42.379 + 2.04901523 * this.tempF + 10.14333127 * this.umR - 0.22475541 * this.tempF * this.umR - 0.00683783 * this.tempF * this.tempF - 0.05481717 * this.umR * this.umR + 0.00122874 * this.tempF * this.tempF * this.umR + 0.00085282 * this.tempF * this.umR * this.umR - 0.00000199 * this.tempF * this.tempF * this.umR * this.umR;
+                if ((this.umR <= 13) && ((this.tempF >= 80) && this.tempF <= 112)) {
+                    this.hi -= ((13 - this.umR) / 4) * Math.sqrt((17 - Math.abs(this.tempF - 95.)) / 17);
+                }
+                if ((this.umR > 85) && ((this.tempF >= 80) && this.tempF <= 87)) {
+                    this.hi += ((this.umR - 85) / 10) * ((87 - this.tempF) / 5);
+                }
+            }
+
+            this.icparcial = (this.hi - 32) / 1.8;
+            this.ic = this.icparcial.toFixed(0);            
+
+            this.send({ payload: {
+                temperature: this.temp,
+                humidity: this.umR,
+                ic: this.ic,
+                battery: this.bat
+            }});    
+
+            if (this.ic < 22) {
+                this.$refs.ic.style.textShadow = '0px 0px 10px #0000FF';
+            } else if (this.ic >= 22 && this.ic <= 27) {
+                this.$refs.ic.style.textShadow = '0px 0px 10px #F0881D';
+            } else if (this.ic > 27) {
+                this.$refs.ic.style.textShadow = '0px 0px 10px #F0491D';
+            }
+
+        },       
+
+    },
+    watch: {
+        msg: function(msg) {
+            if (msg.payload != undefined) {
+                this.temp = parseInt(msg.payload.temperature);
+                this.umR = parseInt(msg.payload.humidity);
+                this.bat = parseInt(msg.payload.battery);
+                this.active();
+            }
+        }
+    }
+};
+</script>
+
+<style>
+.card_ic {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    height: 70px !important;
+    width: 70px !important;
+    background-color: #4F4F4F !important;
+    border: 1px solid #000000;
+    font-size: 14px;
+    border-radius: 18px;
+}
+
+.title_temp_umi_ic {
+    display: flex;
+    margin: auto;
+    font-size: 65%;
+}
+
+.title_bat_ic {
+    display: flex;
+    margin: auto;
+    font-size: 85%;
+}
+
+.sample_ic {
+    display: flex;
+    margin: auto;
+    font-size: 170%;
+}
+</style>

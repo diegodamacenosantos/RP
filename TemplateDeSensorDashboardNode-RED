@@ -1,0 +1,40 @@
+<h id="h1" style="color: black; text-align: center; font-size: 18px;">
+    TITULO DO CARTÂO {{msg.payload}}
+</h>
+
+
+<h id="h1a" style="text-align: center"> 
+    <i style="font-size: 55px;" class="material-icons"></i>
+</h>
+
+
+<script>
+    (function($scope) {    
+    
+    scope.$watch('msg', function(msg) {         
+
+        var bloco = "#h1a";
+        var objeto = $(bloco);      
+        
+        if (msg) {
+            if(msg.payload == "ON"){
+                ON(objeto);
+            } else if(msg.payload == "OFF"){
+                OFF(objeto);
+            }        
+        }
+    }); 
+    
+    function OFF(objeto){ 
+        document.getElementById("h1a").style.color = "black";
+        objeto.find("i").html('close');
+    }
+    
+    function ON(objeto){ 
+        document.getElementById("h1a").style.color = "red";
+        objeto.find("i").html('directions_run');                
+    }
+
+})(scope)
+</script>
+

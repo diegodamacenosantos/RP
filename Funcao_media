@@ -1,0 +1,8 @@
+var a1 = msg.payload[0];
+var a2 = msg.payload[1];
+
+msg.payload = ((parseInt(a1) + parseInt(a2)) /2);
+
+return msg;
+
+

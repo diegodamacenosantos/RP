@@ -1,0 +1,94 @@
+1 - ls -l /dev/serial/by-id
+
+2 - curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+
+3 - apt-get install -y nodejs git make g++ gcc
+
+4 - mkdir /opt/zigbee2mqtt
+
+5 - chown -R ${USER}: /opt/zigbee2mqtt
+
+6 - git clone --depth 1 https://github.com/Koenkk/zigbee2mqtt.git /opt/zigbee2mqtt
+
+7 - cd /opt/zigbee2mqtt
+
+8 - npm ci
+
+9 - nano /opt/zigbee2mqtt/data/configuration.yaml 
+
+- 01 (cc2531)
+
+frontend:
+  port: 80
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost:1883 
+serial:
+  port: /dev/ttyACM0
+
+ - 02 (ZBDongle-P)
+ 
+frontend:
+  port: 80
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost:1883 
+serial:  
+  port: /dev/ttyUSB0 	
+
+- 03 (ZBDongle-E)
+
+frontend:
+  port: 80
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://localhost:1883  
+advanced:
+  transmit_power: 20
+serial:  
+  port: /dev/ttyUSB0
+  adapter: ezsp 
+
+10 - cd /opt/zigbee2mqtt
+
+11 - npm start
+
+12 - nano /lib/systemd/system/zigbee2mqtt.service
+
+[Unit]
+Description=zigbee2mqtt
+After=network.target
+[Service]
+ExecStart=/usr/bin/npm start
+WorkingDirectory=/opt/zigbee2mqtt
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+RestartSec=10s
+User=root
+[Install]
+WantedBy=multi-user.target
+
+13 - systemctl enable zigbee2mqtt.service
+
+---------------------- ATUALIZAÇÂO -----------------------
+
+0 - apt update -y && apt upgrade -y && apt autoremove -y 
+
+1 - sudo systemctl stop zigbee2mqtt
+
+2 - cd /opt/zigbee2mqtt
+
+3 - cp -R data data-backup
+
+4 - git pull
+
+5 - npm ci
+
+6 - cp -R data-backup/* data
+
+7 - rm -rf data-backup
+
+8 - sudo systemctl start zigbee2mqtt
+
+

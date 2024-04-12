@@ -1,0 +1,31 @@
+var obj = msg.payload.occupancy;
+var memoria = global.get("exemplo");
+var bat = msg.payload.battery;
+var valor;
+
+function tick() {
+    valor--;
+    if (valor >= 0) {
+        if (context.get("obj") !== "parado") {
+            node.send([{ decaimento: valor }, null, null, null]);
+            setTimeout(tick, 1000);
+        };
+    } else {
+        node.send([null, null, { payload: "OFF" }, null]);
+        context.set("obj", "parado");
+    };
+};
+
+if (obj !== memoria) {
+    global.set("exemplo", obj);
+    if (obj == "on" || obj == "ON" || obj == true || obj == 1) {
+        node.send([null, { payload: "ON" }, null, { payload: bat }]);
+        context.set("obj", "parado");
+    } else if (obj == "off" || obj == "OFF" || obj == false || obj == 0) {
+        if (context.get("obj") !== "rodando") {
+            context.set("obj", "rodando");
+            valor = 10;
+            tick();
+        };
+    };
+};

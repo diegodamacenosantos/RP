@@ -1,0 +1,65 @@
+FUNÇÂO
+
+setInterval(function () {
+
+    var data = new Date();
+    var horas = data.getHours();
+    var minuto = data.getMinutes();
+    var dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+    var dia = dias[data.getDay()];
+    var diasemana = data.getDate();
+    var meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    var mes = meses[data.getMonth()];
+
+    var horaminuto = horas.toString().padStart(2, '0') + ':' + minuto.toString().padStart(2, '0');
+    var dataextenso = dia + ' ' + diasemana + ' de ' + mes;
+
+    node.send([{ payload_data: dataextenso, payload_hora: horaminuto }])
+
+}, 40000);
+
+return msg;
+
+TEMPLATE PARA DASHBOARD 
+
+<style>
+    .total01 {
+        display: flex;
+        justify-content: center;
+        aling-intens: center;
+        flex-direction: column;
+        text-align: center;
+        margin: auto;
+        background-color: #00000060;
+        border: 1px solid #8C8C8C;
+        border-radius: 20px;
+        width: 90%;
+        min-height: 60%;
+    }
+
+    .texto-data01 {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 12px;
+    }
+
+    .texto-hora01 {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 70px;
+    }
+</style>
+
+<div class="total0">
+    <br>
+    <div class="texto-data01">
+        {{msg.payload_data}}
+    </div>
+    <div class="texto-hora01">
+        {{msg.payload_hora}}
+    </div>
+    <br>
+</div>
+

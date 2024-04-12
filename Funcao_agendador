@@ -1,0 +1,5 @@
+if (msg.payload_hora_atual == msg.payload_hora_marcada)
+    msg.payload = "on"
+else
+    msg.payload = "off"
+return msg;

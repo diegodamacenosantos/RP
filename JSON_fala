@@ -1,0 +1,5 @@
+{
+    "data": {"type": "tts"},
+    "message": "MENSAGEM QUE ALEXA FALARÁ",
+    "target": "ALEXA QUE FALARÁ A MENSAGEM"
+}

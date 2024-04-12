@@ -1,0 +1,127 @@
+################################################################################
+
+<style>   
+    .total@ {
+        display: flex;        
+        flex-direction: column;
+        text-align: center;
+        margin: auto;
+        background-color: #ffffff40 !important;
+        border-radius: 20px;        
+        width: 90%;
+        border: 1px solid #ffffff40 !important;
+    }   
+    .senha@ {
+        width: 90%;       
+        margin: auto;
+        padding: 4px 4px;
+        box-sizing: border-box;
+        background-color: #ffffff40;
+        border-radius: 20px;
+        text-align: center;
+    } 
+    .autorizar@ {
+        width: 50%;
+        margin: auto;
+        padding: 4px 4px;
+        box-sizing: border-box;
+        background-color: #ffffff60;
+        border-radius: 20px;
+        text-align: center;
+    }
+    .senha@::placeholder {
+        color: #000000;
+    }
+</style>
+
+<div class="total@">
+    <br>   
+    <input class="senha@" type="password" placeholder="Senha"/>
+    <br> 
+    <button class="autorizar@" ng-click="autorizar37()">Autorizar</button>
+    <br>
+</div>
+
+<script>
+    (function(scope) {
+        const obj = document.querySelector('.senha@');
+        const button = document.querySelector('.autorizar@');
+        
+        obj.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter') {
+                const payload = obj.value;
+                scope.send({payload});
+            }
+        });
+        
+        button.addEventListener('click', function() {
+            const payload = obj.value;
+            scope.send({payload});
+        });
+    })(scope);
+</script>
+
+################################################################################
+
+node.send([{payload:{"tab":"painel01"}}])
+
+setTimeout(function () {
+    
+    msg.payload = {
+        "tabs": {
+            "show": [
+                "painel01",
+                "painel02"
+            ]
+        }
+    };
+
+    node.send(msg); 
+}, 200);
+
+setTimeout(function () {
+    
+    msg.payload = {
+        "tabs": {
+            "hide": [
+                "painel02"         
+            ]
+        }
+    };
+
+    node.send(msg); 
+}, 400);
+
+setTimeout(function () {
+
+    msg.payload = {
+        "group": {
+            "show": [
+                "painel01_grupo01",
+                "painel02_grupo02"
+            ]
+        }
+    };
+
+    node.send(msg);
+}, 600); 
+
+setTimeout(function () {
+
+    msg.payload = {
+        "group": {
+            "hide": [
+                "painel02_grupo02"
+            ]
+        }
+    };
+
+    node.send(msg);
+}, 800); 
+
+################################################################################
+
+
+
+
+

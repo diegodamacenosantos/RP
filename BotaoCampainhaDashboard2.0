@@ -1,0 +1,30 @@
+<template>
+    <v-btn ref="botao" style="display: flex; flex-direction: column; margin: auto; height: 75px; width: 75px; background-color: #4F4F4F; color: #000000; border: 1px solid #000000; font-size: 14px; border-radius: 18px;" stacked @click="start">
+      Start
+      <v-icon ref="icon" style="font-size: 40px;">{{ icone }}</v-icon>
+    </v-btn>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        icone: 'mdi-power-on'
+       };
+    },
+    methods: {
+      start: function () {        
+        this.icone = 'mdi-power-off';
+        this.$refs.icon.$el.style.color = '#BD9608';
+        this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+
+        setTimeout(() => {
+          this.icone = 'mdi-power-on';
+          this.$refs.icon.$el.style.color = '#000000';
+          this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+          this.send({ payload: 'ON' });
+        }, 1000);
+      },
+    }
+  };
+</script>

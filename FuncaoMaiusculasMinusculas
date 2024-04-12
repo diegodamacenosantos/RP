@@ -1,0 +1,3 @@
+if (msg.payload && typeof msg.payload === 'string') {
+    node.send([{ payload: msg.payload.toUpperCase() }, { payload: msg.payload.toLowerCase() }])
+} 

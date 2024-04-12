@@ -1,0 +1,23 @@
+var horainicial = "8:00:00"; 
+var intervaloFormato = "0:00:05"; 
+
+var intervaloSplit = intervaloFormato.split(':');
+var intervaloSegundos = parseInt(intervaloSplit[0]) * 3600 + parseInt(intervaloSplit[1]) * 60 + parseInt(intervaloSplit[2]);
+
+var data = new Date();
+var horas = data.getHours();
+var minutos = data.getMinutes();
+var segundos = data.getSeconds();
+var horaminutosegundo = horas.toString().padStart(2, '0') + ':' + minutos.toString().padStart(2, '0') + ':' + segundos.toString().padStart(2, '0');
+
+var horainicialSplit = horainicial.split(':');
+var horaInicialEmSegundos = parseInt(horainicialSplit[0]) * 3600 + parseInt(horainicialSplit[1]) * 60 + parseInt(horainicialSplit[2]);
+var horaAtualEmSegundos = horas * 3600 + minutos * 60 + segundos;
+var diferenca = horaAtualEmSegundos - horaInicialEmSegundos;
+var ciclos = Math.floor(diferenca / intervaloSegundos);
+
+if (ciclos % 2 === 0) {
+    node.send([{ payload: "ligado" }, null])
+} else {
+    node.send([null, { payload: "desligado" }])
+}

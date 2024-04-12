@@ -1,0 +1,51 @@
+<style>
+    .total@ {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;        
+    }
+    .titulo@ {        
+        color: black;
+        font-size: 12px;
+    }
+    .barra@ {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 200px;
+        height: 7px;
+        border-radius: 25px;
+        background-color: #d9d9db;
+        border: 1px solid #343839;
+    }
+    .barra@::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #BD960B;
+        border: 1px solid #000000;
+        cursor: pointer;
+    }
+</style>
+
+<div class="total@"> 
+    <div>
+        <div class="titulo@">Volume</div>
+        <input class="barra@" type="range" min="1" max="100" value="1">
+    </div>
+</div>
+
+<script>
+    (function($scope) {       
+        $scope.$watch('msg', function(msg) {
+            if (msg) {
+                $('.barra@').val(msg.payload);                
+            }
+        });        
+        $('.barra@').on('change', function() {
+            $scope.send({"payload": $('.barra@').val()});
+        }); 
+    })(scope);
+</script>

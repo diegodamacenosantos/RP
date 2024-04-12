@@ -1,0 +1,95 @@
+##################### 01 ATUALIZADA
+
+
+var temp = parseFloat(msg.payload.temperature);
+var umR = parseFloat(msg.payload.humidity);
+var bat = parseFloat(msg.payload.battery);
+var HI;
+var tempF = (temp * 9 / 5) + 32;
+
+HI = 0.5 * (tempF + 61.0 + ((tempF - 68.0) * 1.2) + (umR * 0.094));
+if (HI > 79) {
+    HI = -42.379 + 2.04901523 * tempF + 10.14333127 * umR - 0.22475541 * tempF * umR - 0.00683783 * tempF * tempF - 0.05481717 * umR * umR + 0.00122874 * tempF * tempF * umR + 0.00085282 * tempF * umR * umR - 0.00000199 * tempF * tempF * umR * umR;
+    if ((umR <= 13) && ((tempF >= 80) && tempF <= 112)) {
+        HI -= ((13 - umR) / 4) * Math.sqrt((17 - Math.abs(tempF - 95.)) / 17);
+    }
+    if ((umR > 85) && ((tempF >= 80) && tempF <= 87)) {
+        HI += ((umR - 85) / 10) * ((87 - tempF) / 5);
+    }
+}
+var ic = (HI - 32) / 1.8;
+
+var icArredondado = ic.toFixed(0);
+global.set("ic", icArredondado);
+
+return [{
+    payload: {
+        temperatura: temp.toFixed(0),
+        umidade: umR.toFixed(0),
+        ic: icArredondado,
+        bateria: bat.toFixed(0)
+    }
+}];
+
+
+##################### 02
+
+<style>
+    .total@ {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        border: 1px solid #ffffff40;
+        border-radius: 20px;
+        background-color: #ffffff40 !important;
+        height: 75px;
+        width: 75px;
+    }
+
+    .titulo@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 7px;
+    }
+
+    .amostra@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 8px;
+    }
+
+    .valor@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 30px;
+        margin-top: 0;
+        margin-bottom: 0;
+        text-shadow: 0px 0px 0px;
+    }
+</style>
+
+<div class="total@">
+    <div class="titulo@">--</div>
+    <div class="valor@">0°</div>
+    <div class="amostra@">--</div>
+</div>
+
+<script>
+    (function(scope) { 
+
+        scope.$watch('msg', function(msg) { 
+            document.querySelector('.titulo@').innerHTML = "Termostato " + msg.payload.bateria + "%";
+            document.querySelector('.valor@').innerHTML = msg.payload.ic + "°";
+            document.querySelector('.amostra@').innerHTML = "T." + msg.payload.temperatura + "° U." + msg.payload.umidade + "%";
+            if(msg.payload.ic > 25){
+                document.querySelector('.valor@').style.textShadow = "0px 0px 10px #BD960B";
+            } else {
+                document.querySelector('.valor@').style.textShadow = "0px 0px 10px #293AFA";
+            }
+        });          
+    
+    })(scope);
+</script>

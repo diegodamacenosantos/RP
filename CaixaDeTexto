@@ -1,0 +1,35 @@
+<style> 
+    .total@ {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+    }
+    .caixadetexto@ {
+        width: 250px;
+        padding: 4px 4px;        
+        box-sizing: border-box;
+        background-color: #d1d1d1;
+        border-radius: 25px;
+        text-align: center;        
+    }       
+</style>
+
+<div class="total@">
+    <input class="caixadetexto@" type="text" placeholder="Comandos">
+</div>
+
+<script>
+    (function($scope) {
+        $('.caixadetexto@').on("keyup", function() {
+            var keycode = (event.keyCode ? event.keyCode : event.which);
+            if(keycode == '13'){
+                const bloco = document.getElementsByClassName("caixadetexto@");
+                var objeto = bloco[0].value;
+                $scope.send({"payload": objeto });                             
+            }            
+        });    
+    })(scope);
+</script>

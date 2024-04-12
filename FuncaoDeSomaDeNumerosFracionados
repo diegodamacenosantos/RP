@@ -1,0 +1,6 @@
+var a1 = msg.payload_a1;
+var a2 = msg.payload_a2;
+
+msg.payload = parseFloat(a1) + parseFloat(a2);
+
+return msg;

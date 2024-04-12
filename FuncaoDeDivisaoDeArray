@@ -1,0 +1,8 @@
+if (msg.payload[0] == msg.payload[1]) {
+    msg.payload = "on"
+    return [msg, null]
+}
+else {
+    msg.payload = "off"
+    return [null, msg]
+}

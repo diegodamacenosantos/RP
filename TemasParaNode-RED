@@ -1,0 +1,180 @@
+Tema - 1
+
+<style>
+    /* cuida de imagens e cores do fundo da pagina */
+    body {
+        background-image: url("https://img.freepik.com/vetores-gratis/fundo-abstrato-aquarela_23-2149056656.jpg?w=2000") !important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position: center centet !important;
+    }
+
+    /* cuida da transparencia da barra de titulo */
+    body.nr-dashboard-theme md-toolbar {
+        background-color: transparent !important;
+    }
+
+    /* cuida da transperancia dos botões dos cartões */
+    body.nr-dashboard-theme md-content md-card {
+        background-color: transparent !important;
+    }
+
+    /* cuida da transparencia de fundo do menu */
+    body.nr-dashboard-theme md-sidenav {
+        background-color: transparent !important;
+    }
+
+    /* cuida do arredondamento do item selecionado no menu */
+    button.md-no-style {
+        border-radius: 10px !important;
+    }
+
+    /* cuida da cor da seleção do item selecionado no menu */
+    .nr-menu-item-active div button {
+        border-right: 4px solid #000000 !important;
+    }
+
+    /* cuida das configurações do menu */
+    body.nr-dashboard-theme md-sidenav div.md-list-item-inner {
+        color: #000000 !important; /* cor das letras dos itens do menu */   
+        background-color: #ffffff !important; /* cor do fundo dos itens do menu */
+        border-radius: 10px !important; /* cuida da curva dos cantos dos itens do menu */
+        
+    }
+
+    /* cuida das configurações dos cartões de grupo */
+    ui-card-panel {        
+        background-color: #00000040 !important; /* cuida da cor do fundo dos grupos do menu */        
+        border-radius: 10px !important; /* cuida da curva dos cantos do cartão de grupo */        
+    }
+
+    /* cuida da cor do nome do cartão de grupo */
+    .nr-dashboard-theme ui-card-panel p.nr-dashboard-cardtitle {
+        color: #000000 !important;
+    }
+
+    /* cuida da cor do titulo da pagina */
+    body.nr-dashboard-theme md-toolbar .md-toolbar-tools {
+        color: #030303 !important;
+    }
+</style>
+
+Tema - 2
+
+<style>
+    /* cuida de imagens e cores do fundo da pagina */
+    body {
+        background-image: url("https://static.vecteezy.com/system/resources/thumbnails/002/019/901/original/matrix-digital-background-free-video.jpg") !important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position: center centet !important;
+    }
+
+    /* cuida da transparencia da barra de titulo */
+    body.nr-dashboard-theme md-toolbar {
+        background-color: transparent !important;
+    }
+
+    /* cuida da transparencia dos botões dos cartões */
+    body.nr-dashboard-theme md-content md-card {
+        background-color: transparent !important;
+    }
+
+    /* cuida da transperencia de fundo do menu */
+    body.nr-dashboard-theme md-sidenav {
+        background-color: transparent !important;
+    }
+
+    /* cuida do arredondamento do item selecionado no menu */
+    button.md-no-style {
+        border-radius: 10px !important;
+    }
+
+    /* cuida da cor da seleção do item selecionado no menu */
+    .nr-menu-item-active div button {
+        border-right: 4px solid #000000 !important;
+    }
+
+    /* cuida das configurações do menu */
+    body.nr-dashboard-theme md-sidenav div.md-list-item-inner {
+        color: #85E665 !important; /* cor das letras dos itens do menu */        
+        background-color: #34592795 !important; /* cor do fundo dos itens do menu */        
+        border-radius: 10px !important; /* cuida da curva dos cantos dos itens do menu */        
+    }
+
+    /* cuida das configurações dos cartões de grupo */
+    ui-card-panel {        
+        background-color: #34592795 !important; /* cuida da cor do fundo dos grupos do menu */        
+        border-radius: 10px !important; /* cuida da curva dos cantos do cartão de grupo */        
+    }
+
+    /* cuida da cor do nome do cartão de grupo */
+    .nr-dashboard-theme ui-card-panel p.nr-dashboard-cardtitle {
+        color: #85E665 !important;
+    }
+
+    /* cuida da cor do titulo da pagina */
+    body.nr-dashboard-theme md-toolbar .md-toolbar-tools {
+        color: #85E665 !important;
+    }
+</style>
+
+Tema - 3
+
+<style>
+    /* cuida de imagens e cores do fundo da pagina */
+    body {
+        background-image: url("https://abstartups.com.br/wp-content/uploads/2021/01/office-wallpaper.jpg") !important;
+        background-repeat: no-repeat !important;
+        background-size: cover !important;
+        background-position: center centet !important;
+    }
+
+    /* cuida da transparencia da barra de titulo */
+    body.nr-dashboard-theme md-toolbar {
+        background-color: transparent !important;
+    }
+
+    /* cuida da transparencia dos botões dos cartões */
+    body.nr-dashboard-theme md-content md-card {
+        background-color: transparent !important;
+    }
+
+    /* cuida da transparencia de fundo do menu */
+    body.nr-dashboard-theme md-sidenav {
+        background-color: transparent !important;
+    }
+
+    /* cuida do arredondamento do item selecionado no menu */
+    button.md-no-style {
+        border-radius: 10px !important;
+    }
+
+    /* cuida da cor da seleção do item selecionado no menu */
+    .nr-menu-item-active div button {
+        border-right: 4px solid #000000 !important;
+    }
+
+    /* cuida das configurações do menu */
+    body.nr-dashboard-theme md-sidenav div.md-list-item-inner {
+        color: #E6CB49 !important; /* cor das letras dos itens do menu */        
+        background-color: #E6CB4940 !important; /* cor do fundo dos itens do menu */        
+        border-radius: 10px !important; /* cuida da curva dos cantos dos itens do menu */        
+    }
+
+    /* cuida das configurações dos cartões de grupo */
+    ui-card-panel {
+        background-color: #E6CB4940 !important; /* cuida da cor do fundo dos grupos do menu */        
+        border-radius: 10px !important; /* cuida da curva dos cantos do cartão de grupo */        
+    }
+
+    /* cuida da cor do nome do cartão de grupo */
+    .nr-dashboard-theme ui-card-panel p.nr-dashboard-cardtitle {
+        color: #5C521D !important;
+    }
+
+    /* cuida da cor do titulo da pagina */
+    body.nr-dashboard-theme md-toolbar .md-toolbar-tools {
+        color: #E6CB49 !important;
+    }
+</style>

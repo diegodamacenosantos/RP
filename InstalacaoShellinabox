@@ -1,0 +1,9 @@
+Como instalar 
+
+1 - sudo apt-get install shellinabox -y
+
+Como desinstalar
+
+1 - sudo systemctl stop shellinabox
+
+2 - sudo apt-get purge shellinabox && sudo apt-get autoremove -y

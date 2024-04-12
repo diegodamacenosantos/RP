@@ -1,0 +1,25 @@
+0 - apt update -y && apt upgrade -y && apt autoremove -y 
+
+1 - systemctl stop zigbee2mqtt
+
+	copie o conteudo da pasta "data" todo antes do proximo comando
+
+2 - rm -rf /opt/zigbee2mqtt
+
+3 - mkdir /opt/zigbee2mqtt
+
+4 - chown -R ${USER}: /opt/zigbee2mqtt
+
+6 - git clone --depth 1 https://github.com/Koenkk/zigbee2mqtt.git /opt/zigbee2mqtt
+
+7 - cd /opt/zigbee2mqtt
+
+8 - npm ci
+
+5 - chmod -R 777 /opt/zigbee2mqtt
+
+	Retornar com arquivos para pasta "data"
+
+9 - systemctl start zigbee2mqtt
+
+feito

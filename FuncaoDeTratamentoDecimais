@@ -1,0 +1,3 @@
+var a1 = parseFloat(msg.payload.replace(',', '.'));
+
+node.send([{ payload: Math.floor(a1).toString() }, { payload: a1.toFixed(1) }, { payload: a1.toFixed(2) }])

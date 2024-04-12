@@ -1,0 +1,9 @@
+msg.payload = ((((1 * msg.payload_w) * 24) * 30) / 1000) * msg.payload_tarifa;
+
+var a1 = msg.payload;
+
+var inteiro = parseInt(a1);
+
+msg.payload_consumo = inteiro
+
+return msg;

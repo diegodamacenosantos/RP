@@ -1,0 +1,15 @@
+1 - node-red admin hash-pw
+
+  # Rode esse comando para criar um hash que será usando na autenticação
+
+2 - cd .node-red 
+
+  # Rode esse comando apra entrar na pasta de instalação do node-red
+
+3 - nano settings.js
+
+  # Rode esse comando para entrar no arquivo de inicialização para edição
+
+4 - node-red-stop && node-red-start
+
+  # Rode esse comando para parar e inciar novamente o node-red

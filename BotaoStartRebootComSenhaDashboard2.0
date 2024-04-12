@@ -1,0 +1,89 @@
+<template>
+  <div>
+    <v-btn class="button_reboot" ref="button" stacked @click="opendialog">
+      <div class="title_reboot">Reboot</div>
+      <v-icon class="icon_reboot" ref="icon">{{icon}}</v-icon>
+    </v-btn>
+    <v-dialog class="dialog_reboot" v-model="dialog" @click:outside="closedialog_b">
+      <v-text-field class="text_dialog_reboot" label="Senha" variant="outlined" v-model="senha" @keyup.enter="closedialog_a"></v-text-field>
+      <v-btn class="btn_dialog_reboot" @click="closedialog_a">Autorizar</v-btn>
+    </v-dialog>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {        
+        icon: "mdi-restart",
+        dialog: false,
+        senha: '' 
+      };
+    },
+    methods: {
+      opendialog() {
+        this.dialog = true;
+        this.$refs.button.$el.style.backgroundColor = '#FF8C00';
+      },
+      closedialog_a() {
+        if (this.senha === '780705') { 
+          this.senha = ''
+          this.$refs.button.$el.style.backgroundColor = '#4F4F4F';
+          this.send({ payload: 'reboot' });
+          this.dialog = false;       
+        } else {
+          this.senha = ''
+        }
+      },
+      closedialog_b() {
+        this.$refs.button.$el.style.backgroundColor = '#4F4F4F';
+        this.senha = ''
+        this.dialog = false;
+      },           
+    }
+  };
+</script>
+
+<style>
+  .dialog_reboot {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: #A9A9A9;
+    border: 1px solid #000000;
+    border-radius: 18px;
+    height: 150px;
+    width: 300px;
+  }
+
+  .btn_dialog_reboot {
+    display: flex;
+    margin: auto;
+    background-color: #A9A9A9;
+    border: 1px solid #000000;
+    color: #000000;
+    border-radius: 08px;
+    width: 40%;
+  }
+
+  .button_reboot {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    height: 75px;
+    width: 75px;
+    background-color: #4F4F4F;
+    color: #000000;
+    border: 1px solid #000000;
+    font-size: 14px;
+    border-radius: 18px;
+  }
+
+  .title_reboot {
+    font-size: 75%;
+  }
+
+  .icon_reboot {
+    font-size: 40px;
+  }
+</style>

@@ -1,0 +1,7 @@
+var ORI = msg.payload;
+
+var MOD = ORI.toUpperCase();
+
+msg.payload = MOD
+
+return msg;

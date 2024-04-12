@@ -1,0 +1,7 @@
+var ORI = msg.payload;
+
+var MOD = decodeURI(encodeURI(ORI).replaceAll('%0A', ' '));
+
+msg.payload = MOD
+
+return msg;

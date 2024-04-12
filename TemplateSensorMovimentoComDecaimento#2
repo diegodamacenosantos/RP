@@ -1,0 +1,110 @@
+##################################################### 01
+
+var obj = msg.payload.occupancy;
+var memoria = global.get("NOME");
+var bat = msg.payload.battery;
+var valor;
+
+function tick() {
+    valor--;
+    if (valor >= 0) {
+        if (context.get("obj") !== "parado") {
+            node.send([{ payload: { decaimento: valor, bateria: bat } }, null, null])
+            setTimeout(tick, 1000);
+        };
+    } else {
+        node.send([null, null, { payload: { status: "OFF", bateria: bat } }])
+        context.set("obj", "parado");
+    };
+};
+
+if (obj !== memoria) {
+    global.set("NOME", obj);
+    if (obj == "on" || obj == "ON" || obj == true || obj == 1) {
+        node.send([null, { payload: { status: "ON", bateria: bat } }, null])
+        context.set("obj", "parado");
+    } else if (obj == "off" || obj == "OFF" || obj == false || obj == 0) {
+        if (context.get("obj") !== "rodando") {
+            context.set("obj", "rodando");
+            valor = 70;
+            tick();
+        };
+    };
+};
+
+##################################################### 02
+
+<style>
+    .total@ {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        border: 1px solid #ffffff40;
+        border-radius: 20px;
+        background-color: #ffffff40 !important;
+        height: 75px;
+        width: 75px;
+    }
+
+    .titulo@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 11px;
+    }
+
+    .bateria@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 11px;
+    }
+
+    .icone@ {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 40px;
+        margin-top: 0;
+        margin-bottom: 0;
+        text-shadow: 0px 0px 0px;
+    }
+</style>
+
+<div class="total@">
+    <div class="titulo@">--</div>
+    <i class="icone@ material-icons" style="text-shadow: 0px 0px 0px; color: #8C8C8C;">directions_walk</i>
+    <div class="bateria@">0%</div>
+</div>
+
+
+<script>
+    (function(scope) {    
+        
+        scope.$watch('msg', function(msg) {        
+            document.querySelector('.titulo@').innerHTML = msg.payload.decaimento + "s";
+            document.querySelector('.bateria@').innerHTML = msg.payload.bateria + "%";
+            if(msg.payload.status === "ON"){
+                ON();
+            } else if(msg.payload.status === "OFF"){
+                OFF();
+            }        
+        }); 
+        
+        function OFF(){ 
+            document.querySelector('.icone@').style.textShadow = "0px 0px 0px";
+            document.querySelector('.icone@').style.color = "#8C8C8C";
+            document.querySelector('.icone@').innerHTML = "directions_walk";
+            document.querySelector('.titulo@').innerHTML = "NOME";         
+            
+        }
+        
+        function ON(){ 
+            document.querySelector('.icone@').style.textShadow = "0px 0px 10px #BD960B";
+            document.querySelector('.icone@').style.color = "#BD960B";
+            document.querySelector('.icone@').innerHTML = "directions_run";
+            document.querySelector('.titulo@').innerHTML = "NOME";            
+        }
+
+    })(scope);
+</script>

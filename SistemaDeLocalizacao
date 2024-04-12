@@ -1,0 +1,54 @@
+OBS: O CÓDIGO PODE TER SOFRIDO ALTERAÇÕES DADA A COMPARAÇÃO VISUAL COMO O VÍDEO, MAS CONTINUA FUNCIONANDO CORRETAMENTE.
+    AS ALTERAÇÕES SÃO MERAS MELHORIAS.
+
+################################################### FUNÇÃO 01
+
+var latitude = msg.req.query.lat;
+var longitude = msg.req.query.lon;
+var bateria = parseFloat(msg.req.query.batt).toFixed(0);
+
+msg.payload = {
+    "draggable": true,
+    "name": "nome",
+    "lat": latitude,
+    "lon": longitude,
+    "radius": 13,
+    "color": '#000000',
+    "opacity": 1,
+    "fillColor": '#F52D00',
+    "fillOpacity": 1,
+    "command": {       
+        "zoom": 17,
+        "lat": latitude,
+        "lon": longitude,
+    } 
+};
+
+return [{payload: msg.payload}, {payload: latitude}, {payload: longitude}, {payload: bateria}];
+
+################################################## FUNÇÃO 02
+
+const centerLat = -22.889358;
+const centerLng = -42.041405;
+const radius = 2;
+const { lat, lon } = msg.req.query;
+const distance = getDistanceFromLatLonInM(centerLat, centerLng, lat, lon);
+
+function deg2rad(deg) {
+    return deg * (Math.PI / 180);
+}
+
+function getDistanceFromLatLonInM(lat1, lon1, lat2, lon2) {
+    const earthRadius = 6371e3;
+    const deltaLat = deg2rad(lat2 - lat1);
+    const deltaLon = deg2rad(lon2 - lon1);
+    const a = Math.sin(deltaLat / 2) ** 2 + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(deltaLon / 2) ** 2;
+    const centralAngle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return earthRadius * centralAngle;
+}
+
+if (distance <= radius) {
+    node.send([{payload: "ON"}, null]);
+} else {
+    node.send([null, {payload: "OFF"}]);
+}
