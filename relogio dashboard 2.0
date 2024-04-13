@@ -1,0 +1,75 @@
+<template>
+  <div class="card_relogio">
+    <div class="data_relogio"> {{ dataextenso }} </div>
+    <div class="hora_relogio"> {{ horaminuto }} </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {              
+        data:'',
+        hora:'',
+        minutos:'',
+        dia:'',
+        diasemana:'',
+        meses:'',
+        mes:'',
+        horaminuto:'',
+        dataextenso:''
+      };
+    },
+    mounted() {
+      this.$socket.on('widget-load:' + this.id, (msg) => {
+        this.horaminuto = msg.payload.hora;
+        this.dataextenso = msg.payload.data;
+      });
+    },
+    methods: {    
+      computar() {
+        this.data = new Date();
+        this.horas = this.data.getHours();
+        this.minuto = this.data.getMinutes();
+        this.dias = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+        this.dia = this.dias[this.data.getDay()];
+        this.diasemana = this.data.getDate();
+        this.meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        this.mes = this.meses[this.data.getMonth()];
+        this.horaminuto = this.horas.toString().padStart(2, '0') + ':' + this.minuto.toString().padStart(2, '0');
+        this.dataextenso = this.dia + ' ' + this.diasemana + ' de ' + this.mes;
+        this.send({payload: {data: this.dataextenso, hora: this.horaminuto}});
+      }   
+    },
+    watch: {
+      msg: function(msg) {
+        this.computar();
+      }
+    }     
+  }
+</script>
+
+
+<style>
+  .card_relogio{
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    height: 130px !important;
+    width: 250px !important;
+    background-color: #ADD8E6;
+    border: 1px solid #000000;
+    border-radius: 18px;
+    padding: 10px;
+  }
+
+  .data_relogio {
+    object-position: right top;
+    font-size: 15px;
+  }
+
+  .hora_relogio {
+    margin: auto;
+    font-size: 80px;
+  }
+</style>
