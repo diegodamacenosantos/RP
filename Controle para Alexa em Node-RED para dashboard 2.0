@@ -25,26 +25,26 @@
     },
     mounted() {
       this.$socket.on('widget-load:' + this.id, (msg) => {
-        this.value_barra = msg.payload.data;
+        this.value_barra = msg.topic;
       });
     },
     methods: {   
       enviarComando() {
-        this.send({ payload: { comando: this.comando, data: parseInt(this.value_barra) }});
+        this.send({ topic: parseInt(this.value_barra), payload: { comando: this.comando }});
         this.comando = '';
       },
       enviarNotificacao() {
-        this.send({ payload: { notificacao: this.notificacao, data: parseInt(this.value_barra) }});
+        this.send({ topic: parseInt(this.value_barra), payload: { notificacao: this.notificacao }});
         this.notificacao = '';
       },
       enviarVolume() {
-        this.send({ payload: { volume: parseInt(this.value_barra), data: parseInt(this.value_barra) }});
+        this.send({ topic: parseInt(this.value_barra), payload: { volume: parseInt(this.value_barra) }});
       },
       play() {
-        this.send({ payload: { play: "start", data: parseInt(this.value_barra) }});
+        this.send({ topic: parseInt(this.value_barra), payload: { play: "start" }});
       },
       stop() {
-        this.send({ payload: { stop: "start", data: parseInt(this.value_barra) }});
+        this.send({ topic: parseInt(this.value_barra), payload: { stop: "start" }});
       }
     }
   }
