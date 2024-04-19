@@ -1,0 +1,105 @@
+<template>
+  <div class="card_alexa">
+    <div class="linha_horizontal_alexa">
+      <v-btn class="button_alexa" @click="play" variant="text">
+        <v-icon class="icon_alexa">mdi-play</v-icon>
+      </v-btn>
+      <v-btn class="button_alexa" @click="stop" variant="text">
+        <v-icon class="icon_alexa">mdi-stop</v-icon>
+      </v-btn>
+    </div>
+    <v-slider class="barra_alexa" v-model="value_barra" :max="100" :min="0" @click="enviarVolume" prepend-icon="mdi-volume-high"></v-slider>
+    <v-text-field class="comando_alexa" label="Comandos" @keyup.enter="enviarComando" v-model="comando" variant="outlined"></v-text-field>
+    <v-text-field class="notificacao_alexa" label="Notificações" @keyup.enter="enviarNotificacao" v-model="notificacao" variant="outlined"></v-text-field>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {              
+        value_barra: '',
+        comando: '',
+        notificacao: ''
+      };
+    },
+    mounted() {
+      this.$socket.on('widget-load:' + this.id, (msg) => {
+        this.value_barra = msg.payload.data;
+      });
+    },
+    methods: {   
+      enviarComando() {
+        this.send({ payload: { comando: this.comando, data: parseInt(this.value_barra) }});
+        this.comando = '';
+      },
+      enviarNotificacao() {
+        this.send({ payload: { notificacao: this.notificacao, data: parseInt(this.value_barra) }});
+        this.notificacao = '';
+      },
+      enviarVolume() {
+        this.send({ payload: { volume: parseInt(this.value_barra), data: parseInt(this.value_barra) }});
+      },
+      play() {
+        this.send({ payload: { play: "start", data: parseInt(this.value_barra) }});
+      },
+      stop() {
+        this.send({ payload: { stop: "start", data: parseInt(this.value_barra) }});
+      }
+    }
+  }
+</script>
+
+<style>
+  .card_alexa {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    height: 290px !important;
+    width: 250px !important;
+    background-color: #4F4F4F;
+    border: 1px solid #000000;
+    border-radius: 18px;
+    padding: 10px;
+  }
+
+  .linha_horizontal_alexa {
+    margin: auto;
+    flex-direction: row;
+  }
+
+  .button_alexa {
+    margin: 8px;
+    background-color: transparent;
+  }
+
+  .icon_alexa {
+    font-size: 50px;
+  }
+
+  .barra_alexa {
+    margin: 10px 5px 0;
+  }
+
+  .comando_alexa, .notificacao_alexa {
+    margin: 0;
+  }
+</style>
+
+=======================================================================
+
+if (msg.payload.volume) {
+    node.send([{payload: msg.payload.volume}, null, null, null, null])
+}
+if (msg.payload.comando) {
+    node.send([null, { payload: msg.payload.comando }, null, null, null])
+}
+if (msg.payload.notificacao) {
+    node.send([null, null, { payload: msg.payload.notificacao }, null, null])
+}
+if (msg.payload.play) {
+    node.send([null, null, null, { payload: msg.payload.play }, null])
+}
+if (msg.payload.stop) {
+    node.send([null, null, null, null, { payload: msg.payload.stop }])
+}
