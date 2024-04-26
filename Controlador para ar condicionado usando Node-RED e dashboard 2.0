@@ -1,0 +1,95 @@
+<template>    
+    <div class="contaner_ar_condicionado">
+        <div class="title_ar_condicionado">Ar Condicionado</div>
+        <div class="buttons_ar_condicionado">
+            <v-btn class="button_ar_condicionado" @click="mais">        
+                <v-icon class="icon_ar_condicionado">mdi-plus-thick</v-icon>
+            </v-btn>
+            <v-btn class="button_ar_condicionado" @click="alternar">
+                <v-icon class="icon_ar_condicionado" ref="icon">mdi-power</v-icon>
+            </v-btn>
+            <v-btn class="button_ar_condicionado" @click="menos">
+                <v-icon class="icon_ar_condicionado">mdi-minus</v-icon>
+            </v-btn>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                value: ''
+            };
+        },
+        mounted() {            
+            this.$socket.on('widget-load:' + this.id, (msg) => {
+                this.value = msg.payload;
+                if (this.value === "ON") {
+                    this.on();
+                } else {
+                    this.off();
+                }
+            });
+        },
+        methods: {
+            alternar() {
+                if (this.value === 'ON') {
+                    this.off();
+                    this.value = "OFF";
+                    this.send({ payload: 'OFF' });
+                } else {
+                    this.on();
+                    this.value = "ON";
+                    this.send({ payload: 'ON' });
+                }
+            },
+            mais() {
+                if (this.value === 'ON') {                    
+                    this.send({ payload: 'MAIS' });
+                }                
+            },
+            menos() {
+                if (this.value === 'ON') {                    
+                    this.send({ payload: 'MENOS' });
+                } 
+            },
+            on() {
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';                             
+            },
+            off() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+            }
+        }
+    }
+</script>
+
+<style>
+    .contaner_ar_condicionado {
+        display: flex; 
+        margin: auto; 
+        flex-direction: column; 
+        height: 75px; 
+        width: 225px; 
+        background-color: #4F4F4F; 
+        border: 1px solid #000000; 
+        border-radius: 18px;
+    }
+    .buttons_ar_condicionado {         
+        margin: auto;
+        flex-direction: row;         
+    }
+    .button_ar_condicionado {         
+        margin: auto;
+        background-color: transparent;
+    }
+    .title_ar_condicionado {
+        margin: auto;
+        font-size: 14px;
+    }
+    .icon_ar_condicionado {
+        font-size: 30px; 
+    }
+</style>
