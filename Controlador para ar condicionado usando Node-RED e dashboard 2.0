@@ -24,7 +24,7 @@
         },
         mounted() {            
             this.$socket.on('widget-load:' + this.id, (msg) => {
-                this.value = msg.payload;
+                this.value = msg.payload.state;
                 if (this.value === "ON") {
                     this.on();
                 } else {
@@ -37,21 +37,21 @@
                 if (this.value === 'ON') {
                     this.off();
                     this.value = "OFF";
-                    this.send({ payload: 'OFF' });
+                    this.send({ payload: { state: "OFF"}});
                 } else {
                     this.on();
                     this.value = "ON";
-                    this.send({ payload: 'ON' });
+                    this.send({ payload: { state: "ON"}});
                 }
             },
             mais() {
                 if (this.value === 'ON') {                    
-                    this.send({ payload: 'MAIS' });
+                    this.send({ payload: { state: "ON", selection: "MAIS"}});
                 }                
             },
             menos() {
                 if (this.value === 'ON') {                    
-                    this.send({ payload: 'MENOS' });
+                    this.send({ payload: { state: "ON", selection: "MENOS"}});
                 } 
             },
             on() {
