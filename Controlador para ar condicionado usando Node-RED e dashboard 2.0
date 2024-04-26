@@ -1,3 +1,26 @@
+======================================== Função
+
+var state = msg.payload.state;
+var selection = msg.payload.selection;
+
+if (state === "ON") {
+    node.send([{payload: "ON"}, null, null, null]);
+}
+
+if (state === "OFF") {
+    node.send([null, { payload: "OFF" }, null, null]);
+}
+
+if (selection === "MAIS") {
+    node.send([null, null, { payload: "MAIS" }, null]);
+}
+
+if (selection === "MENOS") {
+    node.send([null, null, null, { payload: "MENOS" }]);
+}
+
+========================================= Elemento
+
 <template>    
     <div class="contaner_ar_condicionado">
         <div class="title_ar_condicionado">Ar Condicionado</div>
