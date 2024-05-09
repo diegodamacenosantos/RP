@@ -1,0 +1,189 @@
+<template>
+    <div class="total_horaMarcada">
+        <button class="botao_horaMarcada" @click="alternar">
+            <div class="titulo_horaMarcada">LUZ</div>
+            <v-icon class="icone_horaMarcada" ref="icon">{{icon}}</v-icon>
+        </button>
+        <input type="time" class="selecaohora_horaMarcada" :class="{ 'background_horaMarcada': active }" v-model="marcacao" @input="selecao"/>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                icon: "mdi-alert-rhombus-outline",
+                value: "",
+                status: "",
+                date: "",
+                horas: "",
+                minutos: "",
+                horaminuto: "",
+                marcacao: "", 
+                active: false
+            };
+        },
+
+        mounted() {
+            this.$socket.on('widget-load:' + this.id, (msg) => {
+                
+                this.value = msg.payload.value;
+                this.marcacao = msg.payload.marcacao;
+                this.status = msg.payload.status;
+                
+                if (this.value === "ON") {
+                    this.setligar();
+                } else {
+                    this.setdesligar();
+                }
+
+                if (this.status === "contando") {
+                    this.tick();
+                } else {
+                    this.status = "parado";
+                    this.active = false;
+                }
+                
+            });
+        },
+                
+        methods: {
+            alternar: function() {
+                if (this.value === 'ON') {
+                    this.desligar();
+                } else {
+                    this.ligar();
+                }
+                this.marcacao = "";
+                this.status = "parado";
+                this.active = false;
+            },
+            
+            tick: function() {             
+                this.date = new Date();
+                this.horas = this.date.getHours();
+                this.minutos = this.date.getMinutes();
+                this.horaminuto = this.horas.toString().padStart(2, '0') + ':' + this.minutos.toString().padStart(2, '0');
+
+                if (this.marcacao === this.horaminuto) {
+                    this.alternar();
+                    this.status = "parado";
+                    this.send({ payload: { value: this.value, status: "parado", marcacao: this.marcacao } });
+                } else if (this.status === "contando") {
+                    this.active = true;
+                    this.send({ payload: { value: this.value, status: "contando", marcacao: this.marcacao } });
+                    setTimeout(this.tick, 5000); 
+                } else {
+                    this.status = "parado";
+                    this.active = false;
+                }           
+            },
+
+            ligar: function() {
+                this.icon = "mdi-lightbulb-outline";
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+                this.value = "ON";
+                this.send({ payload: { value: "ON", status: this.status, marcacao: this.marcacao } });   
+            },
+
+            desligar: function() {
+                this.icon = "mdi-lightbulb-outline";
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+                this.value = "OFF";
+                this.send({ payload: { value: "OFF", status: this.status, marcacao: this.marcacao } });   
+            },
+
+            setligar: function() {
+                this.icon = "mdi-lightbulb-outline";
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+                this.value = "ON";
+            },
+
+            setdesligar: function() {
+                this.icon = "mdi-lightbulb-outline";
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+                this.value = "OFF";
+            },
+
+            selecao: function() {
+                this.status = "contando";
+                this.active = true;
+                this.send({ payload: { value: this.value, status: this.status, marcacao: this.marcacao } });
+                this.tick();                
+            }
+        },
+        
+        watch: {
+            msg: function() {
+                if (this.msg.payload === "ON") {
+                    this.setligar();
+                    this.marcacao = "";
+                    this.status = "parado";
+                    this.active = false;
+                } else if (this.msg.payload === "OFF") {
+                    this.setdesligar();
+                    this.marcacao = "";
+                    this.status = "parado";
+                    this.active = false;
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .total_horaMarcada {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+        background-color: #ffffff40;
+        border: 1px solid #ffffff40;
+        border-radius: 14px;
+        height: 85px;
+        width: 70px;
+    }
+
+    .botao_horaMarcada {
+        display: flex;
+        margin: auto;
+        flex-direction: column;
+        align-items: center;
+        background-color: transparent;
+        height: 50px;
+        width: 50px;
+    }
+
+    .titulo_horaMarcada {
+        display: flex;
+        margin: auto;
+        color: #000000;
+        font-size: 11px;
+    }
+
+    .icone_horaMarcada {
+        display: flex;
+        margin: auto;
+        font-size: 40px;
+        text-shadow: 0px 0px 0px black;
+    }
+
+    .selecaohora_horaMarcada {
+        display: flex;
+        margin: auto;
+        border-radius: 8px;
+        border: 1px solid black;
+        background-color: #ffffff40;
+        font-size: 10px;
+        height: 18px;
+        width: 52px;
+    }
+
+    .background_horaMarcada {
+        background-color: #32a85240;
+    }
+</style>
