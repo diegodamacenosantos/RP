@@ -1,3 +1,9 @@
+========================================================
+
+@flowfuse/node-red-dashboard
+
+======================================================== 
+
 <template>
     <div class="total_horaMarcada">
         <button class="botao_horaMarcada" @click="alternar">
