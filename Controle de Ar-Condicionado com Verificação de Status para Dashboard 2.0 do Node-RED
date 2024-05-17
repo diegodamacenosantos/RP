@@ -1,0 +1,101 @@
+<template>
+    <div class="contaner_ar_condicionado">
+        <div class="title_state_ar_condicionado">
+            <div class="title_ar_condicionado">Ar Condicionado</div>
+            <v-icon class="icon_state_ar_condicionado" ref="icon">{{icon_state}}</v-icon>
+        </div>
+        <div class="buttons_ar_condicionado">
+            <v-btn class="button_ar_condicionado" @click="mais">
+                <v-icon class="icon_ar_condicionado">mdi-plus-thick</v-icon>
+            </v-btn>
+            <v-btn class="button_ar_condicionado" @click="power">
+                <v-icon class="icon_ar_condicionado">mdi-power</v-icon>
+            </v-btn>
+            <v-btn class="button_ar_condicionado" @click="menos">
+                <v-icon class="icon_ar_condicionado">mdi-minus</v-icon>
+            </v-btn>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                value: '',
+                icon_state: "mdi-checkbox-blank-circle"
+            };
+        },
+        methods: {
+            power() {
+                this.send({ payload: "POWER"});
+            },
+            mais() {
+                this.send({ payload: "MAIS"});
+            },
+            menos() {
+                this.send({ payload: "MENOS"});
+            },
+            on() {
+                this.$refs.icon.$el.style.color = '#3CB371';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #3CB371';                             
+            },
+            off() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+            }
+        },
+        watch: {
+            msg: function() {
+                if (this.msg.payload === "ON") {
+                    this.on();                                    
+                } else if (this.msg.payload === "OFF") {
+                    this.off();
+                }
+            }
+        }
+    }
+</script>
+
+<style>
+    .contaner_ar_condicionado {
+        display: flex;
+        margin: auto;
+        flex-direction: column;
+        height: 75px;
+        width: 225px;
+        background-color: #4F4F4F;
+        border: 1px solid #000000;
+        border-radius: 18px;
+    }
+
+    .buttons_ar_condicionado {
+        margin: auto;
+        flex-direction: row;
+    }
+
+    .button_ar_condicionado {
+        margin: auto;
+        background-color: transparent;
+    }
+
+    .title_ar_condicionado {
+        margin: 10px 12px 2px 60px;
+        font-size: 14px;
+    }
+
+    .icon_ar_condicionado {
+        font-size: 30px;
+    }
+
+    .icon_state_ar_condicionado {
+        margin: 10px 12px 2px 12px;
+        font-size: 15px;
+    }
+
+    .title_state_ar_condicionado {
+        display: flex;
+        flex-direction: row;
+
+    }
+</style>
