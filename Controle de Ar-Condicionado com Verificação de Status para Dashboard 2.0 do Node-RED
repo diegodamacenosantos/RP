@@ -1,3 +1,9 @@
+###################################################
+
+@flowfuse/node-red-dashboard
+
+###################################################
+
 <template>
     <div class="contaner_ar_condicionado">
         <div class="title_state_ar_condicionado">
