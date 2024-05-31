@@ -1,0 +1,139 @@
+<template>
+  <div class="contaner_ar_condicionado">
+    <div class="group_title_icon_ar_condicionado">
+      <div class="title_ar_condicionado">{{ inteiro }}° - Ar Condicionado</div>
+    </div>
+    <div class="group_buttons_ar_condicionado">
+      <v-btn class="button_ar_condicionado" variant="text" @click="soma">
+        <v-icon class="icon_ar_condicionado">mdi-plus-thick</v-icon>
+      </v-btn>
+      <v-btn class="button_ar_condicionado" variant="text" @click="alternar">
+        <v-icon class="icon_ar_condicionado" ref="icon_ar_condicionado">mdi-power</v-icon>
+      </v-btn>
+      <v-btn class="button_ar_condicionado" variant="text" @click="subtracao">
+        <v-icon class="icon_ar_condicionado">mdi-minus</v-icon>
+      </v-btn>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      value: '',
+      inteiro: 16,
+      memoria: ""
+    };
+  },
+  mounted() {            
+    this.$socket.on('widget-load:' + this.id, (msg) => {
+      this.value = msg.payload.state;
+      this.inteiro = msg.payload.selecao;
+      if (this.inteiro == 0) {
+        this.inteiro = 16;
+      } else {
+        this.inteiro = msg.payload.selecao;
+      }
+      if (this.value == "ON") {
+        this.on();
+      } else {
+        this.off();
+      }
+    });
+  },
+  methods: {
+    alternar() {
+      if (this.value === 'ON') {
+        this.off();  
+        this.value = "OFF";
+        this.inteiro = 16;
+        this.send({ payload: { state: "OFF", selecao: 0 }});
+      } else {
+        this.on();  
+        this.value = "ON";
+        this.send({ payload: { state: "ON", selecao: 16 }});            
+      }
+    },
+    soma() {
+      if (this.value == "ON") {
+        if (this.inteiro < 30) {
+          this.on();  
+          this.value = "ON";
+          this.inteiro++;
+          setTimeout(() => { 
+            if (this.inteiro != this.memoria) {
+              this.memoria = this.inteiro;
+              this.send({ payload: { state: "ON", selecao: this.inteiro }});
+            } else {
+              this.memoria = this.inteiro;
+            }
+          }, 3000);        
+        }
+      }
+    },
+    subtracao() {
+      if (this.value == "ON") {
+        if (this.inteiro > 16) {
+          this.on();  
+          this.value = "ON";
+          this.inteiro--;
+          setTimeout(() => {
+            if (this.inteiro != this.memoria) {
+              this.memoria = this.inteiro;
+              this.send({ payload: { state: "ON", selecao: this.inteiro }});
+            } else {
+              this.memoria = this.inteiro;
+            }
+          }, 3000);        
+        }    
+      }
+    },
+    on() {   
+      this.$refs.icon_ar_condicionado.$el.style.color = '#32CD32';                     
+    },
+    off() {     
+      this.$refs.icon_ar_condicionado.$el.style.color = '#A9A9A9';
+    }
+  } 
+}
+</script>
+
+<style>
+.contaner_ar_condicionado {
+  display: flex;
+  margin: auto;
+  flex-direction: column;
+  height: 75px;
+  width: 225px;
+  background-color: #4F4F4F;
+  border: 1px solid #000000;
+  border-radius: 18px;
+}
+
+.group_title_icon_ar_condicionado {
+  display: flex; 
+  align-items: center; 
+  margin: 3px auto 0px auto;
+}
+
+.group_buttons_ar_condicionado {
+  display: flex;
+  justify-content: space-around; 
+  margin: 5px auto auto auto;
+}
+
+.button_ar_condicionado {
+  background-color: transparent;
+}
+
+.icon_ar_condicionado {
+  font-size: 30px;
+}
+
+.title_ar_condicionado {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+</style>
