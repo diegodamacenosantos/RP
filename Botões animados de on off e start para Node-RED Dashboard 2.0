@@ -1,0 +1,165 @@
+<template>
+    <v-btn class="button_animado_1" stacked @click="alternar">
+        <div class="title_animado_1">animado_1</div>
+        <v-icon class="icon_animado_1" ref="icon" :class="{ 'icon-active': value === 'ON', 'icon-spin': value === 'ON' }">mdi-cog-outline</v-icon>
+    </v-btn>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                value: '',
+                dialog: false,
+                senha: ''
+            };
+        },
+        mounted() {            
+            this.$socket.on('widget-load:' + this.id, (msg) => {
+                this.value = msg.payload;
+                if (this.value === "ON") {
+                    this.on();
+                } else {
+                    this.off();
+                }
+            });
+        },
+        methods: {
+            alternar() {
+                if (this.value === 'ON') {
+                    this.off_alternar();
+                } else {
+                    this.on_alternar();
+                }
+            },
+            on_alternar() {
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+                this.value = "ON";
+                this.send({ payload: "ON" });
+            },
+            off_alternar() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+                this.value = "OFF";
+                this.send({ payload: "OFF" });
+            },
+            on() {
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+                this.value = "ON";
+            },
+            off() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+                this.value = "OFF";
+            }
+            
+        },
+        watch: {
+            msg: function() {
+                if (this.msg.payload === "ON") {
+                    this.on();
+                } else {
+                    this.off();
+                }                        
+            }
+        }
+    }
+</script>
+
+<style>
+    .dialog_animado_1 {
+        display: flex;
+        flex-direction: column;
+        margin: animado_1;
+        background-color: #A9A9A9;
+        border: 1px solid #000000;
+        border-radius: 18px;
+        height: 150px;
+        width: 300px;
+    }
+    .button_animado_1 {
+        display: flex; 
+        flex-direction: column; 
+        margin: animado_1; 
+        height: 70px !important; 
+        width: 70px !important; 
+        background-color: #4F4F4F; 
+        color: #000000; 
+        border: 1px solid #000000; 
+        ont-size: 14px; 
+        border-radius: 18px;"
+    }
+    .title_animado_1 {
+        font-size: 75%;
+    }
+    .icon_animado_1 {
+        font-size: 300%;
+    }
+    .icon-spin {
+        animation: spin 2s linear infinite; 
+    }    
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
+#############################################################
+
+<template>
+    <v-btn class="buton_animado_2" ref="botao" stacked @click="start">
+      <div class="title_animado_2">animado_2</div>
+      <v-icon class="icon_animado_2" ref="icon" style="font-size: 40px;">{{ icone }}</v-icon>
+    </v-btn>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        icone: 'mdi-power-on'
+      };
+    },
+    methods: {
+      start: function () {        
+        this.icone = 'mdi-power-off';
+        this.$refs.icon.$el.style.color = '#BD9608';
+        this.$refs.icon.$el.style.textShadow = '0px 0px 10px #BD9608';
+
+        setTimeout(() => {
+          this.icone = 'mdi-power-on';
+          this.$refs.icon.$el.style.color = '#A9A9A9';
+          this.$refs.icon.$el.style.textShadow = '0px 0px 0px';
+          this.send({ payload: 'ON' });
+        }, 1000);
+      },
+    }
+  };
+</script>
+
+<style>
+  .buton_animado_2 {
+    display: flex; 
+    flex-direction: column; 
+    margin: auto; 
+    height: 70px !important; 
+    width: 70px !important; 
+    background-color: #4F4F4F; 
+    color: #000000; 
+    border: 1px solid #000000; 
+    font-size: 14px; 
+    border-radius: 18px;
+  }
+  .title_animado_2 {
+    font-size: 75%;
+  }
+  .icon_animado_2 {
+    color: #A9A9A9;
+  }
+</style>
