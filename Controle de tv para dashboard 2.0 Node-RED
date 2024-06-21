@@ -1,3 +1,29 @@
+============================ FUNÇÂO
+
+if (msg.payload.power === "ON")  {
+    node.send([{payload: "ON"}, null, null, null, null, null, null]);
+}
+if (msg.payload.menos === "ON") {
+    node.send([null, { payload: "ON" }, null, null, null, null, null]);
+}
+if (msg.payload.mais === "ON") {
+    node.send([null, null, { payload: "ON" }, null, null, null, null]);
+}
+if (msg.payload.cima === "ON") {
+    node.send([null, null, null, { payload: "ON" }, null, null, null]);
+}
+if (msg.payload.baixo === "ON") {
+    node.send([null, null, null, null, { payload: "ON" }, null, null]);
+}
+if (msg.payload.direita === "ON") {
+    node.send([null, null, null, null, null, { payload: "ON" }, null]);
+}
+if (msg.payload.esquerda === "ON") {
+    node.send([null, null, null, null, null, null, { payload: "ON" }]);
+}
+
+============================== CONTROLE
+
 <template>
   <div class="card_controle_tv">
     <v-btn class="button_power_controle_tv" @click="power" variant="text">
