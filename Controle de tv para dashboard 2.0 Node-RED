@@ -1,0 +1,131 @@
+<template>
+  <div class="card_controle_tv">
+    <v-btn class="button_power_controle_tv" @click="power" variant="text">
+      <v-icon class="icon_power_controle_tv">mdi-power</v-icon>
+    </v-btn>
+    <div class="group_mais_menos_controle_tv">
+      <v-btn class="button_mais_controle_tv" @click="mais" variant="text">
+        <v-icon class="icon_mais_controle_tv">mdi-plus</v-icon>
+      </v-btn>
+      <v-btn class="button_menos_controle_tv" @click="menos" variant="text">
+        <v-icon class="icon_menos_controle_tv">mdi-minus</v-icon>
+      </v-btn>
+    </div>
+    <div class="group_direcional_controle_tv">
+      <v-btn class="button_cima_controle_tv" @click="cima" variant="text">
+        <v-icon class="icon_cima_controle_tv">mdi-arrow-up</v-icon>
+      </v-btn>
+      <div class="group_esquerda_direita_controle_tv">
+        <v-btn class="button_esquerda_controle_tv" @click="esquerda" variant="text">
+          <v-icon class="icon_controle_tv">mdi-arrow-left</v-icon>
+        </v-btn>
+        <v-btn class="button_direita_controle_tv" @click="direita" variant="text">
+          <v-icon class="icon_direita_controle_tv">mdi-arrow-right</v-icon>
+        </v-btn>
+      </div>
+      <v-btn class="button_baixo_controle_tv" @click="baixo" variant="text">
+        <v-icon class="icon_baixo_controle_tv">mdi-arrow-down</v-icon>
+      </v-btn>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    methods: { 
+      power() {
+        this.send({ payload: {power: "ON"}});
+      },
+      mais() {
+        this.send({ payload: {mais: "ON"}});
+      },
+      menos() {
+        this.send({ payload: {menos: "ON"}});
+      },
+      cima() {
+        this.send({ payload: {cima: "ON"}});
+      },
+      direita() {
+        this.send({ payload: {direita: "ON"}});
+      },
+      esquerda() {
+        this.send({ payload: {esquerda: "ON"}});
+      },
+      baixo() {
+        this.send({ payload: {baixo: "ON"}});
+      }
+    }
+  }
+</script>
+
+<style>
+  .card_controle_tv {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    height: 290px !important;
+    width: 250px !important;
+    background-color: #4F4F4F;
+    border: 1px solid #000000;
+    border-radius: 18px;
+    padding: 10px;
+  }
+
+  .group_mais_menos_controle_tv {
+    display: flex;
+    margin: auto;
+    justify-content: space-evenly;
+    flex-direction: row;
+    border: 1px solid #000000;
+    border-radius: 14px;
+    width: 160px
+  }
+
+  .group_direcional_controle_tv {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    border: 1px solid #000000;
+    border-radius: 14px;
+  }
+
+  .group_esquerda_direita_controle_tv {
+    display: flex;
+    margin: auto;
+    flex-direction: row;
+  }
+
+  .button_power_controle_tv {
+    margin: 5px 5px  7px 150px;
+    font-size: 30px;
+  }
+
+  .button_mais_controle_tv {
+    font-size: 30px;
+  }
+
+  .button_menos_controle_tv {
+    font-size: 30px;
+  }
+
+  .button_cima_controle_tv {
+    font-size: 30px;
+  }
+
+  .button_direita_controle_tv {
+    font-size: 30px;
+  }
+
+  .button_esquerda_controle_tv {
+    display: flex;
+    margin: auto;
+    font-size: 30px;
+  }
+  
+  .button_baixo_controle_tv {
+    display: flex;
+    margin: auto;
+    font-size: 30px;
+  }
+  
+</style>
