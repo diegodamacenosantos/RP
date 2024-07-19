@@ -1,0 +1,46 @@
+var entrada = msg.payload.presence;
+var memoria = global.get("XX");
+var valor;
+
+if (entrada == "on" || entrada == "ON" || entrada == true || entrada == 1) {
+    entrada = "ON"
+} else if (entrada == "off" || entrada == "OFF" || entrada == false || entrada == 0) {
+    entrada = "OFF"
+}
+
+function tick() {
+    valor--;
+    if (valor >= 0) {
+        if (context.get("entrada") !== "parado") {
+            node.send([{ payload: { decaimento: valor} }, null, null])
+            setTimeout(tick, 1000);
+        };
+    } else {
+        node.send([null, null, { payload: { state: "OFF" } }])
+        context.set("entrada", "parado");
+    };
+};
+
+if (entrada !== memoria) {
+    global.set("XX", entrada);
+    if (entrada == "ON") {
+        node.send([null, { payload: { state: "ON" } }, null])
+        context.set("entrada", "parado");
+    } else if (entrada == "OFF") {
+        if (context.get("entrada") !== "rodando") {
+            context.set("entrada", "rodando");
+            valor = 70;
+            tick();
+        };
+    };
+};
+
+----------------------------------
+
+if (msg.payload.illuminance_lux < 10) {
+    global.set("xx", msg.payload.illuminance_lux);
+    node.send([{payload: "ON"}, null]);
+} else if (msg.payload.illuminance_lux >= 10) {
+    global.set("xx", msg.payload.illuminance_lux);
+    node.send([null, {payload: "OFF"}]);
+}
