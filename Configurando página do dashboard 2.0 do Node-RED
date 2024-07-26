@@ -1,0 +1,44 @@
+/* cuida do fundo */
+.v-main {
+    background-image: url('/fundo.jpg');
+    background-size: cover;
+}
+
+/* cuida do grupo */
+.nrdb-ui-group .v-card  {    
+    background-color: #00000040 !important; 
+    border-radius: 10px !important; 
+    border: 1px solid #908f8f;
+    color: #c3c3c3;
+    
+}
+
+/* cuida do menu */
+.v-navigation-drawer {
+    background-color: #00000040;   
+}
+
+/* cuida da cor do titulo do grupo */
+.v-card-title {
+    color: #c3c3c3;
+}
+
+/* cuida da cor do titulo do menu */
+.v-list-item-title {
+    color: #c3c3c3;
+}
+
+/* cuida da transperencia da barra de titulo */
+.v-app-bar.v-toolbar {
+    background: transparent;
+}
+
+/* cuida da cor do titulo */
+.v-toolbar-title__placeholder {
+    color: #c3c3c3;
+}
+
+/* cuida da cor ddo icone de expansao do menu */
+.v-theme--nrdb .v-icon--size-default {
+    color: #c3c3c3;
+}
