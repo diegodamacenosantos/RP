@@ -1,0 +1,10 @@
+apt update -y && apt upgrade -y && apt autoremove -y
+
+apt install mosquitto mosquitto-clients -y
+
+nano /etc/mosquitto/conf.d/default.conf
+
+	allow_anonymous true
+	listener 1883
+
+systemctl restart mosquitto
