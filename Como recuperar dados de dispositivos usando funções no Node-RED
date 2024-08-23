@@ -1,0 +1,31 @@
+var obj = msg.payload;
+var memoria = global.get("nome_variavel");
+
+if (obj == "on" || obj == "ON" || obj == true) {
+    msg.payload = "ON"
+} else if (obj == "off" || obj == "OFF" || obj == false) {
+    msg.payload = "OFF"
+}
+
+
+if (memoria == msg.payload) {
+    node.send([null, null])
+} else {
+    global.set("nome_variavel", msg.payload);
+    if (msg.payload == "ON") {
+        node.send([{ payload: "ON" }, null])
+    } else {
+        node.send([null, { payload: "OFF" }])
+    }
+}
+
+
+##############################################
+
+setTimeout(function () {
+    if (global.get("nome_variavel") == "ON") {
+        node.send([{ payload: "ON" }, null])
+    } else {
+        node.send([null, { payload: "OFF" }])
+    }
+}, 10);
