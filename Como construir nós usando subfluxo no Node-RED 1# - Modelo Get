@@ -1,0 +1,13 @@
+var obj = global.get(env.get("variavel"));
+
+if (obj !== "ON" && obj !== "OFF") {
+    node.send([{ payload: obj }, null, null]);
+}
+
+if (obj === "ON" || obj === "OFF") {
+    if (obj === "ON") {
+        node.send([null, { payload: obj }, null]);
+    } else {
+        node.send([null, null, { payload: obj }]);
+    }
+}
