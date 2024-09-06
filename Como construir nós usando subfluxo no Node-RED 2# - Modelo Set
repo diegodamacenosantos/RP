@@ -1,0 +1,8 @@
+if (env.get("sub_topic") === "") {
+    node.send([{topic: env.get("topic"), payload: env.get("set")}]);
+} else {
+    const subTopic = env.get("sub_topic");
+    const setValue = env.get("set");
+    const jsonPayload = JSON.stringify({ [subTopic]: setValue });
+    node.send([{ topic: env.get("topic"), payload: jsonPayload }]);
+}
