@@ -1,0 +1,97 @@
+[
+    {
+        "id": "209248e6b8478aa4",
+        "type": "subflow",
+        "name": "Status de Grupo",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 780,
+                "y": 560,
+                "wires": [
+                    {
+                        "id": "2408c485d19c5aa4"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 1020,
+                "y": 560,
+                "wires": [
+                    {
+                        "id": "2408c485d19c5aa4",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "referencia",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "pt-BR": "Referência"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str",
+                            "num",
+                            "bool",
+                            "json",
+                            "bin",
+                            "env",
+                            "conf-types"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {},
+        "color": "#FFF0F0",
+        "icon": "font-awesome/fa-arrows-alt"
+    },
+    {
+        "id": "2408c485d19c5aa4",
+        "type": "function",
+        "z": "209248e6b8478aa4",
+        "name": "function 8",
+        "func": "const globalVars = global.keys();\n\nconst onVars = globalVars.filter(key => {\n    return global.get(key) === env.get(\"referencia\");\n});\n\nnode.send({payload:onVars});\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 900,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "edf1c122d4437b6c",
+        "type": "subflow:209248e6b8478aa4",
+        "z": "25b93721f2503edc",
+        "name": "",
+        "env": [
+            {
+                "name": "referencia",
+                "value": "ON",
+                "type": "str"
+            }
+        ],
+        "x": 760,
+        "y": 440,
+        "wires": [
+            [
+                "46989e92c715a370"
+            ]
+        ]
+    }
+]
