@@ -93,7 +93,7 @@
         "type": "function",
         "z": "bf6ebd07f8c65f52",
         "name": "!",
-        "func": "if (env.get(\"referencia_01\") === env.get(\"referencia_02\")) {\n    node.send([{payload: \"igual\"}, null]);\n} else {\n    node.send([null, { payload: \"diferente\" }]);\n}",
+        "func": "var a = global.get(env.get(\"referencia_01\").trim());\nvar b = global.get(env.get(\"referencia_02\").trim());\n\nif ( a === b ) {\n    node.send([{payload: \"igual\"}, null]);\n} else {\n    node.send([null, { payload: \"diferente\" }]);\n}",
         "outputs": 2,
         "timeout": 0,
         "noerr": 0,
@@ -120,7 +120,7 @@
             },
             {
                 "name": "referencia_02",
-                "value": "fita_banheiro",
+                "value": "fita_cozinha",
                 "type": "str"
             },
             {
@@ -129,7 +129,7 @@
                 "type": "str"
             }
         ],
-        "x": 630,
+        "x": 690,
         "y": 520,
         "wires": [
             [
