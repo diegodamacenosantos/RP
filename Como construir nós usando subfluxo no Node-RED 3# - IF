@@ -1,0 +1,143 @@
+[
+    {
+        "id": "bf6ebd07f8c65f52",
+        "type": "subflow",
+        "name": "IF",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 440,
+                "y": 440,
+                "wires": [
+                    {
+                        "id": "31e1ac4fa2583103"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 660,
+                "y": 400,
+                "wires": [
+                    {
+                        "id": "31e1ac4fa2583103",
+                        "port": 0
+                    }
+                ]
+            },
+            {
+                "x": 660,
+                "y": 480,
+                "wires": [
+                    {
+                        "id": "31e1ac4fa2583103",
+                        "port": 1
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "referencia_01",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "pt-BR": "Referência 01"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str",
+                            "num",
+                            "bool",
+                            "json",
+                            "bin",
+                            "env",
+                            "conf-types"
+                        ]
+                    }
+                }
+            },
+            {
+                "name": "referencia_02",
+                "type": "str",
+                "value": "",
+                "ui": {
+                    "label": {
+                        "pt-BR": "Referência 02"
+                    },
+                    "type": "input",
+                    "opts": {
+                        "types": [
+                            "str",
+                            "num",
+                            "bool",
+                            "json",
+                            "bin",
+                            "env",
+                            "conf-types"
+                        ]
+                    }
+                }
+            }
+        ],
+        "meta": {},
+        "color": "#FDF0C2",
+        "icon": "node-red/inject.svg"
+    },
+    {
+        "id": "31e1ac4fa2583103",
+        "type": "function",
+        "z": "bf6ebd07f8c65f52",
+        "name": "!",
+        "func": "if (env.get(\"referencia_01\") === env.get(\"referencia_02\")) {\n    node.send([{payload: \"igual\"}, null]);\n} else {\n    node.send([null, { payload: \"diferente\" }]);\n}",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 440,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "3790bfd2c958ff0f",
+        "type": "subflow:bf6ebd07f8c65f52",
+        "z": "5f68438c7b24fd45",
+        "name": "IF",
+        "env": [
+            {
+                "name": "referencia_01",
+                "value": "fita_banheiro",
+                "type": "str"
+            },
+            {
+                "name": "referencia_02",
+                "value": "fita_banheiro",
+                "type": "str"
+            },
+            {
+                "name": "relacao",
+                "value": "",
+                "type": "str"
+            }
+        ],
+        "x": 630,
+        "y": 520,
+        "wires": [
+            [
+                "33f112f3a953a4d2"
+            ],
+            [
+                "9437caf35a95dd16"
+            ]
+        ]
+    }
+]
