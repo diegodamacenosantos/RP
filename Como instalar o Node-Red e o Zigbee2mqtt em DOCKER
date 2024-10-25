@@ -22,6 +22,8 @@ echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
 
 1 - mkdir /opt/node-red
 
+1a - chmod -R 777 /opt/node-red
+
 ---------------------------------------
 
 version: "3.7"
@@ -32,9 +34,7 @@ services:
     restart: unless-stopped
     environment:
       - TZ=America/Sao_Paulo
-    ports:
-      - "1880:1880"
-      - "1883:1883"	
+    network_mode: host
     volumes:
       - /opt/node-red:/data
 
@@ -50,7 +50,11 @@ OBS>>>> instalar o broker no node-red
 
 1 - mkdir /opt/zigbee2mqtt
 
+1a - chmod -R 777 /opt/zigbee2mqtt/data
+
 2 - mkdir /opt/zigbee2mqtt/data
+
+2a - chmod -R 777 /opt/zigbee2mqtt/data
 
 ----------------------------------------
 
@@ -63,8 +67,7 @@ services:
     volumes:
       - /opt/zigbee2mqtt/data/:/app/data
       - /run/udev:/run/udev:ro
-    ports:
-      - 8080:8080
+    network_mode: host
     environment:
       - TZ=America/Sao_Paulo
     devices:
@@ -114,7 +117,3 @@ serial:
         directory mode = 0777
 
 ---------------------------------------
-
-3 - chmod -R 777 /opt/zigbee2mqtt/data
-
-4 - chmod -R 777 /opt/node-red
