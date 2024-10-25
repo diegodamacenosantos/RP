@@ -1,0 +1,120 @@
+##########################################################################
+
+1 - apt update -y && apt upgrade -y && apt autoremove -y
+
+2 - fallocate -l 3G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+swapon --show
+cp /etc/fstab /etc/fstab.bak
+echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab
+
+3 - apt install curl 
+
+4 - curl -fsSL get.docker.com | sh
+
+5 - systemctl enable docker
+
+6 - docker run -d -p 9000:9000 --name portainer --restart always -v /var/run/docker.sock:/var/run/docker.sock portainer/portainer-ce
+
+##########################################################################
+
+1 - mkdir /opt/node-red
+
+---------------------------------------
+
+version: "3.7"
+services:
+  node-red:
+    container_name: node-red
+    image: nodered/node-red:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+    ports:
+      - "1880:1880"
+      - "1883:1883"	
+    volumes:
+      - /opt/node-red:/data
+
+---------------------------------------
+
+2 - nano /opt/node-red/settings.js
+
+##########################################################################
+
+OBS>>>> instalar o broker no node-red 
+
+##########################################################################
+
+1 - mkdir /opt/zigbee2mqtt
+
+2 - mkdir /opt/zigbee2mqtt/data
+
+----------------------------------------
+
+version: '3.8'
+services:
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - /opt/zigbee2mqtt/data/:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      - 8080:8080
+    environment:
+      - TZ=America/Sao_Paulo
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+
+----------------------------------------
+
+3 - nano /opt/zigbee2mqtt/data/configuration.yaml
+
+----------------------------------------
+
+frontend:
+  port: 8080
+mqtt:
+  base_topic: zigbee2mqtt
+  server: mqtt://ip_do_node-red:1883
+serial:  
+  port: /dev/ttyUSB0
+
+##########################################################################
+
+1 - apt-get install samba -y
+
+2 - nano /etc/samba/smb.conf
+
+---------------------------------------
+
+[global]
+        workgroup = WORKGROUP
+        server string = HUB
+        server role = standalone server
+        passdb backend = smbpasswd
+        map to guest = bad user
+[Node-RED]
+        path = /opt/node-red
+        guest ok = yes
+        read only = no
+        browseable = yes
+        create mode = 0777
+        directory mode = 0777
+[Zigbee2mqtt]
+        path = /opt/zigbee2mqtt
+        guest ok = yes
+        read only = no
+        browseable = yes
+        create mode = 0777
+        directory mode = 0777
+
+---------------------------------------
+
+3 - chmod -R 777 /opt/zigbee2mqtt/data
+
+4 - chmod -R 777 /opt/node-red
