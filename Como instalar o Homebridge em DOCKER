@@ -1,0 +1,12 @@
+version: '2'
+services:
+  homebridge:
+    container_name: homebridge
+    image: homebridge/homebridge:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+    network_mode: host
+    volumes:
+      - /opt/homebridge:/homebridge
+    privileged: true
