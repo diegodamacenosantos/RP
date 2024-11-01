@@ -1,3 +1,7 @@
+1 - mkdir /opt/homebridge
+
+2 - chmod -R 777 /opt/homebridge
+
 version: '2'
 services:
   homebridge:
