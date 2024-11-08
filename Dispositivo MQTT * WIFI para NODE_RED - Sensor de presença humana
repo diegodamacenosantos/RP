@@ -1,0 +1,44 @@
+import network
+import time
+from umqtt.simple import MQTTClient
+from machine import Pin, UART
+import ujson
+
+ssid = "WIFI"
+password = "SENHA_WIFI"
+mqtt_broker = "test.mosquitto.org"
+mqtt_port = 1883
+mqtt_topic = "TOPICO"
+
+presenca = UART(1, baudrate=115200, tx=32, rx=33)
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+while not wlan.isconnected():
+    time.sleep(1)
+
+client = MQTTClient(mqtt_topic, mqtt_broker, mqtt_port)
+client.connect()
+client.publish(mqtt_topic, f"WIFI e Broker Conectados! IP: {wlan.ifconfig()[0]}".encode())
+
+def read_presenca():
+    if presenca.any():
+        data = presenca.read().decode('utf-8')
+        if "ON" in data:
+            distancia = int(data.split("Range ")[1].split()[0])
+            return {"captura": "ON", "distancia": distancia}
+    return {"captura": "OFF", "distancia": 0}
+
+try:
+    while True:
+        presenca_data = read_presenca()
+        payload_json = ujson.dumps({"presenca": presenca_data}).encode()
+        client.publish(mqtt_topic, payload_json)
+        time.sleep(2)
+
+except KeyboardInterrupt:
+    client.publish(mqtt_topic, "Programa interrompido.".encode())
+
+finally:
+    client.disconnect()
