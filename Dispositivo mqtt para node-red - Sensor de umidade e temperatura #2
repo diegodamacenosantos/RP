@@ -1,0 +1,51 @@
+import network
+import time
+from umqtt.simple import MQTTClient
+import dht
+import ujson
+from machine import Pin
+
+ssid = ""
+password = ""
+
+mqtt_broker = "test.mosquitto.org"
+mqtt_port = 1883
+mqtt_topic = ""
+
+termostato = dht.DHT11(Pin(33))  
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+while not wlan.isconnected():
+    time.sleep(1)
+
+client = MQTTClient("esp32_temp", mqtt_broker, mqtt_port)
+client.connect()
+
+client.publish(
+    mqtt_topic, "WIFI e Broker Conectados! IP: {}".format(wlan.ifconfig()[0]).encode()
+)
+
+try:
+    while True:
+        
+        termostato.measure()  
+        temperatura = termostato.temperature() 
+        umidade = termostato.humidity()  
+        
+        payload = {
+            "temperatura": temperatura,
+            "umidade": umidade
+        }
+        
+        payload_json = ujson.dumps(payload)
+        client.publish(mqtt_topic, payload_json.encode())
+        
+        time.sleep(5)  
+
+except KeyboardInterrupt:
+    client.publish(mqtt_topic, "Programa interrompido.".encode())
+
+finally:
+    client.disconnect()
