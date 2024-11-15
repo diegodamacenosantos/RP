@@ -49,3 +49,33 @@ except KeyboardInterrupt:
 
 finally:
     client.disconnect()
+
+
+#########################################################################
+
+var temp = parseFloat(msg.payload.temperatura);
+var umR = parseFloat(msg.payload.umidade);
+var HI;
+var tempF = (temp * 9 / 5) + 32;
+
+HI = 0.5 * (tempF + 61.0 + ((tempF - 68.0) * 1.2) + (umR * 0.094));
+if (HI > 79) {
+    HI = -42.379 + 2.04901523 * tempF + 10.14333127 * umR - 0.22475541 * tempF * umR - 0.00683783 * tempF * tempF - 0.05481717 * umR * umR + 0.00122874 * tempF * tempF * umR + 0.00085282 * tempF * umR * umR - 0.00000199 * tempF * tempF * umR * umR;
+    if ((umR <= 13) && ((tempF >= 80) && tempF <= 112)) {
+        HI -= ((13 - umR) / 4) * Math.sqrt((17 - Math.abs(tempF - 95.)) / 17);
+    }
+    if ((umR > 85) && ((tempF >= 80) && tempF <= 87)) {
+        HI += ((umR - 85) / 10) * ((87 - tempF) / 5);
+    }
+}
+var ic = (HI - 32) / 1.8;
+
+var icArredondado = ic.toFixed(0);
+
+return [{
+    payload: {
+        temperatura: temp.toFixed(0),
+        umidade: umR.toFixed(0),
+        ic: icArredondado
+    }
+}];
