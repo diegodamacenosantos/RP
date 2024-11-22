@@ -1,0 +1,58 @@
+import network
+import time
+import ujson
+from umqtt.simple import MQTTClient
+from machine import Pin
+
+ssid = ""
+password = ""
+
+mqtt_broker = "test.mosquitto.org"
+mqtt_port = 1883
+mqtt_topic = ""
+
+pir_sensor = Pin(33, Pin.IN)
+last_motion = None
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+
+while not wlan.isconnected():
+    time.sleep(1)
+
+client = MQTTClient(mqtt_topic, mqtt_broker, mqtt_port)
+client.connect()
+
+client.publish(
+    mqtt_topic, "Wi-Fi e Broker Conectados! IP: {}".format(wlan.ifconfig()[0]).encode()
+)
+
+def on_message(topic, msg):
+    pass
+
+client.set_callback(on_message)
+client.subscribe(mqtt_topic)
+
+try:
+    while True:
+        motion_detected = pir_sensor.value()
+
+        if motion_detected and last_motion != True:
+
+            mensagem = ujson.dumps({"movimento": "ON"})
+            client.publish(mqtt_topic, mensagem.encode())
+            last_motion = True
+
+        elif not motion_detected and last_motion != False:
+            mensagem = ujson.dumps({"movimento": "OFF"})
+            client.publish(mqtt_topic, mensagem.encode())
+            last_motion = False
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    client.publish(mqtt_topic, "Programa interrompido.".encode())
+
+finally:
+    client.disconnect()
