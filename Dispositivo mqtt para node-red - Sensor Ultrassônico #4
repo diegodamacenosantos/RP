@@ -1,0 +1,65 @@
+import network
+import time
+from umqtt.simple import MQTTClient
+from machine import Pin, Timer
+import ujson
+
+ssid = ""
+password = ""
+
+mqtt_broker = "test.mosquitto.org"
+mqtt_port = 1883
+mqtt_topic = ""
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+while not wlan.isconnected():
+    time.sleep(1)
+
+client = MQTTClient(mqtt_topic, mqtt_broker, mqtt_port)
+client.connect()
+
+client.publish(
+    mqtt_topic, "WIFI e Broker Conectados! IP: {}".format(wlan.ifconfig()[0]).encode()
+)
+
+trigger_pin = Pin(25, Pin.OUT)
+echo_pin = Pin(26, Pin.IN)
+
+def medir_distancia():
+    trigger_pin.value(0)
+    time.sleep_us(2)
+    trigger_pin.value(1)
+    time.sleep_us(10)
+    trigger_pin.value(0)
+
+    while echo_pin.value() == 0:
+        pulse_start = time.ticks_us()
+
+    while echo_pin.value() == 1:
+        pulse_end = time.ticks_us()
+
+    pulse_duration = time.ticks_diff(pulse_end, pulse_start)
+    distance = (pulse_duration / 2) / 29.1  # Fórmula para conversão de tempo para distância (em cm)
+    return distance
+
+try:
+    while True:
+        distancia = medir_distancia()
+
+        payload = {
+            "distancia": round(distancia, 2)
+        }
+
+        payload_json = ujson.dumps(payload)
+
+        client.publish(mqtt_topic, payload_json.encode())
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    client.publish(mqtt_topic, "Programa interrompido.".encode())
+
+finally:
+    client.disconnect()
