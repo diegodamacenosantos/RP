@@ -1,0 +1,46 @@
+import network
+import time
+from umqtt.simple import MQTTClient
+from machine import Pin
+
+ssid = ""
+password = ""
+mqtt_broker = ""
+mqtt_port = 1883
+mqtt_topic = ""
+
+switch = Pin(33, Pin.OUT)  
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+
+while not wlan.isconnected():
+    time.sleep(1)
+
+client = MQTTClient(mqtt_topic, mqtt_broker, mqtt_port)
+client.connect()
+
+client.publish(
+    mqtt_topic, "WIFI e Broker Conectados! IP: {}".format(wlan.ifconfig()[0]).encode()
+)
+
+def on_message(topic, msg):
+    if msg == b"ON":
+        switch.value(1)  
+    elif msg == b"OFF":
+        switch.value(0)  
+
+client.set_callback(on_message)
+client.subscribe(mqtt_topic)
+
+try:
+    while True:
+        client.wait_msg()  
+
+except KeyboardInterrupt:
+    client.publish(mqtt_topic, "Programa interrompido.".encode())
+
+finally:
+    client.disconnect()
+
