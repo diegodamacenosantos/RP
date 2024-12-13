@@ -28,13 +28,13 @@ sensor_lux = ADC(Pin(32))
 sensor_lux.atten(ADC.ATTN_11DB)
 
 def ler_luminosidade():
-    amostras = 10  # Número de leituras para média
+    amostras = 10  
     soma_adc = 0
     for _ in range(amostras):
-        soma_adc += sensor_lux.read()  # Lê o valor do ADC (0-4095)
-        time.sleep(0.01)  # Pequeno atraso entre leituras
-    valor_adc = soma_adc / amostras  # Calcula a média
-    porcentagem = (valor_adc / 4095) * 100  # Converte o valor ADC para porcentagem (0-100)
+        soma_adc += sensor_lux.read()  
+        time.sleep(0.01)  
+    valor_adc = soma_adc / amostras  
+    porcentagem = (valor_adc / 4095) * 100  
     return porcentagem
 
 ultimo_valor = None
