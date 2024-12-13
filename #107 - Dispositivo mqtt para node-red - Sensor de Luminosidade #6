@@ -1,0 +1,63 @@
+import network
+import time
+from umqtt.simple import MQTTClient
+from machine import Pin, ADC
+import ujson
+
+ssid = ""
+password = ""
+
+mqtt_broker = ""
+mqtt_port = 1883
+mqtt_topic = ""
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+while not wlan.isconnected():
+    time.sleep(1)
+
+client = MQTTClient(mqtt_topic, mqtt_broker, mqtt_port)
+client.connect()
+
+client.publish(
+    mqtt_topic, "WIFI e Broker Conectados! IP: {}".format(wlan.ifconfig()[0]).encode()
+)
+
+sensor_lux = ADC(Pin(32))
+sensor_lux.atten(ADC.ATTN_11DB)
+
+def ler_luminosidade():
+    amostras = 10  # Número de leituras para média
+    soma_adc = 0
+    for _ in range(amostras):
+        soma_adc += sensor_lux.read()  # Lê o valor do ADC (0-4095)
+        time.sleep(0.01)  # Pequeno atraso entre leituras
+    valor_adc = soma_adc / amostras  # Calcula a média
+    porcentagem = (valor_adc / 4095) * 100  # Converte o valor ADC para porcentagem (0-100)
+    return porcentagem
+
+ultimo_valor = None
+
+try:
+    while True:
+        luminosidade = ler_luminosidade()
+
+        if ultimo_valor is None or abs(luminosidade - ultimo_valor) > 1:  
+            payload = {
+                "luminosidade": round(luminosidade, 2)  
+            }
+
+            payload_json = ujson.dumps(payload)
+
+            client.publish(mqtt_topic, payload_json.encode())
+
+            ultimo_valor = luminosidade
+
+        time.sleep(1)
+
+except KeyboardInterrupt:
+    client.publish(mqtt_topic, "Programa interrompido.".encode())
+
+finally:
+    client.disconnect()
