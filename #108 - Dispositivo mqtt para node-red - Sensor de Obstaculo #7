@@ -1,0 +1,48 @@
+import network
+from umqtt.simple import MQTTClient
+from machine import Pin
+import ujson
+
+ssid = ""
+password = ""
+
+mqtt_broker = ""
+mqtt_port = 1883
+mqtt_topic = ""  
+
+obstaculo = Pin(32, Pin.IN)  # Sensor de obstáculo
+
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(ssid, password)
+while not wlan.isconnected():
+    pass
+
+client = MQTTClient(mqtt_topic, mqtt_broker, mqtt_port)
+client.connect()
+client.publish(
+    mqtt_topic, "Conectado ao WiFi e Broker! IP: {}".format(wlan.ifconfig()[0]).encode()
+)
+
+estado_anterior = obstaculo.value()
+
+try:
+    while True:
+        estado_atual = obstaculo.value()
+
+        if estado_atual != estado_anterior:
+            if estado_atual == 1:  
+                payload = {"obstaculo": "OFF"}
+            else:  
+                payload = {"obstaculo": "ON"}
+            
+            payload_json = ujson.dumps(payload)
+            client.publish(mqtt_topic, payload_json.encode())
+            
+            estado_anterior = estado_atual
+
+except KeyboardInterrupt:
+    client.publish(mqtt_topic, "Programa interrompido.".encode())
+
+finally:
+    client.disconnect()
