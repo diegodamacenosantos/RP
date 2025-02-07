@@ -1,0 +1,17 @@
+1 - mkdir /opt/homeassistant
+
+2 - chmod -R 777 /opt/homeassistant
+
+-----------------------------------------
+
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    restart: unless-stopped
+    volumes:
+      - /opt/homeassistant/:/homeassistant
+    network_mode: host
+    environment:
+      - TZ=America/Sao_Paulo    
+    privileged: true
