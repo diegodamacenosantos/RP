@@ -1,0 +1,24 @@
+mkdir /opt/influxdb-data
+mkdir /opt/influxdb-config
+
+chmod -R 777 /opt/influxdb-data
+chmod -R 777 /opt/influxdb-config
+
+
+services:
+  influxdb:
+    container_name: influxdb
+    image: influxdb:2
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=1234567890
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=1234567890
+      - DOCKER_INFLUXDB_INIT_ORG=node-red
+      - DOCKER_INFLUXDB_INIT_BUCKET=node-red
+    network_mode: "host"
+    volumes:
+      - /opt/influxdb-data:/var/lib/influxdb2
+      - /opt/influxdb-config:/etc/influxdb2
