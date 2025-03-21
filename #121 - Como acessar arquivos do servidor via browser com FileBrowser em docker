@@ -1,0 +1,29 @@
+1 - mkdir /opt/filebrowser
+
+2 - chmod -R 777 /opt/filebrowser
+
+3 - mkdir /opt/filebrowser/config
+
+4 - chmod -R 777 /opt/filebrowser/config
+
+5 - mkdir /opt/filebrowser/database
+
+6 - chmod -R 777 /opt/filebrowser/database
+
+-----------------------------------------------
+
+version: "3.8"
+services:
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser:latest
+    restart: unless-stopped
+    environment:
+      - FB_NOAUTH=false  
+    ports:
+      - "8185:80" 	  
+    volumes:
+      - /opt/node-red:/srv/node-red 
+      - /opt/zigbee2mqtt:/srv/zigbee2mqtt 
+      - /opt/filebrowser/config:/config  
+      - /opt/filebrowser/database:/database
