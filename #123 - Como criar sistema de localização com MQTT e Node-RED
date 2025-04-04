@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+Aplicativo a ser usado - Owntracks
+------------------------------------------------------------------
+Nó a ser instalado no node-red - node-red-contrib-web-worldmap
+------------------------------------------------------------------
+
+msg.payload = {
+    "draggable": true,
+    "name": "obj",
+    "lat": msg.payload.lat,
+    "lon": msg.payload.lon,
+    "radius": 13,
+    "color": '#000000',
+    "opacity": 1,
+    "fillColor": '#F52D00',
+    "fillOpacity": 1,
+    "command": {       
+        "zoom": 17,
+        "lat": msg.payload.lat,
+        "lon": msg.payload.lon,
+    } 
+};
+
+global.set("bateria_obj", parseFloat(msg.payload.batt).toFixed(0))
+
+global.set("localizacao_obj", msg.payload)
+
+node.send([{payload: msg.payload}, {payload: parseFloat(msg.payload.batt).toFixed(0)}])
+
+------------------------------------------------------------------
+
+<template>
+    <iframe class="mapa" src="/worldmap"></iframe>
+</template>
+
+<style>
+    .mapa {
+        display: flex;
+        margin: auto;
+        border: 1px solid #000000;
+        border-radius: 18px;
+        height: 300px;
+        width: 300px;
+    }
+</style>
+
+------------------------------------------------------------------
