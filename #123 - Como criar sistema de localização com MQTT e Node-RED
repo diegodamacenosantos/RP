@@ -4,7 +4,7 @@ Aplicativo a ser usado - Owntracks
 Nó a ser instalado no node-red - node-red-contrib-web-worldmap
 ------------------------------------------------------------------
 
-msg.payload = {
+var localizacao = {
     "draggable": true,
     "name": "obj",
     "lat": msg.payload.lat,
@@ -21,11 +21,14 @@ msg.payload = {
     } 
 };
 
-global.set("bateria_obj", parseFloat(msg.payload.batt).toFixed(0))
+var bateria = msg.payload.batt
 
-global.set("localizacao_obj", msg.payload)
 
-node.send([{payload: msg.payload}, {payload: parseFloat(msg.payload.batt).toFixed(0)}])
+global.set("bateria_obj", bateria)
+
+global.set("localizacao_obj", localizacao)
+
+node.send([{payload: localizacao}, {payload: bateria}])
 
 ------------------------------------------------------------------
 
