@@ -1,0 +1,20 @@
+1 - mkdir /opt/grafana
+
+2 - chmod -R 777 /opt/grafana
+
+---------------------------------------
+
+version: "3.7"
+services:
+  grafana:
+    container_name: grafana
+    image: grafana/grafana-enterprise:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - GF_SECURITY_ADMIN_USER=admin       
+      - GF_SECURITY_ADMIN_PASSWORD=1234   
+    network_mode: "host"                   
+    volumes:
+      - /opt/grafana:/var/lib/grafana      
+    privileged: true    
