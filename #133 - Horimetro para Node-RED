@@ -1,0 +1,40 @@
+var tempo_usado = global.get("tempo_de_funcionamento") | 0;
+let startTime = flow.get('startTime');   
+const now = Date.now();
+
+if (msg.payload === 'ON') {
+    flow.set('startTime', now);
+    
+    msg.payload = {
+        evento: 'ON',
+        hora_on: new Date(now).toLocaleString()
+    };
+    
+    return msg;          
+}
+
+if (msg.payload === 'OFF' && startTime) {
+    const duracaoMs = now - startTime;
+    const duracaoSeg = Math.floor(duracaoMs / 1000);
+
+    flow.set('startTime', null);
+
+    global.set("tempo_de_funcionamento", tempo_usado + duracaoSeg)
+
+    msg.payload = {
+        evento: 'OFF',
+        hora_on:  new Date(startTime).toLocaleString(),
+        hora_off: new Date(now).toLocaleString(),
+        duracao_segundos: duracaoSeg,
+        duracao_hms: new Date(duracaoMs).toISOString().substr(11, 8),
+        tempo_total_de_uso: global.get("tempo_de_funcionamento") | 0
+    };
+
+    return msg;          
+}
+
+if (msg.payload === 'RESET') {
+    global.set("tempo_de_funcionamento", 0)
+}
+
+return null;
