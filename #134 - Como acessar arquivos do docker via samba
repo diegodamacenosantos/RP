@@ -1,0 +1,25 @@
+apt-get install samba -y
+
+nano /etc/samba/smb.conf
+
+———————————————————
+
+[global]
+        workgroup = WORKGROUP
+        server string = HUB
+        server role = standalone server
+        passdb backend = smbpasswd
+        map to guest = bad user
+[otp]
+        path = /opt
+        guest ok = yes
+        read only = no
+        browseable = yes
+        create mode = 0777
+        directory mode = 0777
+
+———————————————————
+
+chmod -R 777 /opt
+
+systemctl enable --now smbd nmbd 
