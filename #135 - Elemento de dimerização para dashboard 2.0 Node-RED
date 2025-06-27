@@ -1,0 +1,200 @@
+<template>
+    <v-btn class="botao_test" stacked @click="alternardialog">
+        <div class="titulo_botao_test">Sala</div>
+        <v-icon class="icone_botao_test" ref="icon">mdi-track-light</v-icon>
+    </v-btn>
+    <v-dialog class="dialog_test" v-model="dialog">
+        <v-slider class="barra_test" :max="254" :min="0" :step="1" :thumb-size="15" color="#BD9608" :track-size="5" v-model="value_barra" @end="barra" hide-details/>
+    </v-dialog>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                dialog: false,
+                value_barra: 0
+            };
+        },
+        methods: {
+            alternardialog() {
+                this.dialog = true;
+            },
+            alternar() {
+                if (this.msg.payload.state === 'ON') {
+                    this.off_alternar();
+                } else {
+                    this.on_alternar();
+                }
+            },
+            barra() {
+                if (this.value_barra >= 1) {
+                    this.send({ payload: {state: "ON", brightness: parseInt(this.value_barra)}});
+                    this.on();
+                } else {
+                    this.send({ payload: { state: "OFF", brightness: 0}});
+                    this.off();
+                }                
+            },
+            on_alternar() {
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.send({ payload: {state: "ON", brightness: 10}});
+            },
+            off_alternar() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.send({ payload: {state: "OFF", brightness: 0}});
+            },
+            on() {
+                this.$refs.icon.$el.style.color = '#BD9608';
+            },
+            off() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+            }
+            
+        },
+        watch: {
+            msg: function() {
+                if (this.msg.payload.state === "ON") {
+                    this.on();
+                } else {
+                    this.off();
+                } 
+                if (this.msg.payload.brightness) {
+                    this.value_barra = this.msg.payload.brightness;
+                }
+
+            }
+        }
+    }
+</script>
+
+<style>
+    .dialog_test {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        background-color: #A9A9A9;
+        border: 1px solid #000000;
+        border-radius: 18px;
+        height: 80px !important;
+        width: 300px;
+    }    
+    .botao_test {
+        display: flex; 
+        flex-direction: column; 
+        margin: auto; 
+        height: 75px !important; 
+        width: 75px !important; 
+        background-color: #4F4F4F; 
+        color: #000000; 
+        border: 1px solid #000000; 
+        font-size: 14px; 
+        border-radius: 18px;
+    }
+    .titulo_botao_test {
+        font-size: 75%;
+    }
+    .icone_botao_test {
+        margin: 5px 1px 1px 1px;
+        font-size: 300%;
+    }
+</style><template>
+    <v-btn class="botao_test" stacked @click="alternardialog">
+        <div class="titulo_botao_test">test</div>
+        <v-icon class="icone_botao_test" ref="icon">mdi-lightbulb</v-icon>
+    </v-btn>
+    <v-dialog class="dialog_test" v-model="dialog">
+        <v-slider class="barra_test" :max="254" :min="0" :step="1" :thumb-size="15" color="#BD9608" :track-size="5" v-model="value_barra" @end="barra" hide-details/>
+    </v-dialog>
+</template>
+
+<script>
+    export default {
+        data() {
+            return {
+                dialog: false,
+                value_barra: 0
+            };
+        },
+        methods: {
+            alternardialog() {
+                this.dialog = true;
+            },
+            alternar() {
+                if (this.msg.payload.state === 'ON') {
+                    this.off_alternar();
+                } else {
+                    this.on_alternar();
+                }
+            },
+            barra() {
+                if (this.value_barra >= 1) {
+                    this.send({ payload: {state: "ON", brightness: parseInt(this.value_barra)}});
+                    this.on();
+                } else {
+                    this.send({ payload: { state: "OFF", brightness: 0}});
+                    this.off();
+                }                
+            },
+            on_alternar() {
+                this.$refs.icon.$el.style.color = '#BD9608';
+                this.send({ payload: {state: "ON", brightness: 10}});
+            },
+            off_alternar() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+                this.send({ payload: {state: "OFF", brightness: 0}});
+            },
+            on() {
+                this.$refs.icon.$el.style.color = '#BD9608';
+            },
+            off() {
+                this.$refs.icon.$el.style.color = '#A9A9A9';
+            }
+            
+        },
+        watch: {
+            msg: function() {
+                if (this.msg.payload.state === "ON") {
+                    this.on();
+                } else {
+                    this.off();
+                } 
+                if (this.msg.payload.brightness) {
+                    this.value_barra = this.msg.payload.brightness;
+                }
+
+            }
+        }
+    }
+</script>
+
+<style>
+    .dialog_test {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+        background-color: #A9A9A9;
+        border: 1px solid #000000;
+        border-radius: 18px;
+        height: 150px;
+        width: 300px;
+    }    
+    .botao_test {
+        display: flex; 
+        flex-direction: column; 
+        margin: auto; 
+        height: 75px !important; 
+        width: 75px !important; 
+        background-color: #4F4F4F; 
+        color: #000000; 
+        border: 1px solid #000000; 
+        font-size: 14px; 
+        border-radius: 18px;
+    }
+    .titulo_botao_test {
+        font-size: 75%;
+    }
+    .icone_botao_test {
+        font-size: 300%;
+    }
+</style>
