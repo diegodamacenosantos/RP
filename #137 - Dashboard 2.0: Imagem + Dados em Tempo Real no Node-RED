@@ -1,0 +1,67 @@
+<template>
+  <div class="image-container">
+    <v-img src= "/modulo.png" class="base-image" />
+    <div class="a1">{{ a1 }}%</div>
+    <div class="a2">{{ a2 }}°</div>
+    <div class="a3">{{ a3 }}°</div>
+    <div class="a4">{{ a4 }}°</div>
+  </div>
+</template>
+
+<script>
+  export default {
+    data() {
+      return {
+        a1: 0,
+        a2: 0,
+        a3: 0,
+        a4: 0
+      };
+    },
+    watch: {
+      msg(newVal) {
+        if (newVal && newVal.payload) {
+
+          if (newVal.payload.a1 !== undefined) {
+            this.a1 = newVal.payload.a1;
+            this.a2 = newVal.payload.a2;
+            this.a3 = newVal.payload.a3;
+            this.a4 = newVal.payload.a4;
+          }
+          
+        }
+      }
+    }
+  };
+</script>
+
+<style scoped>
+  
+  .image-container {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .base-image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .image-container .a1,
+  .image-container .a2,
+  .image-container .a3,
+  .image-container .a4 {
+    position: absolute;
+    color: #000000;
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  .a1 { top: 12%; left: 74%; }
+  .a2 { top: 33%; left: 67%; }
+  .a3 { top: 50.5%; left: 10%; }
+  .a4 { top: 83%; left: 79%; }
+
+</style>
