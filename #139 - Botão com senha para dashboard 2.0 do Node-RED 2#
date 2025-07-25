@@ -1,0 +1,357 @@
+<template>
+  <div>
+    <div class="smart-auto-control_auto" :class="{ 'active-auto_auto': isActive }" @click="alternardialog">
+      <div class="auto-header_auto">
+        <span class="auto-title_auto">Auto</span>
+        <div class="status-indicator-auto_auto" :class="{ 'on-auto_auto': isActive }"></div>
+      </div>
+      <div class="icon-container-auto_auto">
+        <v-icon 
+          class="auto-icon_auto"
+          :class="{ 'icon-spin_auto': isActive,}"
+          ref="icon"
+          :color="iconColor"
+          size="38"
+        >
+          mdi-cog-outline
+        </v-icon>
+      </div>
+      <div class="status-display_auto">
+        <span class="status-text_auto">{{ statusText }}</span>
+      </div>
+    </div>
+
+    <v-dialog v-model="dialog" max-width="320">
+      <v-card class="auto-dialog_auto">
+        <v-card-text class="dialog-content_auto">
+          <div class="auth-header_auto">
+            <v-icon class="auth-icon_auto" size="40" color="#FFD700">mdi-shield-key</v-icon>
+            <h3 class="auth-title_auto">Autorização</h3>
+            <p class="auth-subtitle_auto">Digite a senha</p>
+          </div>
+
+          <v-text-field 
+            class="password-field_auto" 
+            type="password" 
+            label="Senha" 
+            variant="outlined" 
+            v-model="senha" 
+            @keyup.enter="fecharDialog"
+            :error="hasError"
+            :error-messages="errorMessage"
+            hide-details="auto"
+            color="#FFD700"
+          />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      value: 'OFF',
+      dialog: false,
+      senha: '',
+      hasError: false,
+      errorMessage: ''
+    };
+  },
+  computed: {
+    isActive() {
+      return this.value === 'ON';
+    },
+    iconColor() {
+      return this.isActive ? '#FFD700' : '#9E9E9E';
+    },
+    statusText() {
+      return this.isActive ? 'ATIVO' : 'INATIVO';
+    }
+  },
+  methods: {
+    alternardialog() {
+      this.dialog = true;
+      this.clearError();
+    },
+    fecharDialog() {
+      if (this.senha === '780705') {
+        this.dialog = false;
+        this.alternar();
+        this.senha = '';
+        this.clearError();
+      } else {
+        this.showError('Senha incorreta. Tente novamente.');
+        this.senha = '';
+        setTimeout(() => {
+          this.clearError();
+        }, 3000);
+      }
+    },
+    cancelDialog() {
+      this.dialog = false;
+      this.senha = '';
+      this.clearError();
+    },
+    showError(message) {
+      this.hasError = true;
+      this.errorMessage = message;
+    },
+    clearError() {
+      this.hasError = false;
+      this.errorMessage = '';
+    },
+    alternar() {
+      this.value = this.value === 'ON' ? 'OFF' : 'ON';
+      this.send({ payload: this.value });
+    },
+    on() {
+      this.value = 'ON';
+    },
+    off() {
+      this.value = 'OFF';
+    }
+  },
+  watch: {
+    msg() {
+      if (this.msg.payload === 'ON') {
+        this.on();
+      } else {
+        this.off();
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+.smart-auto-control_auto {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: auto;
+  height: 75px !important;
+  width: 75px !important;
+  background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+  color: #ffffff;
+  border: 2px solid #404040;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.smart-auto-control_auto::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), transparent);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.smart-auto-control_auto:hover::before {
+  opacity: 1;
+}
+
+.smart-auto-control_auto:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: #555555;
+}
+
+.smart-auto-control_auto.active-auto_auto {
+  background: linear-gradient(145deg, #4a3d1a, #2d2510);
+  border-color: #FFD700;
+}
+
+.auto-header_auto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 6px 0;
+  height: 16px;
+}
+
+.auto-title_auto {
+  font-size: 9px;
+  font-weight: 600;
+  color: #e0e0e0;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}
+
+.status-indicator-auto_auto {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: #666666;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.status-indicator-auto_auto.on-auto_auto {
+  background-color: #FFD700;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+  animation: auto-blink_auto 1.5s infinite;
+}
+
+@keyframes auto-blink_auto {
+  0%, 70% { opacity: 1; }
+  71%, 100% { opacity: 0.4; }
+}
+
+.icon-container-auto_auto {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 2px;
+  position: relative;
+}
+
+.auto-icon_auto {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  transform-origin: center center;
+}
+
+.auto-icon_auto.icon-spin_auto {
+  animation: spin_auto 2s linear infinite;
+}
+
+@keyframes spin_auto {
+  0% { transform: rotate(0deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1.05); }
+}
+
+.smart-auto-control_auto:hover .auto-icon_auto {
+  transform: scale(1.1);
+}
+
+.smart-auto-control_auto.active-auto_auto .auto-icon_auto {
+  transform: scale(1.05);
+}
+
+.status-display_auto {
+  text-align: center;
+  font-size: 8px;
+  font-weight: 600;
+  color: #b0b0b0;
+  padding: 0 4px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  line-height: 1;
+  height: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-text_auto {
+  transition: color 0.3s ease;
+}
+
+.active-auto_auto .status-text_auto {
+  color: #FFD700;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+}
+
+.auto-dialog_auto {
+  background: linear-gradient(145deg, #2c2c2c, #1a1a1a) !important;
+  color: #ffffff;
+  border-radius: 16px;
+  border: 2px solid #404040;
+}
+
+.dialog-content_auto {
+  padding: 24px;
+}
+
+.auth-header_auto {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-icon_auto {
+  margin-bottom: 12px;
+}
+
+.auth-title_auto {
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle_auto {
+  color: #b0b0b0;
+  font-size: 14px;
+  margin: 0;
+}
+
+.password-field_auto {
+  margin-bottom: 0;
+}
+
+.smart-auto-control_auto:active {
+  transform: translateY(0);
+}
+
+.smart-auto-control_auto:active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 215, 0, 0.3);
+  transform: translate(-50%, -50%);
+  animation: auto-ripple_auto 0.6s ease-out;
+}
+
+@keyframes auto-ripple_auto {
+  to {
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+  }
+}
+
+:deep(.v-overlay__content) {
+  background: rgba(0, 0, 0, 0.8) !important;
+}
+
+:deep(.v-dialog > .v-card) {
+  background: linear-gradient(145deg, #2c2c2c, #1a1a1a) !important;
+}
+
+:deep(.v-field--variant-outlined .v-field__outline) {
+  color: #555555;
+}
+
+:deep(.v-field--variant-outlined.v-field--focused .v-field__outline) {
+  color: #FFD700;
+}
+
+:deep(.v-field__input) {
+  color: #ffffff !important;
+}
+
+:deep(.v-label) {
+  color: #b0b0b0 !important;
+}
+
+:deep(.v-field--variant-outlined.v-field--focused .v-label) {
+  color: #FFD700 !important;
+}
+</style>
