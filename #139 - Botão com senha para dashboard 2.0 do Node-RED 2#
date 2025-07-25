@@ -76,7 +76,7 @@ export default {
       this.clearError();
     },
     fecharDialog() {
-      if (this.senha === '780705') {
+      if (this.senha === '12345678') {
         this.dialog = false;
         this.alternar();
         this.senha = '';
