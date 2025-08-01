@@ -1,0 +1,31 @@
+
+1 - crie as pasta e de liberação full para salvar os arquivos de configuração do mosquito
+
+sudo rm -rf /opt/mosquitto && sudo mkdir -p /opt/mosquitto/{config,data,log} && sudo chmod -R 777 /opt/mosquitto
+
+2 - acesse o filebrowser e dentro da pasta config crie o arquivo mosquito.conf e cole  as configurações a baixo e depois salve o arquivo e reinicie o contêiner
+
+persistence true
+persistence_location /mosquitto/data/
+log_dest file /mosquitto/log/mosquitto.log
+
+listener 1883
+allow_anonymous true
+
+———————————————————
+
+version: "3.7"
+services:
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+    network_mode: "host"
+    volumes:
+      - /opt/mosquitto/config:/mosquitto/config
+      - /opt/mosquitto/data:/mosquitto/data
+      - /opt/mosquitto/log:/mosquitto/log
+    privileged: true
+
