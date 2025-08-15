@@ -1,0 +1,325 @@
+<template>
+    <div class="triple-switch-container_int_01">
+        <div class="switch-frame_int_01">
+            <div class="switch-header_int_01">
+                <span class="switch-brand_int_01">Conjunto 3 teclas</span>
+                <div class="power-indicator_int_01" :class="{ 'has-power_int_01': anyActive }"></div>
+            </div>
+            
+            <div class="switches-grid_int_01">
+                
+                <div class="switch-button_int_01" 
+                     :class="{ 'active_int_01': switches.quarto.isActive }" 
+                     @click="toggle('quarto')">
+                    <div class="switch-led_int_01" :class="{ 'on_int_01': switches.quarto.isActive }"></div>
+                    <div class="switch-icon_int_01">
+                        <i class="mdi mdi-bed"></i>
+                    </div>
+                    <div class="switch-label_int_01">Quarto</div>
+                </div>
+
+                <div class="switch-button_int_01" 
+                     :class="{ 'active_int_01': switches.sala.isActive }" 
+                     @click="toggle('sala')">
+                    <div class="switch-led_int_01" :class="{ 'on_int_01': switches.sala.isActive }"></div>
+                    <div class="switch-icon_int_01">
+                        <i class="mdi mdi-sofa"></i>
+                    </div>
+                    <div class="switch-label_int_01">Sala</div>
+                </div>
+
+                <div class="switch-button_int_01" 
+                     :class="{ 'active_int_01': switches.cozinha.isActive }" 
+                     @click="toggle('cozinha')">
+                    <div class="switch-led_int_01" :class="{ 'on_int_01': switches.cozinha.isActive }"></div>
+                    <div class="switch-icon_int_01">
+                        <i class="mdi mdi-chef-hat"></i>
+                    </div>
+                    <div class="switch-label_int_01">Cozinha</div>
+                </div>
+            </div>
+
+            <div class="switch-footer_int_01">
+                <div class="status-text_int_01">{{ activeCount }} de 3 ativo{{ activeCount !== 1 ? 's' : '' }}</div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return {
+            switches: {
+                quarto: { isActive: false, label: 'Quarto' },
+                sala: { isActive: false, label: 'Sala' },
+                cozinha: { isActive: false, label: 'Cozinha' }
+            }
+        };
+    },
+    computed: {
+        anyActive() {
+            return Object.values(this.switches).some(sw => sw.isActive);
+        },
+        activeCount() {
+            return Object.values(this.switches).filter(sw => sw.isActive).length;
+        }
+    },
+    methods: {
+        toggle(switchName) {
+            this.switches[switchName].isActive = !this.switches[switchName].isActive;
+            this.send({
+                payload: {
+                    switch: switchName,
+                    status: this.switches[switchName].isActive ? 'ON' : 'OFF',
+                    allSwitches: {
+                        quarto: this.switches.quarto.isActive ? 'ON' : 'OFF',
+                        sala: this.switches.sala.isActive ? 'ON' : 'OFF',
+                        cozinha: this.switches.cozinha.isActive ? 'ON' : 'OFF'
+                    },
+                    activeCount: this.activeCount,
+                    timestamp: new Date().toISOString()
+                }
+            });
+        },
+        updateSwitch(switchName, status) {
+            if (this.switches[switchName]) {
+                this.switches[switchName].isActive = status === 'ON';
+            }
+        }
+    },
+    watch: {
+        msg: function() {
+            if (this.msg && this.msg.payload) {
+                const { switch: switchName, status, allSwitches } = this.msg.payload;
+                if (switchName && status) {
+                    this.updateSwitch(switchName, status);
+                }
+                if (allSwitches) {
+                    Object.keys(allSwitches).forEach(key => {
+                        if (this.switches[key]) {
+                            this.switches[key].isActive = allSwitches[key] === 'ON';
+                        }
+                    });
+                }
+            }
+        }
+    }
+}
+</script>
+
+<style scoped>
+@import url('https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css');
+
+.triple-switch-container_int_01 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.switch-frame_int_01 {
+    background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+    border: 3px solid #c0c0c0;
+    border-radius: 15px;
+    padding: 15px;
+    box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    width: 200px;
+    position: relative;
+}
+
+.switch-header_int_01 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 0 5px;
+}
+
+.switch-brand_int_01 {
+    font-size: 10px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.power-indicator_int_01 {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ccc;
+    transition: all 0.3s ease;
+}
+
+.power-indicator_int_01.has-power_int_01 {
+    background-color: #2196F3;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.6);
+    animation: power-pulse_int_01 2s infinite;
+}
+
+.switches-grid_int_01 {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.switch-button_int_01 {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-height: 40px;
+}
+
+.switch-button_int_01::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.8), transparent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.switch-button_int_01:hover::before {
+    opacity: 0.2;
+}
+
+.switch-button_int_01:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-color: #bbb;
+}
+
+.switch-button_int_01:active {
+    transform: translateY(0);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.switch-button_int_01.active_int_01 {
+    background: linear-gradient(145deg, #e3f2fd, #bbdefb);
+    border-color: #2196F3;
+    box-shadow: 
+        0 2px 8px rgba(33, 150, 243, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.switch-button_int_01.active_int_01:hover {
+    box-shadow: 
+        0 4px 12px rgba(33, 150, 243, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.switch-led_int_01 {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #ccc;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.switch-led_int_01.on_int_01 {
+    background-color: #2196F3;
+    box-shadow: 0 0 6px rgba(33, 150, 243, 0.8);
+}
+
+.switch-icon_int_01 {
+    margin-right: 8px;
+    color: #666;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.switch-button_int_01.active_int_01 .switch-icon_int_01 {
+    color: #2196F3;
+}
+
+.switch-label_int_01 {
+    font-size: 12px;
+    font-weight: 500;
+    color: #5c5b5b;
+    flex: 1;
+    transition: color 0.3s ease;
+}
+
+.switch-button_int_01.active_int_01 .switch-label_int_01 {
+    color: #1565c0;
+    font-weight: 600;
+}
+
+.switch-footer_int_01 {
+    margin-top: 12px;
+    text-align: center;
+    padding: 0 5px;
+}
+
+.status-text_int_01 {
+    font-size: 9px;
+    color: #888;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+@keyframes power-pulse_int_01 {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.switch-button_int_01:active_int_01::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(33, 150, 243, 0.3);
+    transform: translate(-50%, -50%);
+    animation: click-ripple_int_01 0.4s ease-out;
+}
+
+@keyframes click-ripple_int_01 {
+    to {
+        width: 100px;
+        height: 100px;
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .switch-frame_int_01 {
+        width: 180px;
+        padding: 12px;
+    }
+    
+    .switch-button_int_01 {
+        padding: 6px 10px;
+        min-height: 35px;
+    }
+    
+    .switch-icon_int_01 {
+        font-size: 14px;
+    }
+    
+    .switch-label_int_01 {
+        font-size: 11px;
+    }
+}
+</style>
