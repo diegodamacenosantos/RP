@@ -1,6 +1,6 @@
-1 - sudo rm -rf /opt/tasmota-admin
+1 - mkdir /opt/tasmota-admin
 
-2 - sudo chmod -R 777 /opt/tasmota-admin
+2 - chmod -R 777 /opt/tasmota-admin
 
 ------------------------------------------
 
