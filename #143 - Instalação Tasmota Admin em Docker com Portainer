@@ -1,0 +1,18 @@
+1 - sudo rm -rf /opt/tasmota-admin
+
+2 - sudo chmod -R 777 /opt/tasmota-admin
+
+------------------------------------------
+
+services:
+  tasmoadmin:
+    container_name: tasmoadmin
+    image: "raymondmm/tasmoadmin:latest"
+    restart: unless-stopped
+    volumes:
+      - /opt/tasmota-admin:/data
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "9090:80"
+    environment:
+      - TZ=America/Sao_Paulo
