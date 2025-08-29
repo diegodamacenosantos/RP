@@ -1,0 +1,434 @@
+<template>
+    <div class="container_reservatorio">
+        <div class="vertical-text_reservatorio">{{ tankName }}</div>
+        <v-card class="elemento_caixa_agua">
+            <!-- Indicador de extravasão -->
+            <div class="overflow-indicator" :class="{ 'active': isOverflowing }">
+                <div class="overflow-drops">
+                    <div class="drop" v-for="n in 5" :key="n" :style="{ animationDelay: (n * 0.2) + 's' }">💧</div>
+                </div>
+                <div class="overflow-text" v-if="isOverflowing">EXTRAVASANDO!</div>
+            </div>
+
+            <!-- Corpo principal da caixa -->
+            <div class="tank-body">
+                <!-- Nível da água -->
+                <div class="water-level" :style="{ 
+                         height: waterHeightPercent + '%',
+                         backgroundColor: waterColor 
+                     }">
+                    <div class="water-surface"></div>
+                    <div class="water-bubbles">
+                        <div class="bubble" v-for="n in 3" :key="n" :style="{ animationDelay: (n * 1.5) + 's' }"></div>
+                    </div>
+                </div>
+
+                <!-- Marcações laterais -->
+                <div class="tank-markings">
+                    <div class="marking" v-for="i in 4" :key="i" :style="{ bottom: (i * 25) + '%' }">
+                        <span class="marking-line"></span>
+                        <span class="marking-label">{{ (i * 25) }}%</span>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            
+
+            <!-- Display de status -->
+            <div class="status-display">
+                <div class="status-text" :style="{ color: statusColor }">
+                    {{ statusText }}
+                </div>
+                <div class="level-percentage">
+                    {{ Math.round(waterHeightPercent) }}%
+                </div>
+                <div class="sensor-reading">
+                    Sensor: {{ currentSensorDistance }}cm
+                </div>
+            </div>
+        </v-card>
+    </div>
+</template>
+
+<script>
+    export default {
+    props: {
+        sensorDistance: {
+            type: Number,
+            default: 50
+        },
+        tankName: {
+            type: String,
+            default: 'Reservatório Principal'
+        }
+    },
+    data() {
+        return {
+            // CONFIGURAÇÕES AJUSTÁVEIS
+            emptyDistance: 90,    // 90cm = tanque vazio
+            overflowDistance: 10, // 10cm = extravasando
+            inited: false,
+            currentSensorDistance: 50 // Valor interno para o sensor
+        };
+    },
+    watch: {
+        msg() {
+            if (this.msg && this.msg.payload !== undefined) {
+                // Recebe o valor do sensor via Node-RED
+                this.currentSensorDistance = Math.min(Math.max(this.msg.payload, this.overflowDistance), this.emptyDistance);
+            }
+        },
+        sensorDistance() {
+            // Atualiza quando a prop muda (para demonstração)
+            this.currentSensorDistance = this.sensorDistance;
+        }
+    },
+    computed: {
+        waterHeightPercent() {
+            // Converte a distância do sensor em porcentagem de água
+            // Quanto menor a distância, maior o nível de água
+            const range = this.emptyDistance - this.overflowDistance;
+            const currentLevel = this.emptyDistance - this.currentSensorDistance;
+            const percentage = Math.max(0, Math.min(100, (currentLevel / range) * 100));
+            
+            // Se está extravasando, mostra 100%
+            return this.currentSensorDistance <= this.overflowDistance ? 100 : percentage;
+        },
+
+        isOverflowing() {
+            return this.currentSensorDistance <= this.overflowDistance;
+        },
+
+        waterColor() {
+            if (this.isOverflowing) return '#ff4757';
+            if (this.waterHeightPercent <= 25) return '#ff6b6b';
+            if (this.waterHeightPercent <= 50) return '#ffa502';
+            if (this.waterHeightPercent <= 75) return '#3742fa';
+            return '#2ed573';
+        },
+
+        statusText() {
+            if (this.isOverflowing) return 'EXTRAVASANDO';
+            if (this.waterHeightPercent <= 25) return 'CRÍTICO';
+            if (this.waterHeightPercent <= 50) return 'BAIXO';
+            if (this.waterHeightPercent <= 75) return 'MÉDIO';
+            return 'CHEIO';
+        },
+
+        statusColor() {
+            if (this.isOverflowing) return '#ff4757';
+            if (this.waterHeightPercent <= 25) return '#ff4757';
+            if (this.waterHeightPercent <= 50) return '#ffa502';
+            if (this.waterHeightPercent <= 75) return '#3742fa';
+            return '#2ed573';
+        }
+    },
+    mounted() {
+        // Inicializa com o valor da prop
+        this.currentSensorDistance = this.sensorDistance;
+        this.inited = true;
+    }
+};
+</script>
+
+<style scoped>
+    .container_reservatorio {
+        display: flex;
+        align-items: center;
+        margin: 20px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .vertical-text_reservatorio {
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+        color: #2c3e50;
+        font-size: 14px;
+        font-weight: bold;
+        margin-right: 15px;
+        letter-spacing: 2px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .elemento_caixa_agua {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 140px !important;
+        background: linear-gradient(145deg, #f0f2f5, #e1e8ed) !important;
+        border: 2px solid #34495e !important;
+        border-radius: 15px !important;
+        padding: 15px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6) !important;
+        position: relative;
+    }
+
+    /* Indicador de extravasão */
+    .overflow-indicator {
+        width: 100%;
+        height: 50px;
+        margin-bottom: 10px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        position: relative;
+    }
+
+    .overflow-indicator.active {
+        opacity: 1;
+    }
+
+    .overflow-drops {
+        display: flex;
+        justify-content: space-around;
+        height: 30px;
+        align-items: flex-end;
+    }
+
+    .drop {
+        font-size: 1.2rem;
+        animation: dropFall 1.5s infinite;
+        opacity: 0;
+    }
+
+    .overflow-text {
+        text-align: center;
+        color: #ff4757;
+        font-weight: bold;
+        font-size: 10px;
+        animation: blink 1s infinite;
+        margin-top: 5px;
+    }
+
+    @keyframes dropFall {
+        0% {
+            transform: translateY(-15px);
+            opacity: 0;
+        }
+
+        50% {
+            transform: translateY(0px);
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(15px);
+            opacity: 0;
+        }
+    }
+
+    @keyframes blink {
+
+        0%,
+        50% {
+            opacity: 1;
+        }
+
+        51%,
+        100% {
+            opacity: 0.3;
+        }
+    }
+
+    /* Tampa da caixa */
+    .tank-top {
+        width: 110px;
+        height: 12px;
+        background: linear-gradient(to bottom, #95a5a6, #7f8c8d);
+        border-radius: 8px;
+        margin-bottom: 5px;
+        border: 1px solid #34495e;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Corpo da caixa d'água */
+    .tank-body {
+        position: relative;
+        width: 100px;
+        height: 200px;
+        background: linear-gradient(145deg, #ecf0f1, #bdc3c7);
+        border: 3px solid #34495e;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Nível da água */
+    .water-level {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        transition: height 1s ease, background-color 0.5s ease;
+        border-radius: 0 0 5px 5px;
+        overflow: hidden;
+        opacity: 0.9;
+    }
+
+    .water-surface {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.7);
+        animation: wave 2.5s ease-in-out infinite;
+    }
+
+    @keyframes wave {
+
+        0%,
+        100% {
+            transform: translateX(0) scaleX(1);
+        }
+
+        50% {
+            transform: translateX(3px) scaleX(1.05);
+        }
+    }
+
+    /* Bolhas na água */
+    .water-bubbles {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+    }
+
+    .bubble {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        animation: bubbleRise 4s infinite;
+    }
+
+    .bubble:nth-child(1) {
+        left: 25%;
+    }
+
+    .bubble:nth-child(2) {
+        left: 50%;
+    }
+
+    .bubble:nth-child(3) {
+        left: 75%;
+    }
+
+    @keyframes bubbleRise {
+        0% {
+            transform: translateY(0);
+            opacity: 0;
+        }
+
+        10% {
+            opacity: 1;
+        }
+
+        90% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-190px);
+            opacity: 0;
+        }
+    }
+
+    /* Marcações laterais */
+    .tank-markings {
+        position: absolute;
+        right: -35px;
+        top: 0;
+        height: 100%;
+        width: 30px;
+    }
+
+    .marking {
+        position: absolute;
+        right: 0;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .marking-line {
+        width: 12px;
+        height: 1px;
+        background: #34495e;
+    }
+
+    .marking-label {
+        font-size: 9px;
+        color: #34495e;
+        font-weight: bold;
+        min-width: 25px;
+    }
+
+    /* Base da caixa */
+    .tank-base {
+        width: 110px;
+        height: 12px;
+        background: linear-gradient(to top, #95a5a6, #7f8c8d);
+        border-radius: 8px;
+        margin-top: 5px;
+        border: 1px solid #34495e;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Display de status */
+    .status-display {
+        margin-top: 15px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .status-text {
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .level-percentage {
+        font-size: 18px;
+        font-weight: bold;
+        color: #2c3e50;
+        margin-bottom: 5px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .sensor-reading {
+        font-size: 9px;
+        color: #7f8c8d;
+        background: rgba(0, 0, 0, 0.05);
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid #bdc3c7;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .container_reservatorio {
+            margin: 10px;
+        }
+
+        .tank-body {
+            width: 80px;
+            height: 160px;
+        }
+
+        .tank-top,
+        .tank-base {
+            width: 90px;
+        }
+
+        .elemento_caixa_agua {
+            width: 120px !important;
+            padding: 10px !important;
+        }
+    }
+</style>
