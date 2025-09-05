@@ -1,0 +1,362 @@
+var keys = global.keys();
+
+var result = {};
+
+keys.forEach(function(key) {
+    var value = global.get(key);
+    if (value === "ON") {
+        result[key] = value;
+    }
+});
+
+msg.payload = result;
+
+return msg;
+
+-------------------------------------------------
+
+<template>
+    <div class="automation-dashboard">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Dispositivos "ON"</h2>
+        </div>
+
+        <div class="devices-grid" v-if="devices.length > 0">
+            <div 
+                v-for="device in devices" 
+                :key="device.id"
+                class="device-card"
+                :class="{ 'active': device.state === 'ON' }"
+                @click="toggleDevice(device)"
+            >
+                <div class="device-info">
+                    <h3 class="device-name">{{ device.name }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div v-else class="empty-state">
+            <i class="empty-icon">📱</i>
+            <p>Nenhum dispositivo encontrado</p>
+            <small>Aguardando dados do Node-RED...</small>
+        </div>
+        
+        <div class="dashboard-footer">
+            <div class="device-count">
+                <span class="count-label">Ativos:</span>
+                <span class="count-value pulse">{{ activeDevices }}</span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    name: 'NodeRedDashboard',
+    data() {
+        return {
+            devices: []
+        }
+    },
+    watch: {
+        msg: {
+            handler: function(newMsg) {
+                console.log('Recebido msg do Node-RED:', newMsg);
+                
+                if (newMsg && newMsg.payload) {
+                    this.processDeviceData(newMsg.payload);
+                }
+            },
+            deep: true,
+            immediate: true
+        }
+    },
+    computed: {
+        activeDevices: function() {
+            return this.devices.filter(d => d.state === 'ON').length;
+        }
+    },
+    methods: {
+        processDeviceData(payload) {
+            try {
+                let devicesData = [];
+                
+                if (Array.isArray(payload)) {
+                    devicesData = payload.map(device => ({
+                        id: device.id || Math.random().toString(36).substr(2, 9),
+                        name: device.name || 'Dispositivo Sem Nome',
+                        state: (device.state || 'OFF').toString().toUpperCase()
+                    }));
+                } else if (typeof payload === 'object' && payload !== null) {
+                    devicesData = Object.entries(payload).map(([deviceKey, deviceState]) => ({
+                        id: deviceKey,
+                        name: deviceKey,
+                        state: deviceState
+                    }));
+                }
+                
+                this.devices = devicesData;
+                
+                if (this.send) {
+                    this.send({
+                        payload: {
+                            action: 'devices_received',
+                            count: this.devices.length,
+                            active: this.activeDevices,
+                            timestamp: new Date().toISOString()
+                        }
+                    });
+                }
+                
+                console.log('Dispositivos processados:', this.devices);
+                
+            } catch (error) {
+                console.error('Erro ao processar dados dos dispositivos:', error);
+            }
+        },
+        
+        toggleDevice: function(device) {
+            const newState = device.state === 'ON' ? 'OFF' : 'ON';
+            
+            if (this.send) {
+                this.send({
+                    payload: {
+                        action: 'toggle_device',
+                        deviceId: device.id,
+                        deviceName: device.name,
+                        currentState: device.state,
+                        newState: newState,
+                        timestamp: new Date().toISOString()
+                    }
+                });
+            }
+            
+            const deviceIndex = this.devices.findIndex(d => d.id === device.id);
+            if (deviceIndex !== -1) {
+                this.devices[deviceIndex].state = newState;
+            }
+        }
+    },
+    
+    mounted() {
+        console.log('Dashboard Vue montado');
+        if (this.send) {
+            this.send({
+                payload: {
+                    action: 'request_initial_data',
+                    timestamp: new Date().toISOString()
+                }
+            });
+        }
+    }
+}
+</script>
+
+<style scoped>
+.automation-dashboard {
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+    background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #404040;
+}
+
+.dashboard-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #e0e0e0;
+    letter-spacing: 0.5px;
+}
+
+.dashboard-footer {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #404040;
+    text-align: center;
+}
+
+.device-count {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    display: inline-flex;
+}
+
+.count-label {
+    font-size: 12px;
+    color: #b0b0b0;
+}
+
+.count-value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #4CAF50;
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.devices-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    gap: 12px;
+}
+
+.device-card {
+    background: linear-gradient(145deg, #404040, #2c2c2c);
+    border: 2px solid #555555;
+    border-radius: 12px;
+    padding: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    width: 75px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.device-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.device-card:hover::before {
+    opacity: 1;
+}
+
+.device-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    border-color: #666666;
+}
+
+.device-card.active {
+    background: linear-gradient(145deg, #4a5c4a, #2d3d2d);
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    border-color: #4CAF50;
+}
+
+.device-info {
+    text-align: center;
+}
+
+.device-name {
+    margin: 0;
+    font-size: 10px;
+    font-weight: 600;
+    color: #e0e0e0;
+    word-break: break-word;
+    line-height: 1.2;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 30px 20px;
+    color: #b0b0b0;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.empty-state p {
+    margin: 16px 0 8px 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.empty-state small {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .automation-dashboard {
+        padding: 12px;
+        max-width: 100%;
+    }
+    
+    .dashboard-header {
+        margin-bottom: 12px;
+    }
+    
+    .devices-grid {
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+    }
+}
+
+.automation-dashboard {
+    animation: fade-in 0.5s ease-out;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.device-card {
+    animation: device-enter 0.3s ease-out;
+}
+
+@keyframes device-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+</style>
