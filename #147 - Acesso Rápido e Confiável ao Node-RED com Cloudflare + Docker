@@ -1,0 +1,27 @@
+sudo systemctl stop cloudflared
+sudo systemctl disable cloudflared
+sudo systemctl daemon-reload
+
+sudo apt-get remove --purge -y cloudflared
+sudo apt-get autoremove -y
+sudo apt-get clean
+
+sudo rm -rf /etc/cloudflared /var/lib/cloudflared /var/log/cloudflared
+rm -rf ~/.cloudflared
+
+sudo rm -f /usr/share/keyrings/cloudflare-main.gpg
+sudo rm -f /etc/apt/sources.list.d/cloudflared.list
+
+----------------------------------------
+
+version: "3.7"
+services:
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token (token aqui)
+    environment:
+      - TZ=America/Sao_Paulo
+    network_mode: "host"
+    privileged: true
