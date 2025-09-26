@@ -1,0 +1,59 @@
+let keyAcumulado = "dispositivo_tempo_acumulado";
+let keyUltimoON = "dispositivo_ultimo_on";
+
+if (msg.reset === "reset") {
+    
+    global.set(keyAcumulado, 0);
+    global.set(keyUltimoON, null);
+    
+    msg.payload = "00:00";
+    node.status({ fill: "blue", shape: "ring", text: "Reset - Total: 00:00" });
+    return msg;
+}
+
+let tempoAcumulado = global.get(keyAcumulado) || 0; 
+let ultimoON = global.get(keyUltimoON) || null;
+
+if (msg.payload === "ON") {
+    
+    ultimoON = Date.now(); 
+    global.set(keyUltimoON, ultimoON); 
+    
+    node.status({ fill: "green", shape: "dot", text: "Dispositivo ligado" });
+    return null; 
+    
+} else if (msg.payload === "OFF") {
+    if (ultimoON !== null) {
+
+        let agora = Date.now();
+        let tempoDecorridoMs = agora - ultimoON;
+        let tempoDecorridoMinutos = Math.floor(tempoDecorridoMs / (1000 * 60)); 
+        
+        tempoAcumulado += tempoDecorridoMinutos;
+
+        global.set(keyAcumulado, tempoAcumulado);
+        
+        global.set(keyUltimoON, null);
+        
+        let horas = Math.floor(tempoAcumulado / 60);
+        let minutos = tempoAcumulado % 60;
+        
+        let tempoFormatado;
+        if (horas < 100) {
+            tempoFormatado = (horas < 10 ? "0" : "") + horas + ":" + (minutos < 10 ? "0" : "") + minutos;
+        } else {
+            tempoFormatado = horas + ":" + (minutos < 10 ? "0" : "") + minutos;
+        }
+        
+        msg.payload = tempoFormatado;
+        
+        node.status({ fill: "red", shape: "ring", text: "Total: " + tempoFormatado });
+        return msg;
+        
+    } else {
+        node.warn("Recebido OFF sem ON anterior");
+        return null;
+    }
+}
+
+return null;
