@@ -1,0 +1,51 @@
+var PREFIX = "teste";
+var TEMPO_DECAIMENTO = 5;
+
+var entrada = msg.payload;
+var memoria = global.get(PREFIX);
+
+if (entrada == "on" || entrada == "ON" || entrada == true || entrada == 1) {
+    entrada = "ON";
+} else if (entrada == "off" || entrada == "OFF" || entrada == false || entrada == 0) {
+    entrada = "OFF";
+}
+
+var timerAtivo = context.get(PREFIX + "_timer_ativo") || false;
+
+function tick() {
+    
+    if (!context.get(PREFIX + "_timer_ativo")) {
+        return; 
+    }
+
+    var valor = context.get(PREFIX + "_contador") || 0;
+    valor--;
+    context.set(PREFIX + "_contador", valor);
+
+    if (valor > 0) {
+        setTimeout(tick, 1000);
+    } else {
+        
+        context.set(PREFIX + "_timer_ativo", false);
+        context.set(PREFIX + "_contador", 0);
+        global.set(PREFIX, "OFF");
+        node.send([null, { payload: "OFF" }]);
+    }
+}
+
+if (entrada !== memoria) {
+    global.set(PREFIX, entrada);
+
+    if (entrada == "ON") {
+        
+        context.set(PREFIX + "_timer_ativo", false);
+        context.set(PREFIX + "_contador", 0);
+        node.send([{ payload: "ON" }, null]);
+
+    } else if (entrada == "OFF") {
+        
+        context.set(PREFIX + "_timer_ativo", true);
+        context.set(PREFIX + "_contador", TEMPO_DECAIMENTO);
+        tick();
+    }
+}
