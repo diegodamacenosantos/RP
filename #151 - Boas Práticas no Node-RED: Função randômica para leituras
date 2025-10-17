@@ -1,0 +1,26 @@
+msg.payload = Math.round(Math.random()*100);
+
+if (msg.payload == 100){
+    return [msg, null, null, null, null, null, null];
+}
+if (msg.payload == 80){
+    return [null, msg, null, null, null, null, null];
+}
+if (msg.payload == 60){
+    return [null, null, msg, null, null, null, null];
+}
+if (msg.payload == 40){
+    return [null, null, null, msg, null, null, null];
+}
+if (msg.payload == 20){
+    return [null, null, null, null, msg, null, null];
+}
+if (msg.payload == 10){
+    return [null, null, null, null, null, msg, null];
+}
+if (msg.payload == 0){
+    return [null, null, null, null, null, null, msg];
+}
+
+
+
