@@ -1,0 +1,19 @@
+if (msg.payload > 0) {
+    if (global.get("atos") !== "ON") {
+        global.set("atos", "ON")
+        node.send([{payload: "ON"}, null])
+    }
+} else if (msg.payload === false) {
+    if (global.get("atos") !== "OFF") {
+        global.set("atos", "OFF")
+        node.send([null, {payload: "OFF"}])
+    }
+}
+
+-----------------------------------
+
+if (global.get("atos") == "ON") {
+    node.send([{payload: "ON"}, null])
+} else {
+    node.send([null, { payload: "OFF" }])
+}
