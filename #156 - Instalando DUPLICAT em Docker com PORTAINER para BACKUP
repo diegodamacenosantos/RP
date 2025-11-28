@@ -1,0 +1,21 @@
+mkdir /opt/duplicati
+chmod -R 777 /opt/duplicati
+
+mkdir /backup
+chmod -R 777 /backup
+
+---------------------------------------
+
+services:
+  myapp:
+    container_name: duplicati
+    image: duplicati/duplicati:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - DUPLICATI__WEBSERVICE_PASSWORD=12345678
+    network_mode: "host"
+    volumes:
+      - /opt/duplicati:/data
+      - /backup:/backup
+    privileged: true
