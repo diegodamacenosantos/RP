@@ -1,0 +1,83 @@
+[
+    {
+        "id": "51084d3d72720266",
+        "type": "inject",
+        "z": "2acbad0e77ee2115",
+        "name": "a cada 10 minutos",
+        "props": [],
+        "repeat": "600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "5",
+        "topic": "",
+        "x": 570,
+        "y": 500,
+        "wires": [
+            [
+                "e82a60ace39ec2c1"
+            ]
+        ]
+    },
+    {
+        "id": "e82a60ace39ec2c1",
+        "type": "function",
+        "z": "2acbad0e77ee2115",
+        "name": "pronpt",
+        "func": "let globais = global.keys().reduce((obj, key) => {\n    obj[key] = global.get(key);\n    return obj;\n}, {});\n\nlet flows = flow.keys().reduce((obj, key) => {\n    obj[key] = flow.get(key);\n    return obj;\n}, {});\n\nlet contexto = {\n    globais,\n    flows\n};\n\nlet prompt = `\nVocê é um assistente de automação residencial que esta analisando informações de um node-red para retonar a melhor solução de gerenciamento de equipamentos da casa.\n\nAqui estão TODOS os dados atuais do sistema (globais e flows):\n ${JSON.stringify(contexto, null, 2)}\n\nRegras gerais:\n- Sempre recomece a análise do zero.\n- Retorne APENAS um objeto JSON válido. Nada de explicações, markdown ou qualquer texto fora do JSON.\n- Use somente valores ON e OFF.\n- Não envie comando para dispositivo que já está no estado desejado.\n- Retorne acionamento com os mesmo parametro das globais de modo a padronizar os comandos.\n- Analise o contexto considerando:\n  - \"escreva sobre as caracteristicas da sua casa aqui\" \nFormato de saida:\n{\n  \"nome_do_dispositivo\": \"ON ou OFF\",\n  \"outro_dispositivo\": \"ON ou OFF\",\n  \"motivo\": \"Descreva o motivo com nomes normalizados.\"\n}\n\nRegras finais:\n- Nenhum texto fora do JSON.\n- Não use crases.\n- Não retorne string. Retorne objeto JSON cru.\n`;\n\nmsg.payload = {\n    contents: [\n        {\n            parts: [\n                { text: prompt }\n            ]\n        }\n    ]\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 500,
+        "wires": [
+            [
+                "4de7701d646bbf62"
+            ]
+        ]
+    },
+    {
+        "id": "4de7701d646bbf62",
+        "type": "http request",
+        "z": "2acbad0e77ee2115",
+        "name": "Gemini 2.5 Flash",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=API_KEY",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 890,
+        "y": 500,
+        "wires": [
+            [
+                "b1b1c1f1c1136bc8"
+            ]
+        ]
+    },
+    {
+        "id": "b1b1c1f1c1136bc8",
+        "type": "function",
+        "z": "2acbad0e77ee2115",
+        "name": "action",
+        "func": "let raw = msg.payload?.candidates?.[0]?.content?.parts?.[0]?.text;\nraw = raw ?? \"\";\n\nlet jsonText;\n\nif (raw.trim().startsWith(\"{\")) {\n    jsonText = raw.trim();\n} else {\n    const match = raw.match(/\\{[\\s\\S]*\\}/);\n    jsonText = match ? match[0] : \"{}\";\n}\n\nlet obj = {};\ntry {\n    obj = JSON.parse(jsonText);\n} catch (e) {\n    obj = {};\n}\n\nmsg.payload = obj;\nmsg.motivo = obj.motivo;\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1050,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    }
+]
