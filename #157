@@ -1,0 +1,107 @@
+[
+    {
+        "id": "e43d849aa68d6672",
+        "type": "inject",
+        "z": "1350e85e2fab7714",
+        "name": "qual o tamanho da terra",
+        "props": [
+            {
+                "p": "payload.digitacao",
+                "v": "qual o tamanho da terra",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "5",
+        "topic": "",
+        "x": 500,
+        "y": 260,
+        "wires": [
+            [
+                "3e244cd2d497fe30"
+            ]
+        ]
+    },
+    {
+        "id": "3e244cd2d497fe30",
+        "type": "function",
+        "z": "1350e85e2fab7714",
+        "name": "pronpt",
+        "func": "let prompt = `\n\nVocê responderá de forma simples ao texto aqui:\n\n${JSON.stringify(msg.payload, null, 2)}\n\nFormato de saida:\n{\n  \"reposta\": \"conteudo\"\n}\n\n`;\n\nmsg.payload = {\n    contents: [\n        {\n            parts: [\n                { text: prompt }\n            ]\n        }\n    ]\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 260,
+        "wires": [
+            [
+                "68227a2043196d57"
+            ]
+        ]
+    },
+    {
+        "id": "68227a2043196d57",
+        "type": "http request",
+        "z": "1350e85e2fab7714",
+        "name": "Gemini 2.5 Flash",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=API_KEY",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 830,
+        "y": 260,
+        "wires": [
+            [
+                "9241a6ec1c932593"
+            ]
+        ]
+    },
+    {
+        "id": "9241a6ec1c932593",
+        "type": "function",
+        "z": "1350e85e2fab7714",
+        "name": "action",
+        "func": "let raw = msg.payload?.candidates?.[0]?.content?.parts?.[0]?.text || \"\";\nraw = String(raw).trim();\n\n// Remove blocos de markdown ```json ... ```\nraw = raw.replace(/```json/gi, \"\").replace(/```/g, \"\").trim();\n\n// Extrai o primeiro objeto JSON válido\nconst match = raw.match(/\\{[\\s\\S]*\\}/);\nif (!match) {\n    msg.payload = {};\n    return msg;\n}\n\ntry {\n    msg.payload = JSON.parse(match[0]);\n} catch (e) {\n    msg.payload = {};\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 990,
+        "y": 260,
+        "wires": [
+            [
+                "0c4b0e3633340e0a"
+            ]
+        ]
+    },
+    {
+        "id": "0c4b0e3633340e0a",
+        "type": "debug",
+        "z": "1350e85e2fab7714",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1120,
+        "y": 260,
+        "wires": []
+    }
+]
