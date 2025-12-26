@@ -1,0 +1,144 @@
+mkdir /opt/ollama
+chmod -R 777 /opt/ollama
+--------------------------------------
+version: "3.7"
+services:
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+    network_mode: "host"
+    volumes:
+      - /opt/ollama:/root/.ollama
+    privileged: true
+----------------------------------------
+docker exec -it ollama sh -c "rm -rf /root/.ollama/models/*"
+----------------------------------------
+
+docker exec -it ollama ollama pull qwen2:0.5b - 352m | leve, boa para iniciar 
+
+docker exec -it ollama ollama pull phi3:mini  - 2.2g | boa para automacao
+
+docker exec -it ollama ollama pull gemma:2b   - 1.7g | boa para processamento linguistico 
+
+----------------------------------------
+
+[
+    {
+        "id": "ollama-http",
+        "type": "http request",
+        "z": "flow-ollama-ai",
+        "name": "Ollama Chat",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:11434/api/chat",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "other",
+                "valueValue": "application/json"
+            }
+        ],
+        "x": 790,
+        "y": 460,
+        "wires": [
+            [
+                "92a3a74fa167b182"
+            ]
+        ]
+    },
+    {
+        "id": "inject-user",
+        "type": "inject",
+        "z": "flow-ollama-ai",
+        "name": "Qual a temperatura corporal média?",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "Qual a temperatura corporal média?",
+        "payloadType": "str",
+        "x": 420,
+        "y": 460,
+        "wires": [
+            [
+                "build-prompt"
+            ]
+        ]
+    },
+    {
+        "id": "build-prompt",
+        "type": "function",
+        "z": "flow-ollama-ai",
+        "name": "prompt",
+        "func": "let prompt = `\nResponda aos comandos aqui:\n\n${JSON.stringify(msg.payload)}\n\n`;\n\nmsg.payload = {\n  model: \"qwen2:0.5b\",\n  stream: false,\n  options: {\n    num_predict: 120,\n    temperature: 0.2  \n  },\n  messages: [\n    {\n      role: \"user\",\n      content: prompt\n    }\n  ]\n};\n\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 460,
+        "wires": [
+            [
+                "ollama-http"
+            ]
+        ]
+    },
+    {
+        "id": "ea576e20bd47571f",
+        "type": "debug",
+        "z": "flow-ollama-ai",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "92a3a74fa167b182",
+        "type": "function",
+        "z": "flow-ollama-ai",
+        "name": "filtro",
+        "func": "node.send({payload: msg.payload.message.content})",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 460,
+        "wires": [
+            [
+                "ea576e20bd47571f"
+            ]
+        ]
+    }
+]
+
+
