@@ -1,0 +1,7 @@
+ollama list
+
+ollama list | awk 'NR>1 {print $1}' | xargs -n1 ollama rm
+
+ollama pull qwen2.5:0.5b
+ollama pull tinyllama
+ollama pull phi
