@@ -1,0 +1,315 @@
+[
+    {
+        "id": "4617f3522ed62ae4",
+        "type": "inject",
+        "z": "3ce7ac42d53215fa",
+        "name": "criar dispositivo",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 360,
+        "y": 120,
+        "wires": [
+            [
+                "ca3326d209d6b0df"
+            ]
+        ]
+    },
+    {
+        "id": "ca3326d209d6b0df",
+        "type": "function",
+        "z": "3ce7ac42d53215fa",
+        "name": "criação botao_01",
+        "func": "var nome = \"botao_01\";\n\nmsg.topic = \"homeassistant/switch/\" + nome + \"/config\";\n\nmsg.payload = {\n  name: nome,\n  state_topic: \"nodered/\" + nome + \"/state\",\n  command_topic: \"nodered/\" + nome + \"/command\",\n  payload_on: \"ON\",\n  payload_off: \"OFF\",\n  unique_id: nome,\n  device: {\n    identifiers: [nome],\n    name: nome\n  }\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 120,
+        "wires": [
+            [
+                "2675d964a675db8a"
+            ]
+        ]
+    },
+    {
+        "id": "2675d964a675db8a",
+        "type": "mqtt out",
+        "z": "3ce7ac42d53215fa",
+        "name": "config HA",
+        "topic": "",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 980,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "5b84539b06a8012c",
+        "type": "mqtt in",
+        "z": "3ce7ac42d53215fa",
+        "name": "nodered/botao_01/command",
+        "topic": "nodered/botao_01/command",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "cc178c955ca8f8bd",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 480,
+        "y": 380,
+        "wires": [
+            [
+                "90df0921494a3354"
+            ]
+        ]
+    },
+    {
+        "id": "90df0921494a3354",
+        "type": "mqtt out",
+        "z": "3ce7ac42d53215fa",
+        "name": "nodered/botao_01/state",
+        "topic": "nodered/botao_01/state",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 750,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "0751a2b008449c5c",
+        "type": "inject",
+        "z": "3ce7ac42d53215fa",
+        "name": "apagar dispositivo",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "x": 370,
+        "y": 180,
+        "wires": [
+            [
+                "9b609ec6fcc7b4de"
+            ]
+        ]
+    },
+    {
+        "id": "9b609ec6fcc7b4de",
+        "type": "function",
+        "z": "3ce7ac42d53215fa",
+        "name": "remove botao_01",
+        "func": "var nome = \"botao_01\"\n\nmsg.topic = \"homeassistant/switch/\" + nome + \"/config\";\nmsg.payload = null;\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 770,
+        "y": 180,
+        "wires": [
+            [
+                "2675d964a675db8a"
+            ]
+        ]
+    },
+    {
+        "id": "d6aa0f4cf3a3c1b9",
+        "type": "mqtt out",
+        "z": "3ce7ac42d53215fa",
+        "name": "nodered/botao_01/state",
+        "topic": "nodered/botao_01/state",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 470,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "a2a41b87c7a310a8",
+        "type": "inject",
+        "z": "3ce7ac42d53215fa",
+        "name": "NODE-RED ON",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "ON",
+        "payloadType": "str",
+        "x": 200,
+        "y": 440,
+        "wires": [
+            [
+                "d6aa0f4cf3a3c1b9"
+            ]
+        ]
+    },
+    {
+        "id": "b18a69d73eedba58",
+        "type": "inject",
+        "z": "3ce7ac42d53215fa",
+        "name": "NODE-RED OFF",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "",
+        "topic": "",
+        "payload": "OFF",
+        "payloadType": "str",
+        "x": 200,
+        "y": 480,
+        "wires": [
+            [
+                "d6aa0f4cf3a3c1b9"
+            ]
+        ]
+    },
+    {
+        "id": "64b363a56461f4f1",
+        "type": "mqtt in",
+        "z": "3ce7ac42d53215fa",
+        "name": "nodered/botao_01/command",
+        "topic": "nodered/botao_01/command",
+        "qos": "1",
+        "datatype": "auto",
+        "broker": "cc178c955ca8f8bd",
+        "nl": false,
+        "rap": false,
+        "inputs": 0,
+        "x": 760,
+        "y": 460,
+        "wires": [
+            [
+                "25c64cc6c142b01c"
+            ]
+        ]
+    },
+    {
+        "id": "25c64cc6c142b01c",
+        "type": "switch",
+        "z": "3ce7ac42d53215fa",
+        "name": "on / off",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ON",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "OFF",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 950,
+        "y": 460,
+        "wires": [
+            [
+                "cc74a9d258c4055b"
+            ],
+            [
+                "74bf91f2d7625ce5"
+            ]
+        ]
+    },
+    {
+        "id": "cc74a9d258c4055b",
+        "type": "debug",
+        "z": "3ce7ac42d53215fa",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "74bf91f2d7625ce5",
+        "type": "debug",
+        "z": "3ce7ac42d53215fa",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1100,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "cc178c955ca8f8bd",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
