@@ -1,0 +1,165 @@
+[
+    {
+        "id": "9393126199c8fa51",
+        "type": "function",
+        "z": "3ce7ac42d53215fa",
+        "name": "criação sensor presença ",
+        "func": "var nome = \"presenca_01\";\n\nmsg.topic = \"homeassistant/binary_sensor/\" + nome + \"/config\";\n\nmsg.payload = {\n  name: nome,\n  state_topic: \"nodered/\" + nome + \"/state\",\n  payload_on: \"ON\",\n  payload_off: \"OFF\",\n  device_class: \"motion\",\n  unique_id: nome,\n  device: {\n    identifiers: [nome],\n    name: nome\n  }\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 1240,
+        "wires": [
+            [
+                "44ce0b74f8e78a42"
+            ]
+        ]
+    },
+    {
+        "id": "44ce0b74f8e78a42",
+        "type": "mqtt out",
+        "z": "3ce7ac42d53215fa",
+        "name": "config HA",
+        "topic": "",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 980,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "0541ee0ad97501e6",
+        "type": "inject",
+        "z": "3ce7ac42d53215fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 600,
+        "y": 1240,
+        "wires": [
+            [
+                "9393126199c8fa51"
+            ]
+        ]
+    },
+    {
+        "id": "7ea5ec55ad4605bf",
+        "type": "mqtt out",
+        "z": "3ce7ac42d53215fa",
+        "name": "",
+        "topic": "nodered/presenca_01/state",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 880,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "762a2c24413e2e6e",
+        "type": "inject",
+        "z": "3ce7ac42d53215fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "ON",
+        "payloadType": "str",
+        "x": 650,
+        "y": 1100,
+        "wires": [
+            [
+                "7ea5ec55ad4605bf"
+            ]
+        ]
+    },
+    {
+        "id": "ce2267b0030fa832",
+        "type": "inject",
+        "z": "3ce7ac42d53215fa",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "OFF",
+        "payloadType": "str",
+        "x": 650,
+        "y": 1160,
+        "wires": [
+            [
+                "7ea5ec55ad4605bf"
+            ]
+        ]
+    },
+    {
+        "id": "cc178c955ca8f8bd",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
