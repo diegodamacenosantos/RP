@@ -1,0 +1,115 @@
+[
+    {
+        "id": "d55281d21640a8c9",
+        "type": "function",
+        "z": "41ee4ae578af43b9",
+        "name": "criação sensor ic",
+        "func": "var nome = \"sensor_ic\";\n\nmsg.topic = \"homeassistant/sensor/\" + nome + \"_ic/config\";\n\nmsg.payload = {\n  name: \"Índice de Calor\",\n  state_topic: \"nodered/\" + nome + \"/ic\",\n  unit_of_measurement: \"°C\",\n  state_class: \"measurement\",\n  unique_id: nome + \"_ic\",\n  icon: \"mdi:weather-sunny-alert\",\n  device: {\n    identifiers: [nome],\n    name: nome\n  }\n};\n\nreturn msg;\n\n\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 500,
+        "wires": [
+            [
+                "42b29c200841df34"
+            ]
+        ]
+    },
+    {
+        "id": "42b29c200841df34",
+        "type": "mqtt out",
+        "z": "41ee4ae578af43b9",
+        "name": "config HA",
+        "topic": "",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 900,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "4a59646335932a86",
+        "type": "inject",
+        "z": "41ee4ae578af43b9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 560,
+        "y": 500,
+        "wires": [
+            [
+                "d55281d21640a8c9"
+            ]
+        ]
+    },
+    {
+        "id": "f2e8d76401662c9d",
+        "type": "mqtt out",
+        "z": "41ee4ae578af43b9",
+        "name": "",
+        "topic": "nodered/sensor_ic/ic",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 720,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "cc178c955ca8f8bd",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]
