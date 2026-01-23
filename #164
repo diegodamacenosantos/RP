@@ -1,26 +1,69 @@
 [
     {
-        "id": "d55281d21640a8c9",
+        "id": "32c020f7bd72789c",
+        "type": "mqtt out",
+        "z": "41ee4ae578af43b9",
+        "name": "",
+        "topic": "homeassistant/sensor/sensor_ic/config",
+        "qos": "1",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "cc178c955ca8f8bd",
+        "x": 670,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "639c59268f7d6749",
+        "type": "inject",
+        "z": "41ee4ae578af43b9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 450,
+        "y": 400,
+        "wires": [
+            [
+                "32c020f7bd72789c"
+            ]
+        ]
+    },
+    {
+        "id": "7d4c1012e7c247ed",
         "type": "function",
         "z": "41ee4ae578af43b9",
         "name": "criação sensor ic",
-        "func": "var nome = \"sensor_ic\";\n\nmsg.topic = \"homeassistant/sensor/\" + nome + \"_ic/config\";\n\nmsg.payload = {\n  name: \"Índice de Calor\",\n  state_topic: \"nodered/\" + nome + \"/ic\",\n  unit_of_measurement: \"°C\",\n  state_class: \"measurement\",\n  unique_id: nome + \"_ic\",\n  icon: \"mdi:weather-sunny-alert\",\n  device: {\n    identifiers: [nome],\n    name: nome\n  }\n};\n\nreturn msg;\n\n\n",
+        "func": "var nome = \"sensor_ic\";\n\nmsg.topic = \"homeassistant/sensor/\" + nome + \"/config\";\n\nmsg.payload = {\n  name: nome,\n  state_topic: \"nodered/\" + nome + \"/state\",\n  unit_of_measurement: \"°C\",\n  device_class: \"temperature\",\n  state_class: \"measurement\",\n  unique_id: nome,\n  icon: \"mdi:weather-sunny-alert\",\n  device: {\n    identifiers: [nome],\n    name: nome\n  }\n};\n\nreturn msg;\n",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 730,
-        "y": 500,
+        "x": 610,
+        "y": 560,
         "wires": [
             [
-                "42b29c200841df34"
+                "f53841b76632f644"
             ]
         ]
     },
     {
-        "id": "42b29c200841df34",
+        "id": "f53841b76632f644",
         "type": "mqtt out",
         "z": "41ee4ae578af43b9",
         "name": "config HA",
@@ -33,12 +76,12 @@
         "correl": "",
         "expiry": "",
         "broker": "cc178c955ca8f8bd",
-        "x": 900,
-        "y": 500,
+        "x": 780,
+        "y": 560,
         "wires": []
     },
     {
-        "id": "4a59646335932a86",
+        "id": "7fb4fe38b6ac057b",
         "type": "inject",
         "z": "41ee4ae578af43b9",
         "name": "",
@@ -58,20 +101,20 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 560,
-        "y": 500,
+        "x": 440,
+        "y": 560,
         "wires": [
             [
-                "d55281d21640a8c9"
+                "7d4c1012e7c247ed"
             ]
         ]
     },
     {
-        "id": "f2e8d76401662c9d",
+        "id": "332be6888ad5e4cc",
         "type": "mqtt out",
         "z": "41ee4ae578af43b9",
         "name": "",
-        "topic": "nodered/sensor_ic/ic",
+        "topic": "nodered/sensor_ic/state",
         "qos": "1",
         "retain": "true",
         "respTopic": "",
@@ -80,9 +123,34 @@
         "correl": "",
         "expiry": "",
         "broker": "cc178c955ca8f8bd",
-        "x": 720,
-        "y": 420,
+        "x": 690,
+        "y": 480,
         "wires": []
+    },
+    {
+        "id": "286734c8cdbea0a5",
+        "type": "inject",
+        "z": "41ee4ae578af43b9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "23",
+        "payloadType": "num",
+        "x": 450,
+        "y": 480,
+        "wires": [
+            [
+                "332be6888ad5e4cc"
+            ]
+        ]
     },
     {
         "id": "cc178c955ca8f8bd",
