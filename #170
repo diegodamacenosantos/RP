@@ -1,0 +1,234 @@
+[
+    {
+        "id": "http_painel",
+        "type": "http in",
+        "z": "flow_simples",
+        "name": "Painel",
+        "url": "/painel",
+        "method": "get",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 550,
+        "y": 300,
+        "wires": [
+            [
+                "tpl_painel"
+            ]
+        ]
+    },
+    {
+        "id": "tpl_painel",
+        "type": "template",
+        "z": "flow_simples",
+        "name": "HTML Painel",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html lang=\"pt-br\">\n\n<head>\n    <meta charset=\"utf-8\">\n    <title>Painel Neon</title>\n\n    <style>\n        body {\n            background: #0a0a0c;\n            font-family: 'Segoe UI', Roboto, sans-serif;\n            display: flex;\n            flex-direction: column;\n            align-items: center;\n            min-height: 100vh;\n            margin: 0;\n            color: white;\n        }\n\n        .header {\n            width: 100%;\n            max-width: 900px;\n            display: flex;\n            align-items: center;\n            gap: 15px;\n            padding: 15px 20px;\n            margin-top: 20px;\n\n            background: #111116;\n            border-radius: 15px;\n\n            box-shadow: 0 0 15px rgba(0, 255, 255, 0.25);\n        }\n\n        .logo {\n            height: 50px;\n        }\n\n        .titulo {\n            font-size: 22px;\n            font-weight: 600;\n            letter-spacing: 1px;\n        }\n\n        .grid {\n            display: grid;\n            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));\n            gap: 25px;\n            padding: 20px;\n            width: 90%;\n            max-width: 800px;\n        }\n\n        iframe {\n            border: none;\n            width: 100%;\n            height: 130px;\n            border-radius: 15px;\n            box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);\n            transition: all 0.3s ease;\n            background: #1a1a1e;\n            overflow: hidden;\n        }\n\n        iframe:hover {\n            transform: scale(1.05) translateY(-5px);\n            box-shadow: 0 0 20px rgba(0, 255, 255, 0.7);\n            cursor: pointer;\n        }\n    </style>\n</head>\n\n<body>\n\n    <div class=\"header\">\n        <!-- TROQUE AQUI PELO SEU LOGO -->\n        <img src=\"/logo.png\" class=\"logo\">\n\n        <div class=\"titulo\">\n            Sua Empresa aqui!\n        </div>\n    </div>\n\n    <div class='grid'>\n        <iframe src='/botao/1'></iframe>\n        <iframe src='/botao/2'></iframe>\n        <iframe src='/botao/3'></iframe>\n        <iframe src='/botao/4'></iframe>\n        <iframe src='/botao/5'></iframe>\n        <iframe src='/botao/6'></iframe>\n        <iframe src='/botao/7'></iframe>\n        <iframe src='/botao/8'></iframe>\n        <iframe src='/botao/9'></iframe>\n        <iframe src='/botao/10'></iframe>\n    </div>\n\n</body>\n\n</html>",
+        "x": 760,
+        "y": 300,
+        "wires": [
+            [
+                "resp_painel"
+            ]
+        ]
+    },
+    {
+        "id": "resp_painel",
+        "type": "http response",
+        "z": "flow_simples",
+        "x": 1010,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "http_toggle",
+        "type": "http in",
+        "z": "flow_simples",
+        "name": "Toggle",
+        "url": "/toggle",
+        "method": "post",
+        "x": 550,
+        "y": 460,
+        "wires": [
+            [
+                "fn_toggle"
+            ]
+        ]
+    },
+    {
+        "id": "fn_toggle",
+        "type": "function",
+        "z": "flow_simples",
+        "name": "Toggle Estado",
+        "func": "let estados = flow.get('estados') || {};\nlet id = msg.payload.id;\nestados[id] = estados[id] === 'ON' ? 'OFF' : 'ON';\nflow.set('estados', estados);\nmsg.payload = estados;\nreturn msg;",
+        "outputs": 1,
+        "x": 780,
+        "y": 460,
+        "wires": [
+            [
+                "resp_toggle",
+                "9062ff9cf04ba7f6"
+            ]
+        ]
+    },
+    {
+        "id": "resp_toggle",
+        "type": "http response",
+        "z": "flow_simples",
+        "x": 1010,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "http_estado",
+        "type": "http in",
+        "z": "flow_simples",
+        "name": "Estados",
+        "url": "/estado",
+        "method": "get",
+        "x": 560,
+        "y": 520,
+        "wires": [
+            [
+                "fn_estado"
+            ]
+        ]
+    },
+    {
+        "id": "fn_estado",
+        "type": "function",
+        "z": "flow_simples",
+        "name": "Enviar Estados",
+        "func": "msg.payload = flow.get('estados') || {};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 780,
+        "y": 520,
+        "wires": [
+            [
+                "resp_estado"
+            ]
+        ]
+    },
+    {
+        "id": "resp_estado",
+        "type": "http response",
+        "z": "flow_simples",
+        "x": 1010,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "http_botao_tpl",
+        "type": "http in",
+        "z": "flow_simples",
+        "name": "Botão",
+        "url": "/botao/:id",
+        "method": "get",
+        "x": 550,
+        "y": 340,
+        "wires": [
+            [
+                "tpl_botao"
+            ]
+        ]
+    },
+    {
+        "id": "tpl_botao",
+        "type": "template",
+        "z": "flow_simples",
+        "name": "Template Botão",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "html",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n<head>\n<meta charset=\"utf-8\">\n\n<link href=\"https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css\" rel=\"stylesheet\">\n\n<style>\n\nbody{\n    margin:0;\n    height:100vh;\n    display:flex;\n    justify-content:center;\n    align-items:center;\n    background:#111;\n    font-family:Segoe UI, sans-serif;\n}\n\n.smart-room{\n    width:85px;\n    height:85px;\n    border-radius:14px;\n    padding:6px;\n    cursor:pointer;\n\n    display:flex;\n    flex-direction:column;\n    justify-content:space-between;\n\n    background:linear-gradient(145deg,#2c2c2c,#1a1a1a);\n    border:2px solid #404040;\n    color:white;\n\n    transition:.25s;\n    position:relative;\n    overflow:hidden;\n}\n\n.smart-room:hover{\n    transform:translateY(-2px);\n}\n\n.smart-room.active{\n    background:linear-gradient(145deg,#2e5c2e,#1a3d1a);\n    border-color:#4CAF50;\n    box-shadow:0 0 12px rgba(76,175,80,.4);\n}\n\n.header{\n    display:flex;\n    justify-content:space-between;\n    font-size:10px;\n}\n\n.dot{\n    width:6px;\n    height:6px;\n    border-radius:50%;\n    background:#666;\n    transition:.3s;\n}\n\n.dot.on{\n    background:#4CAF50;\n    box-shadow:0 0 6px #4CAF50;\n    animation:blink 1.5s infinite;\n}\n\n@keyframes blink{\n    50%{opacity:.4;}\n}\n\n.icon{\n    text-align:center;\n    font-size:30px;\n    color:#888;\n    transition:.3s;\n}\n\n.smart-room.active .icon{\n    color:#4CAF50;\n    transform:scale(1.05);\n}\n\n.status{\n    text-align:center;\n    font-size:9px;\n    letter-spacing:1px;\n    color:#bbb;\n}\n\n.smart-room.active .status{\n    color:#a5d6a7;\n}\n\n.smart-room:active::after{\n    content:'';\n    position:absolute;\n    top:50%;\n    left:50%;\n    width:0;\n    height:0;\n    border-radius:50%;\n    background:rgba(255,255,255,.3);\n    transform:translate(-50%,-50%);\n    animation:ripple .6s ease-out;\n}\n\n@keyframes ripple{\n    to{\n        width:120px;\n        height:120px;\n        opacity:0;\n    }\n}\n\n</style>\n</head>\n\n<body>\n\n<div id=\"btn\" class=\"smart-room\" onclick=\"toggle()\">\n\n    <div class=\"header\">\n        <span>Botão {{req.params.id}}</span>\n        <div id=\"dot\" class=\"dot\"></div>\n    </div>\n\n    <div id=\"icon\" class=\"icon\">\n        <i class=\"mdi mdi-lightbulb-outline\"></i>\n    </div>\n\n    <div id=\"st\" class=\"status\">OFF</div>\n\n</div>\n\n<script>\n\nconst id = {{req.params.id}};\nconst btn = document.getElementById(\"btn\");\nconst st  = document.getElementById(\"st\");\nconst dot = document.getElementById(\"dot\");\nconst icon = document.getElementById(\"icon\");\n\nfunction aplicar(s){\n\n    if(s === \"ON\"){\n        btn.classList.add(\"active\");\n        dot.classList.add(\"on\");\n        icon.innerHTML='<i class=\"mdi mdi-lightbulb-on\"></i>';\n    }else{\n        btn.classList.remove(\"active\");\n        dot.classList.remove(\"on\");\n        icon.innerHTML='<i class=\"mdi mdi-lightbulb-outline\"></i>';\n    }\n\n    st.innerText = s;\n}\n\nfunction toggle(){\n\n    const atual = st.innerText;\n    aplicar(atual===\"ON\"?\"OFF\":\"ON\");\n\n    fetch(\"/toggle\",{\n        method:\"POST\",\n        headers:{'Content-Type':'application/json'},\n        body:JSON.stringify({id:id})\n    }).catch(()=>aplicar(atual));\n}\n\nsetInterval(()=>{\n    fetch(\"/estado\")\n    .then(r=>r.json())\n    .then(d=>aplicar(d[id]||\"OFF\"));\n},700);\n\n</script>\n\n</body>\n</html>",
+        "x": 760,
+        "y": 340,
+        "wires": [
+            [
+                "resp_botao"
+            ]
+        ]
+    },
+    {
+        "id": "resp_botao",
+        "type": "http response",
+        "z": "flow_simples",
+        "x": 1010,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "9062ff9cf04ba7f6",
+        "type": "switch",
+        "z": "flow_simples",
+        "name": "",
+        "property": "payload[\"1\"]",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "ON",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "OFF",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 550,
+        "y": 660,
+        "wires": [
+            [
+                "bfb1d640b75ae2ae"
+            ],
+            [
+                "594e06e55aaa4542"
+            ]
+        ]
+    },
+    {
+        "id": "bfb1d640b75ae2ae",
+        "type": "debug",
+        "z": "flow_simples",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "594e06e55aaa4542",
+        "type": "debug",
+        "z": "flow_simples",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 680,
+        "wires": []
+    }
+]
