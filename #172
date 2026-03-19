@@ -1,0 +1,215 @@
+mkdir /opt/mysql
+chmod -R 777 /opt/mysql
+
+------------------------------
+
+services:
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+      - MYSQL_ROOT_PASSWORD=123456
+      - MYSQL_DATABASE=nodered
+      - MYSQL_USER=nodered
+      - MYSQL_PASSWORD=123456
+    network_mode: "host"
+    volumes:
+      - /opt/mysql:/var/lib/mysql
+    privileged: true
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    environment:
+      - PMA_HOST=127.0.0.1
+      - PMA_PORT=3306
+      - PMA_ARBITRARY=1
+      - TZ=America/Sao_Paulo
+    ports:
+      - "9145:80"
+
+#########################################################
+
+[
+    {
+        "id": "dc966bb651b1b6d8",
+        "type": "group",
+        "z": "94b60c86e56c7b62",
+        "style": {
+            "stroke": "#999999",
+            "stroke-opacity": "1",
+            "fill": "none",
+            "fill-opacity": "1",
+            "label": true,
+            "label-position": "nw",
+            "color": "#a4a4a4"
+        },
+        "nodes": [
+            "c89f1507318253d0",
+            "f9bba1515e405586",
+            "b27be6f265f326c6",
+            "280f3e8e024c9ef7",
+            "24f2654e3f2475ee",
+            "0e38c2fa7671b50f"
+        ],
+        "x": 214,
+        "y": 279,
+        "w": 1152,
+        "h": 162
+    },
+    {
+        "id": "c89f1507318253d0",
+        "type": "mysql",
+        "z": "94b60c86e56c7b62",
+        "g": "dc966bb651b1b6d8",
+        "mydb": "6792a62b2757f008",
+        "name": "banco de dados nodered",
+        "x": 1070,
+        "y": 360,
+        "wires": [
+            [
+                "b27be6f265f326c6"
+            ]
+        ]
+    },
+    {
+        "id": "f9bba1515e405586",
+        "type": "inject",
+        "z": "94b60c86e56c7b62",
+        "g": "dc966bb651b1b6d8",
+        "name": "crie tabela",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "CREATE TABLE node_red_globals (     id INT AUTO_INCREMENT PRIMARY KEY,     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,     global_key VARCHAR(255),     global_value JSON );",
+        "x": 860,
+        "y": 320,
+        "wires": [
+            [
+                "c89f1507318253d0"
+            ]
+        ]
+    },
+    {
+        "id": "b27be6f265f326c6",
+        "type": "debug",
+        "z": "94b60c86e56c7b62",
+        "g": "dc966bb651b1b6d8",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1260,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "280f3e8e024c9ef7",
+        "type": "function",
+        "z": "94b60c86e56c7b62",
+        "g": "dc966bb651b1b6d8",
+        "name": "função de captura e envio para banco de dados das globais",
+        "func": "let globals = global.keys();\n\nlet queries = [];\n\nglobals.forEach(key => {\n\n    let value = global.get(key);\n\n    if (value === undefined) return;\n\n    queries.push({\n        topic: `\n            INSERT INTO node_red_globals \n            (global_key, global_value)\n            VALUES (?, ?)\n        `,\n        payload: [\n            key,\n            JSON.stringify(value)\n        ]\n    });\n\n});\n\nreturn [queries];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 700,
+        "y": 360,
+        "wires": [
+            [
+                "c89f1507318253d0"
+            ]
+        ]
+    },
+    {
+        "id": "24f2654e3f2475ee",
+        "type": "inject",
+        "z": "94b60c86e56c7b62",
+        "g": "dc966bb651b1b6d8",
+        "name": "intervalo de 1 minuto",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 360,
+        "y": 360,
+        "wires": [
+            [
+                "280f3e8e024c9ef7"
+            ]
+        ]
+    },
+    {
+        "id": "0e38c2fa7671b50f",
+        "type": "inject",
+        "z": "94b60c86e56c7b62",
+        "g": "dc966bb651b1b6d8",
+        "name": "consulta tabela",
+        "props": [
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "SELECT * FROM `node_red_globals`",
+        "x": 840,
+        "y": 400,
+        "wires": [
+            [
+                "c89f1507318253d0"
+            ]
+        ]
+    },
+    {
+        "id": "6792a62b2757f008",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "nodered",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "933157d03c9f0089",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-node-mysql": "3.0.0"
+        }
+    }
+]
