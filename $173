@@ -1,0 +1,65 @@
+mkdir /opt/frigate
+mkdir /opt/frigate/config
+mkdir /opt/frigate/media
+touch /opt/frigate/config/config.yml
+chmod -R 777 /opt/frigate
+
+---------------------------------------
+
+version: "3.7"
+services:
+  frigate:
+    container_name: frigate
+    image: ghcr.io/blakeblackshear/frigate:stable
+    restart: unless-stopped
+    privileged: true
+    network_mode: "host"
+    shm_size: "128mb"
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /opt/frigate/config:/config
+      - /opt/frigate/media:/media/frigate
+      - /etc/localtime:/etc/localtime:ro
+      - /dev/bus/usb:/dev/bus/usb
+
+----------------------------------------
+
+mqtt:                      # Configuração do MQTT
+  enabled: false           # Desativa MQTT (não necessário para iniciar)
+
+cameras:                   # Lista de câmeras
+  teste:                   # Nome da câmera (pode ser qualquer nome)
+    ffmpeg:                # Configuração do leitor de vídeo
+      inputs:              # Entrada de vídeo da câmera
+        - path:  "caminho da câmera"  # Endereço RTSP da câmera
+          roles:
+            - detect       # Usa o vídeo apenas para detecção
+
+    detect:                # Configuração mínima da detecção
+      width: 1280          # Largura do vídeo
+      height: 720          # Altura do vídeo
+      fps: 5               # Frames analisados por segundo (baixo uso de CPU)
+
+version: 0.17-0            # Versão do arquivo de configuração do Frigate
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+mkdir /opt/motioneye
+chmod -R 777 /opt/motioneye
+
+-------------------------------
+
+version: "3.7"
+services:
+  motioneye:
+    container_name: motioneye
+    image: ccrisan/motioneye:latest
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+    network_mode: "host"
+    volumes:
+      - /opt/motioneye:/etc/motioneye
+      - /etc/localtime:/etc/localtime:ro
+    privileged: true
