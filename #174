@@ -1,0 +1,18 @@
+mkdir /opt/esphome
+chmod -R 777 /opt/esphome
+
+------------------------------
+
+version: "3.7"
+services:
+  esphome:
+    container_name: esphome
+    image: ghcr.io/esphome/esphome:stable
+    restart: unless-stopped
+    environment:
+      - TZ=America/Sao_Paulo
+    ports:
+      - "6052:6052"
+    volumes:
+      - /opt/esphome:/config
+    privileged: true
