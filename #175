@@ -1,13 +1,13 @@
 [
     {
-        "id": "49836452614fc099",
+        "id": "45bfeae87da16f9d",
         "type": "http request",
         "z": "f52a1dd661d9f7d2",
         "name": "Gemini 2.5 Flash",
         "method": "POST",
         "ret": "obj",
         "paytoqs": "ignore",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=chaveapi",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=chaveapi",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -15,16 +15,16 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 830,
-        "y": 240,
+        "x": 810,
+        "y": 300,
         "wires": [
             [
-                "d10790610f9ba30f"
+                "203c577a1f15f6d0"
             ]
         ]
     },
     {
-        "id": "5b81575b862f708e",
+        "id": "a7daa9d1dd0b3ac5",
         "type": "function",
         "z": "f52a1dd661d9f7d2",
         "name": "pronpt",
@@ -35,19 +35,19 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 670,
-        "y": 240,
+        "x": 650,
+        "y": 300,
         "wires": [
             [
-                "49836452614fc099"
+                "45bfeae87da16f9d"
             ]
         ]
     },
     {
-        "id": "d10790610f9ba30f",
+        "id": "203c577a1f15f6d0",
         "type": "function",
         "z": "f52a1dd661d9f7d2",
-        "name": "function 3",
+        "name": "function 7",
         "func": "let text = msg.payload.candidates[0].content.parts[0].text;\n\nif (typeof text === \"string\") {\n    try {\n        let parsed = JSON.parse(text);\n        if (parsed.payload) {\n            text = parsed.payload;\n        }\n    } catch (e) {\n        \n    }\n}\n\ntext = text.replace(/```json|```/gi, \"\");\n\ntext = text.replace(/\\*\\*/g, \"\");\ntext = text.replace(/\\*/g, \"\");\n\ntext = text.replace(/\\\\n/g, \" \");\n\ntext = text.replace(/\\s+/g, \" \");\n\ntext = text.trim();\n\nmsg.payload = text;\n\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
@@ -55,8 +55,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1000,
-        "y": 240,
+        "x": 980,
+        "y": 300,
         "wires": [
             []
         ]
