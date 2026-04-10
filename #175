@@ -1,0 +1,64 @@
+[
+    {
+        "id": "49836452614fc099",
+        "type": "http request",
+        "z": "f52a1dd661d9f7d2",
+        "name": "Gemini 2.5 Flash",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=chaveapi",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 830,
+        "y": 240,
+        "wires": [
+            [
+                "d10790610f9ba30f"
+            ]
+        ]
+    },
+    {
+        "id": "5b81575b862f708e",
+        "type": "function",
+        "z": "f52a1dd661d9f7d2",
+        "name": "pronpt",
+        "func": "\nlet origem_lat = -22.88903475040335;\nlet origem_lng = -42.04115016504779;\n\nlet destino_lat = -22.96704152204206;\nlet destino_lng = -42.02376736510033;\n\nlet prompt = `\nCalcule o tempo estimado de deslocamento ENTRE DOIS PONTOS usando trânsito atual estimado.\n\nOrigem:\nLatitude: ${origem_lat}\nLongitude: ${origem_lng}\n\nDestino:\nLatitude: ${destino_lat}\nLongitude: ${destino_lng}\n\nRegras IMPORTANTES:\n\n- Considere trânsito realista e condições normais de tráfego.\n- Caso a rota envolva transporte aéreo ou marítimo, explique resumidamente.\n- Responda em português do Brasil.\n- NÃO use markdown.\n- NÃO use listas com * ou **.\n- NÃO adicione explicações fora do JSON.\n- Retorne SOMENTE o JSON abaixo.\n\nFormato de saída obrigatório:\n\n{\n  \"payload\": \"texto claro dizendo quantos minutos tenho até o destino\"\n}\n`;\n\nmsg.payload = {\n    contents: [\n        {\n            parts: [\n                { text: prompt }\n            ]\n        }\n    ]\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 240,
+        "wires": [
+            [
+                "49836452614fc099"
+            ]
+        ]
+    },
+    {
+        "id": "d10790610f9ba30f",
+        "type": "function",
+        "z": "f52a1dd661d9f7d2",
+        "name": "function 3",
+        "func": "let text = msg.payload.candidates[0].content.parts[0].text;\n\nif (typeof text === \"string\") {\n    try {\n        let parsed = JSON.parse(text);\n        if (parsed.payload) {\n            text = parsed.payload;\n        }\n    } catch (e) {\n        \n    }\n}\n\ntext = text.replace(/```json|```/gi, \"\");\n\ntext = text.replace(/\\*\\*/g, \"\");\ntext = text.replace(/\\*/g, \"\");\n\ntext = text.replace(/\\\\n/g, \" \");\n\ntext = text.replace(/\\s+/g, \" \");\n\ntext = text.trim();\n\nmsg.payload = text;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1000,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    }
+]
