@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  dockpeek:
+    image: ghcr.io/dockpeek/dockpeek:latest
+    container_name: dockpeek
+    restart: unless-stopped
+    ports:
+      - "5000:8000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - TZ=America/Sao_Paulo
+      - SECRET_KEY=12345678
+      - USERNAME=admin
+      - PASSWORD=admin123
