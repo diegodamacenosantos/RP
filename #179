@@ -1,0 +1,494 @@
+[
+    {
+        "id": "sf_recebimento",
+        "type": "subflow",
+        "name": "Recebimento Redundante",
+        "info": "Escuta o mesmo tópico nos 3 brokers. Deduplica mensagens iguais recebidas dentro de 2 segundos e entrega apenas uma ao output.",
+        "category": "",
+        "in": [],
+        "out": [
+            {
+                "x": 1140,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "mqttin_b1",
+                        "port": 0
+                    },
+                    {
+                        "id": "b94b883bc3751683",
+                        "port": 0
+                    },
+                    {
+                        "id": "6dc2791eace70f9e",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [
+            {
+                "name": "Broker_1",
+                "type": "mqtt-broker",
+                "value": "",
+                "ui": {
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "Broker_2",
+                "type": "mqtt-broker",
+                "value": "",
+                "ui": {
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "Broker_3",
+                "type": "mqtt-broker",
+                "value": "",
+                "ui": {
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "topic",
+                "type": "str",
+                "value": ""
+            }
+        ],
+        "meta": {},
+        "color": "#3FADB5",
+        "icon": "font-awesome/fa-chain"
+    },
+    {
+        "id": "fn_sub_b1",
+        "type": "function",
+        "z": "sf_recebimento",
+        "name": "subscribe B1",
+        "func": "",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "setTimeout(function () {\n    node.send([{ action: 'subscribe', topic: env.get('topic') }]);\n}, 500);",
+        "finalize": "",
+        "libs": [],
+        "x": 120,
+        "y": 140,
+        "wires": [
+            [
+                "mqttin_b1"
+            ]
+        ]
+    },
+    {
+        "id": "fn_sub_b2",
+        "type": "function",
+        "z": "sf_recebimento",
+        "name": "subscribe B2",
+        "func": "",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "setTimeout(function () {\n    node.send([{ action: 'subscribe', topic: env.get('topic') }]);\n}, 1000);",
+        "finalize": "",
+        "libs": [],
+        "x": 120,
+        "y": 200,
+        "wires": [
+            [
+                "mqttin_b2"
+            ]
+        ]
+    },
+    {
+        "id": "fn_sub_b3",
+        "type": "function",
+        "z": "sf_recebimento",
+        "name": "subscribe B3",
+        "func": "",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "setTimeout(function () {\n    node.send([{ action: 'subscribe', topic: env.get('topic') }]);\n}, 1500);",
+        "finalize": "",
+        "libs": [],
+        "x": 120,
+        "y": 260,
+        "wires": [
+            [
+                "mqttin_b3"
+            ]
+        ]
+    },
+    {
+        "id": "mqttin_b1",
+        "type": "mqtt in",
+        "z": "sf_recebimento",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "${Broker_1}",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 320,
+        "y": 140,
+        "wires": [
+            [
+                "1bcf8765c0a13b22"
+            ]
+        ]
+    },
+    {
+        "id": "mqttin_b2",
+        "type": "mqtt in",
+        "z": "sf_recebimento",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "${Broker_2}",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 320,
+        "y": 200,
+        "wires": [
+            [
+                "b94b883bc3751683",
+                "0466f61bbef52d6c"
+            ]
+        ]
+    },
+    {
+        "id": "mqttin_b3",
+        "type": "mqtt in",
+        "z": "sf_recebimento",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "${Broker_3}",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 1,
+        "x": 320,
+        "y": 260,
+        "wires": [
+            [
+                "6dc2791eace70f9e"
+            ]
+        ]
+    },
+    {
+        "id": "6dc2791eace70f9e",
+        "type": "delay",
+        "z": "sf_recebimento",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "1000",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 260,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b94b883bc3751683",
+        "type": "delay",
+        "z": "sf_recebimento",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "500",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 860,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1bcf8765c0a13b22",
+        "type": "template",
+        "z": "sf_recebimento",
+        "name": "",
+        "field": "reset",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "reset",
+        "output": "str",
+        "x": 500,
+        "y": 160,
+        "wires": [
+            [
+                "b94b883bc3751683",
+                "6dc2791eace70f9e"
+            ]
+        ]
+    },
+    {
+        "id": "0466f61bbef52d6c",
+        "type": "template",
+        "z": "sf_recebimento",
+        "name": "",
+        "field": "reset",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "reset",
+        "output": "str",
+        "x": 500,
+        "y": 220,
+        "wires": [
+            [
+                "6dc2791eace70f9e"
+            ]
+        ]
+    },
+    {
+        "id": "sf_envio",
+        "type": "subflow",
+        "name": "Envio Redundante",
+        "info": "Recebe uma mensagem e publica nos 3 brokers com delay escalonado para garantir entrega redundante.",
+        "category": "",
+        "in": [
+            {
+                "x": 80,
+                "y": 200,
+                "wires": [
+                    {
+                        "id": "fn_set_topic"
+                    }
+                ]
+            }
+        ],
+        "out": [],
+        "env": [
+            {
+                "name": "Broker_1",
+                "type": "mqtt-broker",
+                "value": "",
+                "ui": {
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "Broker_2",
+                "type": "mqtt-broker",
+                "value": "",
+                "ui": {
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "Broker_3",
+                "type": "mqtt-broker",
+                "value": "",
+                "ui": {
+                    "type": "conf-types"
+                }
+            },
+            {
+                "name": "topic",
+                "type": "str",
+                "value": ""
+            }
+        ],
+        "meta": {},
+        "color": "#3FADB5",
+        "icon": "font-awesome/fa-chain"
+    },
+    {
+        "id": "fn_set_topic",
+        "type": "function",
+        "z": "sf_envio",
+        "name": "set topic",
+        "func": "msg.topic = env.get(\"topic\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 200,
+        "wires": [
+            [
+                "mqttout_b1",
+                "mqttout_b2",
+                "mqttout_b3"
+            ]
+        ]
+    },
+    {
+        "id": "mqttout_b1",
+        "type": "mqtt out",
+        "z": "sf_envio",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "retain": "",
+        "broker": "${Broker_1}",
+        "x": 410,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "mqttout_b2",
+        "type": "mqtt out",
+        "z": "sf_envio",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "retain": "",
+        "broker": "${Broker_2}",
+        "x": 410,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "mqttout_b3",
+        "type": "mqtt out",
+        "z": "sf_envio",
+        "name": "",
+        "topic": "",
+        "qos": "2",
+        "retain": "",
+        "broker": "${Broker_3}",
+        "x": 410,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "inst_envio",
+        "type": "subflow:sf_envio",
+        "z": "tab_principal",
+        "name": "Envio Redundante",
+        "env": [
+            {
+                "name": "Broker_1",
+                "value": "23e8a8683c44e469",
+                "type": "conf-type"
+            },
+            {
+                "name": "Broker_2",
+                "value": "4f79aa31e268aff5",
+                "type": "conf-type"
+            },
+            {
+                "name": "Broker_3",
+                "value": "5b2f346902bbf89c",
+                "type": "conf-type"
+            },
+            {
+                "name": "topic",
+                "value": "qacweafcasdfas",
+                "type": "str"
+            }
+        ],
+        "x": 610,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "inst_recebimento",
+        "type": "subflow:sf_recebimento",
+        "z": "tab_principal",
+        "name": "Recebimento Redundante",
+        "env": [
+            {
+                "name": "Broker_1",
+                "value": "23e8a8683c44e469",
+                "type": "conf-type"
+            },
+            {
+                "name": "Broker_2",
+                "value": "4f79aa31e268aff5",
+                "type": "conf-type"
+            },
+            {
+                "name": "Broker_3",
+                "value": "5b2f346902bbf89c",
+                "type": "conf-type"
+            },
+            {
+                "name": "topic",
+                "value": "qacweafcasdfas",
+                "type": "str"
+            }
+        ],
+        "x": 630,
+        "y": 580,
+        "wires": [
+            [
+                "dbg_saida"
+            ]
+        ]
+    },
+    {
+        "id": "inj_teste",
+        "type": "inject",
+        "z": "tab_principal",
+        "name": "Testar envio",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Mensagem de teste",
+        "payloadType": "str",
+        "x": 430,
+        "y": 540,
+        "wires": [
+            [
+                "inst_envio"
+            ]
+        ]
+    },
+    {
+        "id": "dbg_saida",
+        "type": "debug",
+        "z": "tab_principal",
+        "name": "Mensagem recebida",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 580,
+        "wires": []
+    }
+]
