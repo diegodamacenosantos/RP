@@ -1,0 +1,17 @@
+
+docker stop portainer && docker rm -f portainer && docker rmi portainer/portainer-ce && docker volume rm portainer_data
+
+mkdir -p /opt/dockge
+chmod -R 777 /opt/dockge
+mkdir -p /opt/stacks
+chmod -R 777 /opt/stacks
+
+docker run -d \
+  --name=dockge \
+  -p 5001:5001 \
+  --restart unless-stopped \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /opt/dockge:/app/data \
+  -v /opt/dockge/stacks:/opt/dockge/stacks \
+  -e DOCKGE_ENABLE_CONSOLE=true \
+  louislam/dockge:1
