@@ -1,21 +1,25 @@
-# Atualiza o sistema
+
 apt update -y && apt upgrade -y && apt autoremove -y
 
-# Instala o curl
+
 apt install -y curl
 
-# Instala o Docker
+
 curl -fsSL https://get.docker.com | sh
 
-# Cria pasta do Dockge
+
 mkdir -p /opt/dockge
 chmod -R 777 /opt/dockge
+mkdir -p /opt/stacks
+chmod -R 777 /opt/stacks
 
-# Sobe o Dockge
+
 docker run -d \
   --name=dockge \
   -p 5001:5001 \
   --restart unless-stopped \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v /opt/dockge:/app/data \
+  -v /opt/dockge/stacks:/opt/dockge/stacks \
+  -e DOCKGE_ENABLE_CONSOLE=true \
   louislam/dockge:1
