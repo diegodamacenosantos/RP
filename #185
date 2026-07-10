@@ -1,0 +1,13 @@
+sudo systemctl stop shellinabox
+
+sudo apt-get purge shellinabox && sudo apt-get autoremove -y
+
+-------------------------------------------------------
+
+sudo apt-get install shellinabox -y
+
+sudo sed -i 's|^SHELLINABOX_ARGS=.*|SHELLINABOX_ARGS="--no-beep -t"|' /etc/default/shellinabox && sudo systemctl restart shellinabox
+	
+-------------------------------------------------------
+
+http://localhost:4200
