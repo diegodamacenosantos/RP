@@ -1,7 +1,7 @@
 mkdir -p /opt/backups/node-red
 chmod -R 777 /opt
 
-tar -czf /opt/backups/node-red/node-red-backup.tar.gz /opt/node-red
+tar -czf /opt/backups/node-red/node-red-backup.tar.gz -C /opt node-red
 
 docker stop node-red
 rm -rf /opt/node-red
