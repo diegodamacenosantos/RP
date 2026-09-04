@@ -3,24 +3,36 @@ services:
     container_name: container-restarter
     image: docker:cli
     restart: unless-stopped
+
     environment:
-      INTERVAL_SECONDS: "10800"
-      TARGET_CONTAINERS: zigbee2mqtt mosquitto 
+      a: "10800"
+      b: "21600"
+      a1: "zigbee2mqtt"
+      b1: "mosquitto"
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
     entrypoint:
       - /bin/sh
       - -c
+
     command:
       - |
-        while true; do
-          sleep "$$INTERVAL_SECONDS"
-          for container in $$TARGET_CONTAINERS; do
-            if docker container inspect "$$container" >/dev/null 2>&1; then
-              echo "Reiniciando $$container"
+        reiniciar_grupo() {
+          intervalo="$$1"
+          containers="$$2"
+
+          while true; do
+            sleep "$$intervalo"
+
+            for container in $$containers; do
               docker container restart "$$container"
-            else
-              echo "Container não encontrado: $$container"
-            fi
+            done
           done
-        done
+        }
+
+        reiniciar_grupo "$$a" "$$a1" &
+        reiniciar_grupo "$$b" "$$b1" &
+
+        wait
