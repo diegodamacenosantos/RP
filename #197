@@ -1,0 +1,170 @@
+[
+    {
+        "id": "302e5f0efc11b9cc",
+        "type": "group",
+        "z": "aad8c8fb4a9916fc",
+        "name": "",
+        "style": {
+            "stroke": "#000000",
+            "fill": "#d1d1d1",
+            "label": true,
+            "color": "#000000"
+        },
+        "nodes": [
+            "3a628adedf32a92e",
+            "b7c1f0a2d4e68315"
+        ],
+        "x": 94,
+        "y": 59,
+        "w": 192,
+        "h": 122
+    },
+    {
+        "id": "3a628adedf32a92e",
+        "type": "ui-template",
+        "z": "aad8c8fb4a9916fc",
+        "g": "302e5f0efc11b9cc",
+        "group": "",
+        "page": "",
+        "ui": "ui_base",
+        "name": "ccs pagina",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": ":root {\n  /* TROCAR AQUI: cor do papel (fundo), formato R,G,B de 0 a 255. Atual: bege */\n  --paperos-paper-rgb: 242,234,216;\n  /* TROCAR AQUI: cor da tinta (texto e bordas), formato R,G,B de 0 a 255. Atual: quase preto */\n  --paperos-ink-rgb: 23,21,18;\n  /* NAO MEXER: derivadas das duas cores acima */\n  --paperos-paper: rgb(var(--paperos-paper-rgb));\n  --paperos-ink: rgb(var(--paperos-ink-rgb));\n  /* TROCAR AQUI: fonte de todo o dashboard (lista por ordem de preferencia) */\n  --paperos-font: ui-monospace, Consolas, 'Courier New', monospace;\n  /* TROCAR AQUI: espaco entre widgets. Maior = mais afastados */\n  --paperos-gap: 8px;\n  /* TROCAR AQUI: espessura da borda dos grupos. 0px = sem borda */\n  --paperos-border: 1px;\n  /* TROCAR AQUI: espessura do contorno ao navegar por teclado */\n  --paperos-focus: 2px;\n  /* TROCAR AQUI: tamanho do titulo dos grupos (minimo, ideal, maximo) */\n  --paperos-title-size: clamp(15px, 4.5vw, 18px);\n  /* TROCAR AQUI: respiro interno dos grupos. Maior = mais espaco */\n  --paperos-pad: clamp(8px, 1vw, 10px);\n  /* TROCAR AQUI: respiro menor, abaixo do titulo do grupo */\n  --paperos-pad-small: clamp(4px, .6vw, 6px);\n}\n\n:root, body { color-scheme: light !important; background: var(--paperos-paper) !important; }\n\n.v-application, .v-main, .v-app-bar, .v-navigation-drawer, .v-card { transition: none !important; }\n\n.v-theme--nrdb { color-scheme: light !important;\n  --v-theme-background: var(--paperos-paper-rgb) !important; --v-theme-on-background: var(--paperos-ink-rgb) !important;\n  --v-theme-surface: var(--paperos-paper-rgb) !important; --v-theme-on-surface: var(--paperos-ink-rgb) !important;\n  --v-theme-surface-light: var(--paperos-paper-rgb) !important; --v-theme-on-surface-light: var(--paperos-ink-rgb) !important;\n  --v-theme-group-background: var(--paperos-paper-rgb) !important; --v-theme-on-group-background: var(--paperos-ink-rgb) !important; --v-theme-group-outline: var(--paperos-ink-rgb) !important;\n  --v-theme-navigation-background: var(--paperos-paper-rgb) !important; --v-theme-on-navigation-background: var(--paperos-ink-rgb) !important;\n  --v-theme-primary: var(--paperos-ink-rgb) !important; --v-theme-on-primary: var(--paperos-paper-rgb) !important;\n  --v-border-color: var(--paperos-ink-rgb) !important; --v-border-opacity: 1 !important; --v-high-emphasis-opacity: 1 !important; --v-medium-emphasis-opacity: 1 !important; }\n\n.v-application { --group-border-radius: 0px !important; --widget-gap: var(--paperos-gap) !important; }\n\n.v-application, .v-main, .v-app-bar.v-toolbar, .v-navigation-drawer { color: var(--paperos-ink) !important; background: var(--paperos-paper) !important; font-family: var(--paperos-font) !important; box-shadow: none !important; }\n.v-toolbar-title, .v-list-item-title { font-family: var(--paperos-font) !important; font-weight: 700 !important; }\n\n.v-btn__overlay, .v-list-item__overlay, .v-card__overlay, .v-ripple__container { display: none !important; }\n:focus-visible { outline: var(--paperos-focus) solid var(--paperos-ink) !important; outline-offset: 2px; }\n\n.nrdb-ui-group > .v-card { background: var(--paperos-paper) !important; border: var(--paperos-border) solid var(--paperos-ink) !important; border-radius: 0 !important; box-shadow: none !important; }\n.nrdb-ui-group .v-card-item { padding: var(--paperos-pad) var(--paperos-pad) var(--paperos-pad-small) !important; }\n.nrdb-ui-group .v-card-title { padding: 0 !important; font-family: var(--paperos-font) !important; font-size: var(--paperos-title-size) !important; font-weight: 700 !important; line-height: 1.2 !important; white-space: normal !important; overflow: visible !important; text-overflow: clip !important; }\n.nrdb-ui-group .v-card-text { padding: 0 var(--paperos-pad) var(--paperos-pad) !important; }",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "site:style",
+        "className": "",
+        "x": 190,
+        "y": 100,
+        "wires": [
+            []
+        ],
+        "info": "# ccs pagina (estilo global do dashboard)\n\nNó `ui-template` com escopo `site:style`: o CSS dele vale para **todas as páginas** do dashboard. Não tem entrada nem saída. Para alterar, abra o nó e edite o campo **Template**, depois Deploy.\n\n## Onde mexer (bloco `:root`, no topo do Template)\n\n| Variável | O que controla |\n|---|---|\n| `--paperos-paper-rgb` | cor do papel (fundo) em R,G,B |\n| `--paperos-ink-rgb` | cor da tinta (texto e bordas) em R,G,B |\n| `--paperos-font` | fonte de todo o dashboard |\n| `--paperos-gap` | espaço entre widgets |\n| `--paperos-border` | espessura da borda dos grupos |\n| `--paperos-focus` | espessura do contorno de foco (teclado) |\n| `--paperos-title-size` | tamanho do título dos grupos |\n| `--paperos-pad` / `--paperos-pad-small` | respiro interno dos grupos |\n\nTrocar cores: só os dois `-rgb` (ex.: `242,234,216`). `--paperos-paper` e `--paperos-ink` são derivados deles, não mexer.\n\n## Seções do CSS (na ordem)\n\n1. `:root` com as variáveis acima.\n2. Tema claro forçado em `:root, body`.\n3. Sem transições nos componentes Vuetify.\n4. `.v-theme--nrdb`: faz o tema do Dashboard 2 usar só papel e tinta (monocromático).\n5. `.v-application`: sem cantos arredondados e espaço entre widgets.\n6. Texto, fonte e fundo da aplicação, barra e menu lateral; sem sombra.\n7. Sem overlays e ripple de botões e listas.\n8. Contorno de foco.\n9. Grupos (`.nrdb-ui-group`): borda, título e respiros.\n\n## Regras\n\n- Visual PaperOS: monocromático, quadrado, sem efeitos. Não adicionar sombra, gradiente, arredondado ou animação.\n- O `!important` é necessário para vencer o Vuetify. Não remover.\n- Sem comentários dentro do CSS: a documentação fica aqui.\n- Para mudar um widget específico, use o CSS do próprio widget, não este nó."
+    },
+    {
+        "id": "b7c1f0a2d4e68315",
+        "type": "ui-template",
+        "z": "aad8c8fb4a9916fc",
+        "g": "302e5f0efc11b9cc",
+        "group": "64867f5234884280",
+        "page": "",
+        "ui": "",
+        "name": "cor do fundo",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "head": "",
+        "format": "<template>\n  <select v-model=\"escolhida\" @change=\"aplicar\" aria-label=\"cor do fundo\">\n    <option v-for=\"c in cores\" :key=\"c.nome\" :value=\"c.nome\">{{ c.nome }}</option>\n  </select>\n</template>\n\n<script>\nexport default {\n  data() {\n    return {\n      escolhida: 'bege',\n      /* TROCAR AQUI: cada linha e uma opcao. nome = texto da lista, papel = cor do fundo, tinta = cor do texto (R,G,B de 0 a 255) */\n      cores: [\n        { nome: 'bege', papel: '242,234,216', tinta: '23,21,18' },\n        { nome: 'branco', papel: '255,255,255', tinta: '23,21,18' },\n        { nome: 'cinza', papel: '224,224,224', tinta: '23,21,18' },\n        { nome: 'amarelo', papel: '250,240,190', tinta: '23,21,18' },\n        { nome: 'preto', papel: '23,21,18', tinta: '242,234,216' }\n      ]\n    }\n  },\n  mounted() {\n    try { this.escolhida = localStorage.getItem('paperos-fundo') || this.escolhida } catch (e) {}\n    this.aplicar()\n    this.$nextTick(() => { const p = document.querySelector('.nrdb-ui-page'); if (p) p.prepend(this.$el) })\n  },\n  methods: {\n    aplicar() {\n      const c = this.cores.find(x => x.nome === this.escolhida) || this.cores[0]\n      const r = document.documentElement.style\n      r.setProperty('--paperos-paper-rgb', c.papel)\n      r.setProperty('--paperos-ink-rgb', c.tinta)\n      try { localStorage.setItem('paperos-fundo', c.nome) } catch (e) {}\n    }\n  }\n}\n</script>\n\n<style>\nselect[aria-label=\"cor do fundo\"] {\n  font-family: var(--paperos-font);\n  font-size: 16px;\n  color: var(--paperos-ink);\n  background: var(--paperos-paper);\n  border: var(--paperos-border) solid var(--paperos-ink);\n  border-radius: 0;\n  padding: 6px 8px;\n  position: fixed;\n  bottom: 16px;\n  right: 16px;\n  z-index: 1000;\n  text-transform: uppercase;\n  text-align: center;\n  text-align-last: center;\n}\n</style>",
+        "storeOutMessages": true,
+        "passthru": false,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 190,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "ui_base",
+        "type": "ui-base",
+        "name": "Base",
+        "path": "/dashboard",
+        "appIcon": "",
+        "includeClientData": true,
+        "acceptsClientConfig": [
+            "ui-notification",
+            "ui-control"
+        ],
+        "showPathInSidebar": false,
+        "headerContent": "page",
+        "navigationStyle": "none",
+        "titleBarStyle": "hidden",
+        "showReconnectNotification": false,
+        "notificationDisplayTime": 5,
+        "showDisconnectNotification": false,
+        "allowInstall": true
+    },
+    {
+        "id": "64867f5234884280",
+        "type": "ui-group",
+        "name": "Group 1",
+        "page": "pagina_1",
+        "width": 6,
+        "height": 1,
+        "order": 1,
+        "showTitle": true,
+        "className": "",
+        "visible": "true",
+        "disabled": "false",
+        "groupType": "default"
+    },
+    {
+        "id": "pagina_1",
+        "type": "ui-page",
+        "name": "pagina 1",
+        "ui": "ui_base",
+        "path": "/pagina-1",
+        "icon": "home",
+        "layout": "grid",
+        "theme": "tema_padrao",
+        "breakpoints": [
+            {
+                "name": "Default",
+                "px": "0",
+                "cols": "3"
+            },
+            {
+                "name": "Tablet",
+                "px": "576",
+                "cols": "6"
+            },
+            {
+                "name": "Small Desktop",
+                "px": "768",
+                "cols": "9"
+            },
+            {
+                "name": "Desktop",
+                "px": "1024",
+                "cols": "12"
+            }
+        ],
+        "order": 1,
+        "className": "",
+        "visible": "true",
+        "disabled": "false"
+    },
+    {
+        "id": "tema_padrao",
+        "type": "ui-theme",
+        "name": "Default Theme",
+        "colors": {
+            "surface": "#18191b",
+            "primary": "#0d74ce",
+            "bgPage": "#111113",
+            "groupBg": "#212225",
+            "groupOutline": "#363a3f"
+        },
+        "sizes": {
+            "pagePadding": "12px",
+            "groupGap": "12px",
+            "groupBorderRadius": "4px",
+            "widgetGap": "12px",
+            "density": "default"
+        }
+    },
+    {
+        "id": "14878c074f6cc469",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@flowfuse/node-red-dashboard": "1.32.0"
+        }
+    }
+]
