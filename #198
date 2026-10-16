@@ -1,0 +1,55 @@
+<template>
+ <div class="paperos">
+  <fieldset class="paperos-frame paperos-frame--acao"><legend>Sala</legend>
+    <button class="paperos-alvo" type="button" :aria-pressed="recebido ? isActive : null" :aria-label="`Quarto: ${recebido ? (isActive ? 'ligado' : 'desligado') : 'estado desconhecido'}`" @click="alternar">
+      <span class="paperos-estado" aria-hidden="true">{{ recebido ? (isActive ? '0' : '|') : '?' }}</span>
+    </button>
+  </fieldset>
+ </div>
+</template>
+
+<script>
+export default {
+    data() {
+        return { isActive: false, recebido: false, onWidgetLoad: null, onMsgInput: null };
+    },
+    mounted() {
+        this.onWidgetLoad = (mensagem) => this.aplicarMensagem(mensagem);
+        this.onMsgInput = (mensagem) => this.aplicarMensagem(mensagem);
+        this.$socket.on('widget-load:' + this.id, this.onWidgetLoad);
+        this.$socket.on('msg-input:' + this.id, this.onMsgInput);
+    },
+    beforeUnmount() {
+        if (this.onWidgetLoad) this.$socket.off('widget-load:' + this.id, this.onWidgetLoad);
+        if (this.onMsgInput) this.$socket.off('msg-input:' + this.id, this.onMsgInput);
+    },
+    methods: {
+        alternar() {
+            this.isActive = !this.isActive;
+            this.recebido = true;
+            this.send({ payload: this.isActive ? 'ON' : 'OFF' });
+        },
+        aplicarMensagem(mensagem) {
+            const estado = mensagem?.payload;
+            if (estado === 'ON' || estado === 'OFF') {
+                this.isActive = estado === 'ON';
+                this.recebido = true;
+            }
+        }
+    },
+    watch: {
+        msg: {
+            handler() { this.aplicarMensagem(this.msg); },
+            immediate: true,
+            deep: true
+        }
+    }
+};
+</script>
+
+<style>.nrdb-layout-group--grid:has(.paperos){--widget-row-height:75px;grid-template-columns:repeat(auto-fill,75px)!important;grid-auto-rows:75px!important}</style>
+
+<style scoped>
+.paperos{container-type:inline-size;box-sizing:border-box;width:100%;height:100%;min-width:0}.paperos *{box-sizing:border-box}.paperos-frame{display:flex;flex-direction:column;width:100%;min-width:0;max-height:100%;aspect-ratio:1;margin:0;padding:0 clamp(3px,5cqi,8px) clamp(3px,5cqi,8px);color:#171512;font-family:ui-monospace,Consolas,'Courier New',monospace;background:none;border:1px solid #171512;border-radius:0}.paperos-frame>legend{max-width:100%;margin:0 0 0 clamp(2px,5cqi,6px);padding:0 2px;font-size:clamp(8px,calc((95cqi - 14px) / 6),12px);font-weight:700;line-height:1.1;white-space:nowrap}.paperos :focus-visible{outline:2px solid #171512;outline-offset:2px}.paperos-frame--acao{border-width:2px!important}.paperos-alvo{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(2px,4cqi,6px);width:100%;min-width:0;min-height:0;margin:0;padding:0;color:inherit;font:inherit;text-align:center;background:none;border:0;border-radius:0;cursor:pointer}.paperos-estado{font-size:clamp(24px,40cqi,44px);font-weight:700;line-height:1}
+button.paperos-alvo:not(.paperos-relogio){box-shadow:inset 0 0 0 1px #171512}
+</style>
