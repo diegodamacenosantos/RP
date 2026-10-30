@@ -1,0 +1,88 @@
+<template>
+ <div class="paperos paperos-q">
+  <fieldset class="paperos-frame paperos-frame--acao"><legend>H.Marcada</legend>
+    <button ref="alvo" class="paperos-alvo" type="button" :aria-label="`Configurar externa. Estado: ${recebido ? (isActive ? 'ligada' : 'desligada') : 'desconhecido'}`" @click="abrirConfiguracao">
+      <span class="paperos-estado" aria-hidden="true">{{ recebido ? (isActive ? '0' : '|') : '?' }}</span>
+      <span v-if="status === 'contando' && marcacao" class="paperos-detalhe" aria-hidden="true">{{ marcacao }}</span>
+    </button>
+    <teleport to="body"><div v-if="configurando" class="paperos-popup" role="dialog" aria-modal="true" aria-label="Configuração da externa" @click.self="fecharConfiguracao" @keydown.esc="fecharConfiguracao">
+      <section ref="caixa" class="paperos-caixa" tabindex="-1">
+        <strong>Externa</strong>
+        <div class="paperos-linha"><button type="button" @click="definirEstado('ON')">Ligar</button><button type="button" @click="definirEstado('OFF')">Desligar</button></div>
+        <label>Horário<input v-model="marcacao" type="time" @input="selecionarHorario"></label>
+        <button type="button" @click="fecharConfiguracao">[ Fechar ]</button>
+      </section>
+    </div></teleport>
+  </fieldset>
+ </div>
+</template>
+
+<script>
+export default {
+    data() { return { value: 'OFF', status: 'parado', marcacao: '', timer: null, configurando: false, recebido: false, onWidgetLoad: null, onMsgInput: null }; },
+    computed: { isActive() { return this.value === 'ON'; } },
+    mounted() {
+        this.onWidgetLoad = (m) => this.aplicarMensagem(m);
+        this.onMsgInput = (m) => this.aplicarMensagem(m);
+        this.$socket.on('widget-load:' + this.id, this.onWidgetLoad);
+        this.$socket.on('msg-input:' + this.id, this.onMsgInput);
+    },
+    beforeUnmount() {
+        this.pararTimer();
+        if (this.onWidgetLoad) this.$socket.off('widget-load:' + this.id, this.onWidgetLoad);
+        if (this.onMsgInput) this.$socket.off('msg-input:' + this.id, this.onMsgInput);
+    },
+    methods: {
+        abrirConfiguracao() { this.configurando = true; },
+        fecharConfiguracao() { this.configurando = false; },
+        definirEstado(estado) {
+            this.value = estado;
+            this.recebido = true;
+            this.marcacao = '';
+            this.status = 'parado';
+            this.pararTimer();
+            this.enviarEstado();
+            this.fecharConfiguracao();
+        },
+        selecionarHorario() {
+            this.status = this.marcacao ? 'contando' : 'parado';
+            this.pararTimer();
+            if (this.status === 'contando') this.verificarHorario();
+        },
+        verificarHorario() {
+            if (this.status !== 'contando' || !this.marcacao) return;
+            const agora = new Date();
+            const horario = `${String(agora.getHours()).padStart(2, '0')}:${String(agora.getMinutes()).padStart(2, '0')}`;
+            if (horario === this.marcacao) {
+                this.value = this.isActive ? 'OFF' : 'ON';
+                this.recebido = true;
+                this.status = 'parado';
+                this.enviarEstado();
+                return;
+            }
+            this.timer = setTimeout(() => this.verificarHorario(), 5000);
+        },
+        pararTimer() { if (this.timer) clearTimeout(this.timer); this.timer = null; },
+        enviarEstado() { this.send({ payload: this.value }); },
+        aplicarMensagem(m) {
+            const dados = m?.payload;
+            if (dados === 'ON' || dados === 'OFF') { this.value = dados; this.recebido = true; return; }
+            if (!dados || typeof dados !== 'object') return;
+            if (dados.value === 'ON' || dados.value === 'OFF') { this.value = dados.value; this.recebido = true; }
+            if (typeof dados.marcacao === 'string') this.marcacao = dados.marcacao;
+            this.status = dados.status === 'contando' ? 'contando' : 'parado';
+            this.pararTimer();
+            if (this.status === 'contando' && this.marcacao) this.verificarHorario();
+        }
+    },
+    watch: {
+        msg: { handler() { this.aplicarMensagem(this.msg); }, immediate: true, deep: true },
+        configurando(aberto) { this.$nextTick(() => (aberto ? this.$refs.caixa : this.$refs.alvo)?.focus()); }
+    }
+};
+</script>
+
+<style scoped>
+.paperos{container-type:inline-size;box-sizing:border-box;min-width:0}.paperos.paperos-q{width:min(75px,100%);height:auto;aspect-ratio:1;min-width:0;grid-row:1/-1;align-self:center;justify-self:center}.paperos-q .paperos-frame{width:100%;height:auto;min-height:0;max-height:none;aspect-ratio:1}.paperos *{box-sizing:border-box}.paperos-frame{display:flex;flex-direction:column;width:100%;height:100%;min-width:0;margin:0;padding:0 clamp(3px,5cqi,8px) clamp(3px,5cqi,8px);color:#171512;font-family:ui-monospace,Consolas,'Courier New',monospace;background:none;border:1px solid #171512;border-radius:0}.paperos-frame>legend{max-width:100%;margin:0 0 0 clamp(2px,5cqi,6px);padding:0 2px;font-size:clamp(8px,calc((95cqi - 14px) / 6),12px);font-weight:700;line-height:1.1;white-space:nowrap}.paperos :focus-visible{outline:2px solid #171512;outline-offset:2px}.paperos-frame--acao{border-width:2px!important}.paperos-alvo{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(2px,4cqi,6px);width:100%;min-width:0;min-height:0;margin:0;padding:0;color:inherit;font:inherit;text-align:center;background:none;border:0;border-radius:0;cursor:pointer}.paperos-estado{font-size:clamp(24px,40cqi,44px);font-weight:700;line-height:1}.paperos-detalhe{font-size:clamp(9px,16cqi,14px);font-weight:700;line-height:1;white-space:nowrap}.paperos-popup{position:fixed;inset:0;z-index:2147483647;display:flex;align-items:flex-start;justify-content:center;padding:clamp(24px,8vh,60px) 16px 16px;background:none}.paperos-caixa{box-sizing:border-box;display:grid;gap:clamp(8px,2.5vw,12px);width:min(320px,100%);padding:clamp(12px,3.5vw,16px);color:#171512;font:400 clamp(13px,3.6vw,15px)/1.3 ui-monospace,Consolas,'Courier New',monospace;text-align:center;background:#d8d8d8;border:2px solid #171512}.paperos-caixa *{box-sizing:border-box}.paperos-caixa>strong{font-size:1.1em}.paperos-caixa button,.paperos-caixa input{width:100%;min-width:0;min-height:40px;padding:4px 6px;color:inherit;font:inherit;font-weight:700;background:none;border:1px solid #171512;border-radius:0;cursor:pointer}.paperos-caixa input{font-weight:400;text-align:center;cursor:text}.paperos-caixa label,.paperos-rotulo{display:grid;gap:6px;font-weight:700;text-align:left}.paperos-linha{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px}.paperos-caixa:focus-visible,.paperos-caixa :focus-visible{outline:2px solid #171512;outline-offset:2px}
+button.paperos-alvo:not(.paperos-relogio){box-shadow:inset 0 0 0 1px #171512}
+</style>
