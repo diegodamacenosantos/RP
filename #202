@@ -1,0 +1,723 @@
+[
+    {
+        "id": "d4ca27c264ed24b3",
+        "type": "tab",
+        "label": "Fluxo 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "074d7edc05b2ca17",
+        "type": "group",
+        "z": "d4ca27c264ed24b3",
+        "name": "1 · Receber tudo (uma saída, sem filtro)",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "d3a03112602e4368",
+            "477074ca7c531274"
+        ],
+        "x": 94,
+        "y": 69,
+        "w": 572,
+        "h": 82
+    },
+    {
+        "id": "161ea0dafb1d44e2",
+        "type": "group",
+        "z": "d4ca27c264ed24b3",
+        "name": "2 · Filtrar vários números e grupos (uma saída por item)",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "e1b8301aa5386326",
+            "9e8b333d3af732b3",
+            "abd401ecd68faff3",
+            "4871ad0538dd26ec",
+            "8fbc2cb9cb331afd"
+        ],
+        "x": 94,
+        "y": 219,
+        "w": 632,
+        "h": 247
+    },
+    {
+        "id": "48d995144f6e9b69",
+        "type": "group",
+        "z": "d4ca27c264ed24b3",
+        "name": "3 · Enviar SEM número no nó (destino vai no payload)",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "8b1d0e08560e633f",
+            "0b9e06409409f5de",
+            "e12fe5772758a7fb",
+            "9fcfb892f864f8d7",
+            "81e1e38b27a001ea"
+        ],
+        "x": 4,
+        "y": 534,
+        "w": 742,
+        "h": 247
+    },
+    {
+        "id": "afa5caade9e081f6",
+        "type": "group",
+        "z": "d4ca27c264ed24b3",
+        "name": "4 · Enviar COM número fixo no nó (payload só o texto)",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "0b9c529ca9d84243",
+            "c46bdd346aed3c2c",
+            "079196a06a74df32"
+        ],
+        "x": 84,
+        "y": 849,
+        "w": 712,
+        "h": 137
+    },
+    {
+        "id": "0dd17cf16d096477",
+        "type": "group",
+        "z": "d4ca27c264ed24b3",
+        "name": "5 · Responder a quem escreveu (só ao meu número)",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "677c50ee309d7f48",
+            "6cfc5bca2187137f",
+            "5656cd02bec7f4d0"
+        ],
+        "x": 74,
+        "y": 1054,
+        "w": 712,
+        "h": 87
+    },
+    {
+        "id": "e8e190dac8822061",
+        "type": "group",
+        "z": "d4ca27c264ed24b3",
+        "name": "6 · Separar por tipo de mensagem",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "467ac6c4cc6a5316",
+            "8c109993c1214d75",
+            "d6c72ac41317a507",
+            "2eeb96ec14e12a6b",
+            "ca6ff62a0d52a1a0"
+        ],
+        "x": 74,
+        "y": 1212,
+        "w": 772,
+        "h": 192
+    },
+    {
+        "id": "9e47343ae21a1d6b",
+        "type": "group",
+        "z": "d4ca27c264ed24b3",
+        "name": "7 · Fila e limites (5 mensagens seguidas, ver a etiqueta do nó)",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "b5827b91d53899ad",
+            "6d7f463b92e5ad12",
+            "da08609cab77a926"
+        ],
+        "x": 54,
+        "y": 1472,
+        "w": 732,
+        "h": 82
+    },
+    {
+        "id": "d3a03112602e4368",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "074d7edc05b2ca17",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "recebimento",
+        "numeros": [],
+        "numeroFixo": "",
+        "inputs": 0,
+        "outputs": 1,
+        "x": 220,
+        "y": 110,
+        "wires": [
+            [
+                "477074ca7c531274"
+            ]
+        ]
+    },
+    {
+        "id": "477074ca7c531274",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "074d7edc05b2ca17",
+        "name": "mensagem recebida",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 110,
+        "wires": []
+    },
+    {
+        "id": "e1b8301aa5386326",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "161ea0dafb1d44e2",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "recebimento",
+        "numeros": [
+            "5522974010529",
+            "5511999990001",
+            "120363000000000000@g.us"
+        ],
+        "numeroFixo": "",
+        "inputs": 0,
+        "outputs": 4,
+        "x": 220,
+        "y": 350,
+        "wires": [
+            [
+                "9e8b333d3af732b3"
+            ],
+            [
+                "abd401ecd68faff3"
+            ],
+            [
+                "4871ad0538dd26ec"
+            ],
+            [
+                "8fbc2cb9cb331afd"
+            ]
+        ]
+    },
+    {
+        "id": "9e8b333d3af732b3",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "161ea0dafb1d44e2",
+        "name": "saída 1: tudo",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "abd401ecd68faff3",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "161ea0dafb1d44e2",
+        "name": "saída 2: só meu número",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 315,
+        "wires": []
+    },
+    {
+        "id": "4871ad0538dd26ec",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "161ea0dafb1d44e2",
+        "name": "saída 3: só 5511999990001",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 370,
+        "wires": []
+    },
+    {
+        "id": "8fbc2cb9cb331afd",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "161ea0dafb1d44e2",
+        "name": "saída 4: só o grupo",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 425,
+        "wires": []
+    },
+    {
+        "id": "8b1d0e08560e633f",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "48d995144f6e9b69",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "envio",
+        "numeros": [],
+        "numeroFixo": "",
+        "inputs": 1,
+        "outputs": 0,
+        "x": 640,
+        "y": 655,
+        "wires": []
+    },
+    {
+        "id": "0b9e06409409f5de",
+        "type": "inject",
+        "z": "d4ca27c264ed24b3",
+        "g": "48d995144f6e9b69",
+        "name": "pessoa: {numero, mensagem}",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"numero\":\"5522974010529\",\"mensagem\":\"Olá! Destino veio no payload.\"}",
+        "payloadType": "json",
+        "x": 200,
+        "y": 575,
+        "wires": [
+            [
+                "8b1d0e08560e633f"
+            ]
+        ]
+    },
+    {
+        "id": "e12fe5772758a7fb",
+        "type": "inject",
+        "z": "d4ca27c264ed24b3",
+        "g": "48d995144f6e9b69",
+        "name": "grupo: {grupo, mensagem} (troque o id)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"grupo\":\"120363000000000000@g.us\",\"mensagem\":\"Olá, grupo!\"}",
+        "payloadType": "json",
+        "x": 200,
+        "y": 630,
+        "wires": [
+            [
+                "8b1d0e08560e633f"
+            ]
+        ]
+    },
+    {
+        "id": "9fcfb892f864f8d7",
+        "type": "inject",
+        "z": "d4ca27c264ed24b3",
+        "g": "48d995144f6e9b69",
+        "name": "outra pessoa (recusa: nunca escreveu)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"numero\":\"5511999990001\",\"mensagem\":\"Olá!\"}",
+        "payloadType": "json",
+        "x": 200,
+        "y": 685,
+        "wires": [
+            [
+                "8b1d0e08560e633f"
+            ]
+        ]
+    },
+    {
+        "id": "81e1e38b27a001ea",
+        "type": "inject",
+        "z": "d4ca27c264ed24b3",
+        "g": "48d995144f6e9b69",
+        "name": "texto puro (recusa: sem destino)",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Olá",
+        "payloadType": "str",
+        "x": 200,
+        "y": 740,
+        "wires": [
+            [
+                "8b1d0e08560e633f"
+            ]
+        ]
+    },
+    {
+        "id": "0b9c529ca9d84243",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "afa5caade9e081f6",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "envio",
+        "numeros": [],
+        "numeroFixo": "5522974010529",
+        "inputs": 1,
+        "outputs": 0,
+        "x": 640,
+        "y": 918,
+        "wires": []
+    },
+    {
+        "id": "c46bdd346aed3c2c",
+        "type": "inject",
+        "z": "d4ca27c264ed24b3",
+        "g": "afa5caade9e081f6",
+        "name": "texto puro",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Olá! Número fixo no nó.",
+        "payloadType": "str",
+        "x": 200,
+        "y": 890,
+        "wires": [
+            [
+                "0b9c529ca9d84243"
+            ]
+        ]
+    },
+    {
+        "id": "079196a06a74df32",
+        "type": "inject",
+        "z": "d4ca27c264ed24b3",
+        "g": "afa5caade9e081f6",
+        "name": "{mensagem}",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"mensagem\":\"Olá! Objeto só com a mensagem.\"}",
+        "payloadType": "json",
+        "x": 200,
+        "y": 945,
+        "wires": [
+            [
+                "0b9c529ca9d84243"
+            ]
+        ]
+    },
+    {
+        "id": "677c50ee309d7f48",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "0dd17cf16d096477",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "recebimento",
+        "numeros": [
+            "5522974010529"
+        ],
+        "numeroFixo": "",
+        "inputs": 0,
+        "outputs": 2,
+        "x": 200,
+        "y": 1095,
+        "wires": [
+            [],
+            [
+                "6cfc5bca2187137f"
+            ]
+        ]
+    },
+    {
+        "id": "6cfc5bca2187137f",
+        "type": "function",
+        "z": "d4ca27c264ed24b3",
+        "g": "0dd17cf16d096477",
+        "name": "monta a resposta",
+        "func": "const p = msg.payload;\nif (p.tipo !== 'texto') return null;\nreturn { payload: { numero: p.numero, grupo: p.grupo, mensagem: 'Recebi: ' + p.mensagem } };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 1095,
+        "wires": [
+            [
+                "5656cd02bec7f4d0"
+            ]
+        ]
+    },
+    {
+        "id": "5656cd02bec7f4d0",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "0dd17cf16d096477",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "envio",
+        "numeros": [],
+        "numeroFixo": "",
+        "inputs": 1,
+        "outputs": 0,
+        "x": 680,
+        "y": 1100,
+        "wires": []
+    },
+    {
+        "id": "467ac6c4cc6a5316",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "e8e190dac8822061",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "recebimento",
+        "numeros": [],
+        "numeroFixo": "",
+        "inputs": 0,
+        "outputs": 1,
+        "x": 200,
+        "y": 1308,
+        "wires": [
+            [
+                "8c109993c1214d75"
+            ]
+        ]
+    },
+    {
+        "id": "8c109993c1214d75",
+        "type": "switch",
+        "z": "d4ca27c264ed24b3",
+        "g": "e8e190dac8822061",
+        "name": "tipo",
+        "property": "payload.tipo",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "texto",
+                "vt": "str"
+            },
+            {
+                "t": "regex",
+                "v": "^(imagem|video|audio|documento|figurinha)$",
+                "vt": "str",
+                "case": false
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "checkall": "false",
+        "repair": false,
+        "outputs": 3,
+        "x": 420,
+        "y": 1308,
+        "wires": [
+            [
+                "d6c72ac41317a507"
+            ],
+            [
+                "2eeb96ec14e12a6b"
+            ],
+            [
+                "ca6ff62a0d52a1a0"
+            ]
+        ]
+    },
+    {
+        "id": "d6c72ac41317a507",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "e8e190dac8822061",
+        "name": "texto",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 1253,
+        "wires": []
+    },
+    {
+        "id": "2eeb96ec14e12a6b",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "e8e190dac8822061",
+        "name": "mídia (só aviso, sem baixar)",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 1308,
+        "wires": []
+    },
+    {
+        "id": "ca6ff62a0d52a1a0",
+        "type": "debug",
+        "z": "d4ca27c264ed24b3",
+        "g": "e8e190dac8822061",
+        "name": "localização ou contato",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 1363,
+        "wires": []
+    },
+    {
+        "id": "b5827b91d53899ad",
+        "type": "inject",
+        "z": "d4ca27c264ed24b3",
+        "g": "9e47343ae21a1d6b",
+        "name": "disparar 5 mensagens",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"numero\":\"5522974010529\"}",
+        "payloadType": "json",
+        "x": 200,
+        "y": 1513,
+        "wires": [
+            [
+                "6d7f463b92e5ad12"
+            ]
+        ]
+    },
+    {
+        "id": "6d7f463b92e5ad12",
+        "type": "function",
+        "z": "d4ca27c264ed24b3",
+        "g": "9e47343ae21a1d6b",
+        "name": "5 mensagens",
+        "func": "for (let i = 1; i <= 5; i++) {\n    node.send({ payload: { numero: msg.payload.numero, mensagem: 'Teste de fila ' + i + ' de 5' } });\n}\nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 1513,
+        "wires": [
+            [
+                "da08609cab77a926"
+            ]
+        ]
+    },
+    {
+        "id": "da08609cab77a926",
+        "type": "whatsapp-mensagem",
+        "z": "d4ca27c264ed24b3",
+        "g": "9e47343ae21a1d6b",
+        "name": "",
+        "conta": "79dca0871680d827",
+        "tipo": "envio",
+        "numeros": [],
+        "numeroFixo": "",
+        "inputs": 1,
+        "outputs": 0,
+        "x": 680,
+        "y": 1513,
+        "wires": []
+    },
+    {
+        "id": "79dca0871680d827",
+        "type": "whatsapp-conta",
+        "name": "Diego"
+    },
+    {
+        "id": "23d9461e134b99e2",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "whatsapp-neway-automacoes": "0.2.1"
+        }
+    }
+]
